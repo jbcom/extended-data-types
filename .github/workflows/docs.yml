@@ -1,0 +1,56 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+    tags: ["*"]
+  release:
+    types:
+      - published
+
+jobs:
+  build-package:
+    name: Build & verify package
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: hynek/build-and-inspect-python-package@v2
+
+  pages:
+    name: Build and Push to Github Pages
+    environment: github-pages
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pages: write
+    needs: build-package
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Download pre-built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+      - run: tar xf dist/*.tar.gz --strip-components=1
+      - uses: actions/setup-python@v5
+        with:
+          # Keep in sync with tox.ini/docs & .readthedocs.yaml
+          python-version-file: .python-version
+          cache: 'pip'
+      - uses: hynek/setup-cached-uv@v2
+      - name: Install Hatch
+        uses: pypa/hatch@install
+      - run: hatch run docs:build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs/_build/html'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

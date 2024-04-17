@@ -1,0 +1,258 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "extended-data-types"
+dynamic = ["version"]
+description = "Extended functionality for data types"
+requires-python = ">=3.9"
+license = "MIT"
+readme = "README.md"
+keywords = ["python3"]
+authors = [
+    { name = "Jon Bogaty", email = "jon@jonbogaty.com" },
+]
+maintainers = [
+    { name = "Jon Bogaty", email = "jon@jonbogaty.com" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Typing :: Typed",
+]
+dependencies = [
+    "requests>=2.32.3",
+    "more-itertools>=10.3.0",
+    "python-hcl2>=4.3.4",
+    "validators>=0.33.0",
+    "inflection>=0.5.1",
+    "sortedcontainers>=2.4.0",
+    "wrapt>=1.16.0",
+    "pyyaml>=6.0.1",
+    "future>=1.0.0",
+    "numpy>=2.0.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/jbcom/extended-data-types#readme"
+Issues = "https://github.com/jbcom/extended-data-types/issues"
+Source = "https://github.com/jbcom/extended-data-types"
+
+[project.optional-dependencies]
+tests = [
+    "pytest>=8.2.2",
+    "pytest-mock>=3.14.0",
+    "pytest-asyncio>=0.23.8",
+    "coverage[toml]>=7.6.0",
+]
+
+dev = [
+    "commitizen>=3.28.0",
+    "python-semantic-release>=9.8.6",
+]
+
+[tool.hatch.version]
+path = "src/extended_data_types/__about__.py"
+
+[tool.hatch.env]
+requires = [
+    "hatch-pip-compile"
+]
+
+[tool.hatch.envs.default]
+type = "pip-compile"
+pip-compile-resolver = "uv"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+    "mypy>=1.0.0",
+    "types-PyYAML>=6.0.12.20240724",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/extended_data_types tests}"
+
+[tool.hatch.envs.docs]
+extra-dependencies = [
+    "sphinx>=7.2,<7.5",
+    "sphinxawesome-theme>=5.2.0",
+    "interrogate>=1.7.0",
+    "codespell>=2.3.0",
+    "sphinx-autodoc2>=0.5.0",
+    "beautifulsoup4>=4.12.3",
+    "seed-intersphinx-mapping>=1.2.2",
+    "myst-parser>=3.0.1",
+    "docutils>=0.17",
+]
+[tool.hatch.envs.docs.scripts]
+build = "sphinx-build -W -n --jobs auto -b html -d docs/_build/doctrees docs docs/_build/html"
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["extended_data_types"]
+
+[tool.coverage.paths]
+source = ["src", ".tox/py*/**/site-packages"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.codespell]
+skip = '*.js,*.css,*.inv,*.lock,*.toml,*.json,*.yml,*.yaml'
+count = true
+
+[tool.interrogate]
+ignore-init-method = false
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = false
+ignore-private = false
+ignore-property-decorators = false
+ignore-module = false
+ignore-nested-functions = false
+ignore-nested-classes = false
+ignore-setters = false
+ignore-overloaded-functions = false
+fail-under = 80
+exclude = []
+ignore-regex = []
+ext = []
+style = "google"
+verbose = 1
+quiet = false
+whitelist-regex = []
+color = true
+omit-covered-files = true
+generate-badge = "./docs/_static"
+badge-format = "svg"
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+src = ["extended_data_types", "tests"]
+exclude = ["docs"]
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN",
+    "COM",
+    "E501",
+    "FBT"
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "D", "E", "S"]
+
+[tool.ruff.lint.isort]
+lines-between-types = 1
+lines-after-imports = 2
+
+[tool.mypy]
+strict = true
+pretty = true
+
+show_error_codes = true
+enable_error_code = ["ignore-without-code"]
+ignore_missing_imports = true
+
+warn_return_any = false
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = "tests.typing.*"
+ignore_errors = false
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "v$version"
+version_scheme = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = false
+bump_message = "release $current_version → $new_version [skip-ci]"
+
+[tool.semantic_release]
+assets = []
+build_command_env = []
+commit_message = "release {version} [skip actions]"
+commit_parser = "angular"
+logging_use_named_masks = false
+major_on_zero = true
+allow_zero_version = false
+no_git_verify = false
+tag_format = "v{version}"
+
+version_toml = [
+    "pyproject.toml:tool.poetry.version",
+]
+
+version_variables = [
+    "docs/conf.py:version",
+    "src/extended_data_types/__about__.py:__version__",
+]
+
+[tool.semantic_release.branches.main]
+match = "(main|master)"
+prerelease_token = "rc"
+prerelease = false
+
+[tool.semantic_release.changelog]
+template_dir = "templates"
+changelog_file = "CHANGELOG.md"
+exclude_commit_patterns = []
+
+[tool.semantic_release.changelog.environment]
+block_start_string = "{%"
+block_end_string = "%}"
+variable_start_string = "{{"
+variable_end_string = "}}"
+comment_start_string = "{#"
+comment_end_string = "#}"
+trim_blocks = false
+lstrip_blocks = false
+newline_sequence = "\n"
+keep_trailing_newline = false
+extensions = []
+autoescape = true
+
+[tool.semantic_release.commit_author]
+env = "GIT_COMMIT_AUTHOR"
+default = "github-actions <actions@github.com>"
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = ["build", "chore", "ci", "docs", "feat", "fix", "perf", "style", "refactor", "test"]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+default_bump_level = 0
+
+[tool.semantic_release.remote]
+name = "origin"
+type = "github"
+ignore_token_for_push = false
+insecure = false
+
+[tool.semantic_release.publish]
+dist_glob_patterns = ["dist/*"]
+upload_to_vcs_release = true
