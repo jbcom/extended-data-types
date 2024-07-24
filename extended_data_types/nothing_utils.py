@@ -2,9 +2,9 @@
 
 It includes functions to check if a value is 'nothing', to filter out 'nothing' values,
 and to yield non-empty values from a mapping.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 from typing import Any, Generator, Mapping
 

@@ -2,13 +2,14 @@
 
 It includes functions to make raw data export-safe and to wrap raw data for export
 with optional encoding formats such as YAML or JSON.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 import datetime
 import pathlib
-from typing import Any, Mapping, Union
+
+from typing import Any, Mapping
 
 from extended_data_types.json_utils import encode_json
 from extended_data_types.string_data_type import strtobool
@@ -35,7 +36,7 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
             k: make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
             for k, v in raw_data.items()
         }
-    elif isinstance(raw_data, (set, list)):
+    if isinstance(raw_data, (set, list)):
         return [
             make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
             for v in raw_data
@@ -48,9 +49,9 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
 
     if isinstance(raw_data, (datetime.date, datetime.datetime)):
         return raw_data.isoformat()
-    elif isinstance(raw_data, pathlib.Path):
+    if isinstance(raw_data, pathlib.Path):
         return str(raw_data)
-    elif isinstance(raw_data, (int, float, str, bool, type(None))):
+    if isinstance(raw_data, (int, float, str, bool, type(None))):
         return raw_data
 
     # For all other types, convert to string representation
@@ -58,29 +59,29 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
 
 
 def wrap_raw_data_for_export(
-        raw_data: Union[Mapping, Any],
-        allow_encoding: Union[bool, str] = True,
-        **format_opts: Any,
+    raw_data: Mapping | Any,
+    allow_encoding: bool | str = True,
+    **format_opts: Any,
 ) -> str:
     """Wraps raw data for export, optionally encoding it.
 
     Args:
-        raw_data (Any): The raw data to wrap.
-        allow_encoding (Union[bool, str]): The encoding format or flag (default is 'yaml').
+        raw_data (Mapping | Any): The raw data to wrap.
+        allow_encoding (bool | str): The encoding format or flag (default is 'yaml').
         **format_opts (Any): Additional options for formatting the output.
 
     Returns:
         str: The wrapped and encoded data.
-    """  # noqa: E501
+    """
     raw_data = make_raw_data_export_safe(raw_data)
 
     if isinstance(allow_encoding, str):
         allow_encoding_lower = allow_encoding.casefold()
         if allow_encoding_lower == "yaml":
             return encode_yaml(raw_data)
-        elif allow_encoding_lower == "json":
+        if allow_encoding_lower == "json":
             return encode_json(raw_data, **format_opts)
-        elif allow_encoding_lower == "raw":
+        if allow_encoding_lower == "raw":
             return raw_data
 
         try:
@@ -91,7 +92,8 @@ def wrap_raw_data_for_export(
                 else allow_encoding
             )
         except ValueError as e:
-            raise ValueError(f"Invalid allow_encoding value: {allow_encoding}") from e
+            error_message = f"Invalid allow_encoding value: {allow_encoding}"
+            raise ValueError(error_message) from e
 
     if allow_encoding:
         if is_yaml_data(raw_data):

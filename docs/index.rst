@@ -1,3 +1,7 @@
+.. image:: _static/logo.webp
+   :alt: Extended Data Types
+   :width: 300px
+
 ===============================================
 Extended Data Types
 ===============================================
@@ -9,6 +13,7 @@ Extended Data Types provides additional functionality for Python's standard data
 
    installation
    usage
+   api
    modules
    genindex
    modindex

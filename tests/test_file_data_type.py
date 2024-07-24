@@ -9,7 +9,7 @@ from extended_data_types.file_data_type import (
 
 
 @pytest.mark.parametrize(
-    "file_path, allowed_extensions, denied_extensions, expected",
+    ("file_path", "allowed_extensions", "denied_extensions", "expected"),
     [
         ("test.txt", ["txt"], None, True),
         ("test.txt", ["md"], None, False),
@@ -22,7 +22,7 @@ from extended_data_types.file_data_type import (
     ],
 )
 def test_match_file_extensions(
-    file_path, allowed_extensions, denied_extensions, expected
+    file_path, allowed_extensions, denied_extensions, expected,
 ):
     assert (
         match_file_extensions(file_path, allowed_extensions, denied_extensions)
@@ -31,7 +31,7 @@ def test_match_file_extensions(
 
 
 @pytest.mark.parametrize(
-    "file_path, expected_encoding",
+    ("file_path", "expected_encoding"),
     [
         ("test.yaml", "yaml"),
         ("test.yml", "yaml"),
@@ -45,7 +45,7 @@ def test_get_encoding_for_file_path(file_path, expected_encoding):
 
 
 @pytest.mark.parametrize(
-    "file_path, expected_depth",
+    ("file_path", "expected_depth"),
     [
         ("test.txt", 1),
         ("dir/test.txt", 2),
@@ -59,7 +59,7 @@ def test_file_path_depth(file_path, expected_depth):
 
 
 @pytest.mark.parametrize(
-    "file_path, expected_rel_to_root",
+    ("file_path", "expected_rel_to_root"),
     [
         ("test.txt", ".."),
         ("dir/test.txt", "../.."),

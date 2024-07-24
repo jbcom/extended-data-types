@@ -1,13 +1,13 @@
 """This module provides classes for handling YAML tagged objects and pairs.
 
 It includes a wrapper class for YAML tagged objects and a class to represent YAML pairs.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 from typing import Any
 
-import wrapt  # type: ignore
+import wrapt
 
 
 class YamlTagged(wrapt.ObjectProxy):

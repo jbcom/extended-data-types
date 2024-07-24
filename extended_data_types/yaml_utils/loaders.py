@@ -3,7 +3,7 @@
 It includes a custom YAML loader class that handles special tags and constructors.
 """  # noqa: E501
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 from typing import Any
 

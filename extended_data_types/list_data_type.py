@@ -2,42 +2,42 @@
 
 It includes functions to flatten lists and to filter lists based on allowlists
 and denylists.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
-from typing import Any, List, Optional
+from typing import Any
 
 import numpy as np
 
 
-def flatten_list(matrix: List[Any]) -> List[Any]:
+def flatten_list(matrix: list[Any]) -> list[Any]:
     """Flattens a list of lists into a single list using numpy.
 
     Args:
-        matrix (List[List[Any]]): The list of lists to flatten.
+        matrix (list[list[Any]]): The list of lists to flatten.
 
     Returns:
-        List[Any]: The flattened list.
+        list[Any]: The flattened list.
     """
     array = np.array(matrix)
     return list(array.flatten())
 
 
 def filter_list(
-        items: Optional[List[str]],
-        allowlist: Optional[List[str]] = None,
-        denylist: Optional[List[str]] = None,
-) -> List[str]:
+    items: list[str] | None,
+    allowlist: list[str] | None = None,
+    denylist: list[str] | None = None,
+) -> list[str]:
     """Filters a list based on allowlist and denylist.
 
     Args:
-        items (Optional[List[str]]): The list to filter.
-        allowlist (List[str]): The list of allowed items.
-        denylist (List[str]): The list of denied items.
+        items (list[str] | None): The list to filter.
+        allowlist (list[str] | None): The list of allowed items.
+        denylist (list[str] | None): The list of denied items.
 
     Returns:
-        List[str]: The filtered list.
+        list[str]: The filtered list.
     """
     if items is None:
         items = []

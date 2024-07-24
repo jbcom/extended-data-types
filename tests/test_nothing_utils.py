@@ -11,7 +11,7 @@ from extended_data_types.nothing_utils import (
 
 
 @pytest.mark.parametrize(
-    "value, expected",
+    ("value", "expected"),
     [
         (None, True),
         ("", True),
@@ -29,7 +29,7 @@ def test_is_nothing(value, expected):
 
 
 @pytest.mark.parametrize(
-    "values, expected",
+    ("values", "expected"),
     [
         ((None, "", [], {}), []),
         ((None, "value", 0, "another"), ["value", 0, "another"]),
@@ -41,7 +41,7 @@ def test_all_non_empty(values, expected):
 
 
 @pytest.mark.parametrize(
-    "values, expected",
+    ("values", "expected"),
     [
         ((None, "", [], {}), True),
         ((None, "value", 0, "another"), False),
@@ -53,7 +53,7 @@ def test_are_nothing(values, expected):
 
 
 @pytest.mark.parametrize(
-    "values, expected",
+    ("values", "expected"),
     [
         ((None, "", "value", "another"), "value"),
         ((None, "", [], {}), None),
@@ -65,7 +65,7 @@ def test_first_non_empty(values, expected):
 
 
 @pytest.mark.parametrize(
-    "mapping, keys, expected",
+    ("mapping", "keys", "expected"),
     [
         ({"key1": None, "key2": "value"}, ("key1", "key2"), {"key2": "value"}),
         ({"key1": None, "key2": None}, ("key1", "key2"), {}),

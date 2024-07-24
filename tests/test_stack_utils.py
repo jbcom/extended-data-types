@@ -28,7 +28,7 @@ class DummyClass:
         """NOPARSE This method should not be included."""
 
 
-@pytest.fixture
+@pytest.fixture()
 def methods_list():
     return [
         "public_method",
@@ -39,7 +39,7 @@ def methods_list():
     ]
 
 
-@pytest.fixture
+@pytest.fixture()
 def dummy_instance():
     return DummyClass()
 

@@ -3,32 +3,32 @@ import pytest
 from extended_data_types.list_data_type import filter_list, flatten_list
 
 
-@pytest.fixture
+@pytest.fixture()
 def nested_list():
     return [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
 
 
-@pytest.fixture
+@pytest.fixture()
 def flat_list():
     return [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_list():
     return ["apple", "banana", "cherry", "date"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def allowlist():
     return ["apple", "cherry"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def denylist():
     return ["banana", "date"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def allowlist_and_denylist():
     return {"allowlist": ["apple", "cherry", "date"], "denylist": ["date"]}
 

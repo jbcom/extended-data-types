@@ -42,17 +42,8 @@ docs-clean: ## Clean the docs directory
 	rm -rf docs/_autosummary || echo "No _autosummary directory to cleanup"
 	rm -rf docs/_build || echo "No _build directory to cleanup"
 
-.PHONY: docs-autogen
-docs-autogen: install docs-clean ## Autogenerate module documentation stubs
-	poetry run sphinx-autogen docs/index.rst
-
-.PHONY: docs-readme
-docs-readme: docs-autogen ## Generate README.md from a markdown docs build
-	poetry run sphinx-build -M markdown docs docs/_build
-	cp docs/_build/markdown/index.md README.md
-
-.PHONY: docs-pages
-docs-pages: docs-autogen ## Generate GH pages docs from an HTML docs build
+.PHONY: docs
+docs: docs ## Generate docs
 	poetry run sphinx-build -M html docs docs/_build
 
 .PHONY: build

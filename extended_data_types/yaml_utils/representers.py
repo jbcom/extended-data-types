@@ -1,11 +1,15 @@
 """This module provides custom representers for YAML serialization.
 
 It includes functions to represent tagged objects, YAML pairs, and strings.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
-from yaml import MappingNode, Node, SafeDumper, ScalarNode
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from yaml import MappingNode, Node, SafeDumper, ScalarNode
 
 from .tag_classes import YamlPairs, YamlTagged
 
@@ -20,7 +24,9 @@ def yaml_represent_tagged(dumper: SafeDumper, data: YamlTagged) -> Node:
     Returns:
         Node: The represented YAML node.
     """
-    assert isinstance(data, YamlTagged), data
+    if not isinstance(data, YamlTagged):
+        message = f"Expected YamlTagged, got {type(data).__name__}"
+        raise TypeError(message)
     node = dumper.represent_data(data.__wrapped__)
     node.tag = data.tag
     return node
@@ -36,9 +42,10 @@ def yaml_represent_pairs(dumper: SafeDumper, data: YamlPairs) -> MappingNode:
     Returns:
         MappingNode: The represented YAML node.
     """
-    assert isinstance(data, YamlPairs), data
-    node = dumper.represent_dict(data)
-    return node
+    if not isinstance(data, YamlPairs):
+        message = f"Expected YamlPairs, got {type(data).__name__}"
+        raise TypeError(message)
+    return dumper.represent_dict(data)
 
 
 def yaml_str_representer(dumper: SafeDumper, data: str) -> ScalarNode:

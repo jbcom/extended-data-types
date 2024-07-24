@@ -3,29 +3,31 @@
 It includes functions to check file extensions, determine encoding types based on
 file extensions, calculate file path depths, and find relative paths to the root
 directory.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 import os
+
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Union
+
 
 # FilePath is a type alias for file path representations.
 FilePath = Union[str, os.PathLike[str]]
 
 
 def match_file_extensions(
-        p: FilePath,
-        allowed_extensions: Optional[List[str]],
-        denied_extensions: Optional[List[str]] = None,
+    p: FilePath,
+    allowed_extensions: list[str] | None = None,
+    denied_extensions: list[str] | None = None,
 ) -> bool:
     """Checks if the file extension matches the allowed or denied extensions.
 
     Args:
         p (FilePath): The file path to check.
-        allowed_extensions (Optional[List[str]]): List of allowed extensions.
-        denied_extensions (Optional[List[str]]): List of denied extensions.
+        allowed_extensions (list[str] | None): List of allowed extensions.
+        denied_extensions (list[str] | None): List of denied extensions.
 
     Returns:
         bool: True if the file extension is allowed and not denied, False otherwise.
@@ -45,12 +47,10 @@ def match_file_extensions(
     else:
         suffix = p.suffix.removeprefix(".")
 
-    if (
-            len(allowed_extensions) > 0 and suffix not in allowed_extensions
-    ) or suffix in denied_extensions:
-        return False
-
-    return True
+    return not (
+        (len(allowed_extensions) > 0 and suffix not in allowed_extensions)
+        or suffix in denied_extensions
+    )
 
 
 def get_encoding_for_file_path(file_path: FilePath) -> str:
@@ -66,7 +66,7 @@ def get_encoding_for_file_path(file_path: FilePath) -> str:
     suffix = file_path.suffix
     if suffix in [".yaml", ".yml"]:
         return "yaml"
-    elif suffix in [".json"]:
+    if suffix in [".json"]:
         return "json"
     return "raw"
 

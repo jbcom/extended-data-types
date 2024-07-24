@@ -2,14 +2,15 @@
 
 It includes functions to manipulate, flatten, and filter dictionaries, and to
 convert keys from camelCase to snake_case.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 from collections import defaultdict
-from typing import Any, Dict, List, Mapping, MutableMapping, Optional, Tuple
+from typing import Any, Mapping, MutableMapping
 
 import inflection
+
 from sortedcontainers import SortedDict
 
 from extended_data_types.export_utils import make_raw_data_export_safe
@@ -26,19 +27,19 @@ def first_non_empty_value_from_map(m: Mapping, *keys: str) -> Any:
         Any: The first non-empty value.
     """
     for key in keys:
-        if key in m and m[key]:
+        if m.get(key):
             return m[key]
     return None
 
 
-def deduplicate_map(m: Mapping) -> Dict[str, Any]:
+def deduplicate_map(m: Mapping) -> dict[str, Any]:
     """Removes duplicate values from a map.
 
     Args:
         m (Mapping): The map to deduplicate.
 
     Returns:
-        Dict[str, Any]: The deduplicated map.
+        dict[str, Any]: The deduplicated map.
     """
     deduplicated_map = make_raw_data_export_safe(m)
 
@@ -64,14 +65,14 @@ def deduplicate_map(m: Mapping) -> Dict[str, Any]:
     return deduplicated_map
 
 
-def all_values_from_map(m: Mapping) -> List[Any]:
+def all_values_from_map(m: Mapping) -> list[Any]:
     """Returns all values from a nested map.
 
     Args:
         m (Mapping): The map to retrieve values from.
 
     Returns:
-        List[Any]: A list of all values.
+        list[Any]: A list of all values.
     """
     values = []
 
@@ -91,8 +92,10 @@ def all_values_from_map(m: Mapping) -> List[Any]:
 
 
 def flatten_map(
-        dictionary: Mapping, parent_key: Optional[str] = "", separator: str = "."
-) -> Dict[str, Any]:
+    dictionary: Mapping,
+    parent_key: str | None = "",
+    separator: str = ".",
+) -> dict[str, Any]:
     """Flattens a nested dictionary into a flat dictionary.
 
     Args:
@@ -101,9 +104,9 @@ def flatten_map(
         separator (str): The string used to separate flattened keys.
 
     Returns:
-        Dict[str, Any]: The flattened dictionary.
+        dict[str, Any]: The flattened dictionary.
     """
-    items: List[Tuple[str, Any]] = []
+    items: list[tuple[str, Any]] = []
     for key, value in dictionary.items():
         new_key = f"{parent_key}{separator}{key}" if parent_key else key
         if isinstance(value, MutableMapping):
@@ -116,15 +119,15 @@ def flatten_map(
     return dict(items)
 
 
-def zipmap(a: List[str], b: List[str]) -> Dict[str, str]:
+def zipmap(a: list[str], b: list[str]) -> dict[str, str]:
     """Creates a dictionary from two lists by zipping them together.
 
     Args:
-        a (List[str]): The first list.
-        b (List[str]): The second list.
+        a (list[str]): The first list.
+        b (list[str]): The second list.
 
     Returns:
-        Dict[str, str]: The resulting dictionary.
+        dict[str, str]: The resulting dictionary.
     """
     zipped = {}
 
@@ -137,26 +140,30 @@ def zipmap(a: List[str], b: List[str]) -> Dict[str, str]:
     return zipped
 
 
-def get_default_dict(use_sorted_dict: bool = False, default_type=dict) -> Any:
+def get_default_dict(
+    use_sorted_dict: bool = False,
+    default_type: type[dict] = dict,
+) -> Any:
     """Returns a default dictionary with nested default dictionaries.
 
     Args:
         use_sorted_dict (bool): Whether to use SortedDict for sorting keys.
-        default_type: The type of the default dictionary.
+        default_type (type[dict]): The type of the default dictionary.
 
     Returns:
         Any: The default dictionary.
     """
 
-    def default_factory():
+    def default_factory() -> Any:
         return SortedDict() if use_sorted_dict else default_type()
 
     return defaultdict(default_factory)
 
 
 def unhump_map(
-        m: Mapping[str, Any], drop_without_prefix: Optional[str] = None
-) -> Dict[str, Any]:
+    m: Mapping[str, Any],
+    drop_without_prefix: str | None = None,
+) -> dict[str, Any]:
     """Converts keys in a dictionary from camelCase to snake_case.
 
     Args:
@@ -164,7 +171,7 @@ def unhump_map(
         drop_without_prefix (Optional[str]): Drop keys without this prefix.
 
     Returns:
-        Dict[str, Any]: The converted dictionary.
+        dict[str, Any]: The converted dictionary.
     """
     unhumped = {}
 
@@ -184,19 +191,19 @@ def unhump_map(
 
 
 def filter_map(
-        m: Optional[Mapping[str, Any]],
-        allowlist: Optional[List[str]] = None,
-        denylist: Optional[List[str]] = None,
-) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    m: Mapping[str, Any] | None,
+    allowlist: list[str] | None = None,
+    denylist: list[str] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any]]:
     """Filters a map based on allowlist and denylist.
 
     Args:
         m (Optional[Mapping[str, Any]]): The map to filter.
-        allowlist (List[str]): The list of allowed keys.
-        denylist (List[str]): The list of denied keys.
+        allowlist (list[str]): The list of allowed keys.
+        denylist (list[str]): The list of denied keys.
 
     Returns:
-        Tuple[Dict[str, Any], Dict[str, Any]]: The filtered and remaining maps.
+        tuple[dict[str, Any], dict[str, Any]]: The filtered and remaining maps.
     """
     if m is None:
         m = {}

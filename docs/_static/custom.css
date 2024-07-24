@@ -1,0 +1,111 @@
+/* custom.css */
+
+/* General settings */
+:root {
+    --primary-color: #3572A5; /* Blue from the logo */
+    --secondary-color: #FFD43B; /* Yellow from the logo */
+    --background-color: #f0f0f0; /* Light background */
+    --text-color: #333; /* Dark text */
+    --link-color: var(--primary-color);
+}
+
+/* Body settings */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+/* Header settings */
+.wy-nav-top {
+    background-color: var(--primary-color);
+}
+
+.wy-nav-top a {
+    color: #fff;
+}
+
+/* Sidebar settings */
+.wy-side-nav-search {
+    background-color: var(--primary-color);
+}
+
+.wy-side-nav-search input {
+    background-color: #fff;
+    color: var(--primary-color);
+}
+
+.wy-menu-vertical .current > a {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.wy-menu-vertical a {
+    color: var(--primary-color);
+}
+
+.wy-menu-vertical li.toctree-l1.current > a,
+.wy-menu-vertical li.toctree-l1 > a:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.wy-menu-vertical li.toctree-l2.current > a,
+.wy-menu-vertical li.toctree-l2 > a:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+/* Footer settings */
+.footer {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.footer a {
+    color: var(--secondary-color);
+}
+
+/* Code blocks */
+.highlight {
+    background-color: #2d2d2d;
+    color: #f8f8f2;
+}
+
+/* Links */
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid var(--primary-color);
+}
+
+th {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+td {
+    background-color: #fff;
+    color: var(--primary-color);
+}
+
+/* Buttons */
+button, input[type="submit"], input[type="reset"], input[type="button"] {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+}
+
+button:hover, input[type="submit"]:hover, input[type="reset"]:hover, input[type="button"]:hover {
+    background-color: var(--secondary-color);
+}

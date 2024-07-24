@@ -1,6 +1,6 @@
 import base64
 
-from extended_data_types.base64_utils import base64_encode
+from extended_data_types.base64_utils import base64_decode, base64_encode
 from extended_data_types.export_utils import wrap_raw_data_for_export
 
 
@@ -78,3 +78,29 @@ def test_base64_encode_empty_bytes_with_wrap():
     assert (
         result == expected_encoded_data
     ), f"Expected {expected_encoded_data}, but got {result}."
+
+
+def test_base64_decode_string():
+    encoded_data = "dGVzdCBkYXRh"
+    expected_decoded_data = "test data"
+    result = base64_decode(encoded_data, unwrap_raw_data=False)
+    assert (
+        result == expected_decoded_data
+    ), f"Expected {expected_decoded_data}, but got {result}."
+
+
+def test_base64_decode_bytes():
+    encoded_data = "dGVzdCBkYXRh"
+    expected_decoded_data = "test data"
+    result = base64_decode(encoded_data, unwrap_raw_data=False)
+    assert (
+        result == expected_decoded_data
+    ), f"Expected {expected_decoded_data}, but got {result}."
+
+
+def test_base64_decode_with_unwrap():
+    raw_data = "test data"
+    wrapped_data = wrap_raw_data_for_export(raw_data)
+    encoded_data = base64.b64encode(wrapped_data.encode("utf-8")).decode("utf-8")
+    result = base64_decode(encoded_data, unwrap_raw_data=True)
+    assert result == raw_data, f"Expected {raw_data}, but got {result}."

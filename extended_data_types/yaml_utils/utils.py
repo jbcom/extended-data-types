@@ -2,9 +2,9 @@
 
 It includes functions to decode YAML strings, encode Python objects to YAML,
 and check if data is a YAML tagged object.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 from typing import Any
 
@@ -24,7 +24,7 @@ def decode_yaml(yaml_data: str) -> Any:
     Returns:
         Any: The decoded Python object.
     """
-    return yaml.load(yaml_data, Loader=PureLoader)
+    return yaml.load(yaml_data, Loader=PureLoader)  # noqa: S506
 
 
 def encode_yaml(raw_data: Any) -> str:

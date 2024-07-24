@@ -2,13 +2,18 @@
 
 It includes functions to get the caller's name, filter methods, and retrieve available
 methods and their docstrings for a class.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 import sys
+
 from inspect import getmembers, ismethod
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING
+
+
+if TYPE_CHECKING:
+    from typing import dict, list, type
 
 
 def get_caller() -> str:
@@ -17,22 +22,22 @@ def get_caller() -> str:
     Returns:
         str: The name of the caller function.
     """
-    return sys._getframe(2).f_code.co_name
+    return sys._getframe(2).f_code.co_name  # noqa: SLF001
 
 
-def filter_methods(methods: List[str]) -> List[str]:
+def filter_methods(methods: list[str]) -> list[str]:
     """Filters out private methods from a list of method names.
 
     Args:
-        methods (List[str]): The list of method names to filter.
+        methods (list[str]): The list of method names to filter.
 
     Returns:
-        List[str]: The filtered list of method names.
+        list[str]: The filtered list of method names.
     """
     return [method for method in methods if not method.startswith("_")]
 
 
-def get_available_methods(cls: Any) -> Dict[str, Optional[str]]:
+def get_available_methods(cls: type) -> dict[str, str | None]:
     """Gets available methods and their docstrings for a class.
 
     An "available method" is a public method that:
@@ -41,20 +46,18 @@ def get_available_methods(cls: Any) -> Dict[str, Optional[str]]:
     - Does not have 'NOPARSE' in its docstring.
 
     Args:
-        cls (Any): The class to inspect.
+        cls (type): The class to inspect.
 
     Returns:
-        Dict[str, Optional[str]]: A dictionary of method names and their docstrings.
+        dict[str, str | None]: A dictionary of method names and their docstrings.
     """
     module_name = cls.__class__.__module__
     methods = getmembers(cls, ismethod)
 
-    unique_methods = {
+    return {
         method_name: method_signature.__doc__
         for method_name, method_signature in methods
         if "__" not in method_name
-           and method_signature.__self__.__class__.__module__ == module_name
-           and "NOPARSE" not in (method_signature.__doc__ or "")
+        and method_signature.__self__.__class__.__module__ == module_name
+        and "NOPARSE" not in (method_signature.__doc__ or "")
     }
-
-    return unique_methods

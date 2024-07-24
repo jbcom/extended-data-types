@@ -11,12 +11,12 @@ from extended_data_types.string_data_type import (
 )
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_key():
     return "key-with*invalid_chars"
 
 
-@pytest.fixture
+@pytest.fixture()
 def sanitized_key():
     return "key_with_invalid_chars"
 
@@ -53,5 +53,5 @@ def test_strtobool():
     assert strtobool("yes") is True
     assert strtobool("no") is False
     assert strtobool("invalid") is None
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match=r"invalid truth value 'invalid'"):
         strtobool("invalid", raise_on_error=True)

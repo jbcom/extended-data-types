@@ -14,6 +14,7 @@ from .representers import (
 from .tag_classes import YamlPairs, YamlTagged
 from .utils import decode_yaml, encode_yaml, is_yaml_data
 
+
 __all__ = [
     "YamlTagged",
     "YamlPairs",

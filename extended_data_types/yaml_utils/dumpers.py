@@ -4,10 +4,11 @@ It includes a custom YAML dumper class that handles special types such as date, 
 and pathlib.Path.
 """  # noqa: E501
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
 import datetime
 import pathlib
+
 from typing import Any
 
 from yaml import SafeDumper
@@ -37,23 +38,26 @@ class PureDumper(SafeDumper):
         self.add_representer(
             datetime.date,
             lambda dumper, data: dumper.represent_scalar(
-                "tag:yaml.org,2002:timestamp", data.isoformat()
+                "tag:yaml.org,2002:timestamp",
+                data.isoformat(),
             ),
         )
         self.add_representer(
             datetime.datetime,
             lambda dumper, data: dumper.represent_scalar(
-                "tag:yaml.org,2002:timestamp", data.isoformat()
+                "tag:yaml.org,2002:timestamp",
+                data.isoformat(),
             ),
         )
         self.add_representer(
             pathlib.Path,
             lambda dumper, data: dumper.represent_scalar(
-                "tag:yaml.org,2002:str", str(data)
+                "tag:yaml.org,2002:str",
+                str(data),
             ),
         )
 
-    def ignore_aliases(self, data: Any) -> bool:
+    def ignore_aliases(self, data: Any) -> bool:  # noqa: ARG002
         """Ignore aliases for the given data.
 
         Args:

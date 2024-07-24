@@ -1,11 +1,11 @@
 """This module provides constructors for custom YAML tags and types.
 
 It includes functions to construct undefined YAML tags and YAML pairs.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
-from typing import Any, Dict, Union
+from typing import Any
 
 from yaml import MappingNode, SafeLoader, ScalarNode, SequenceNode
 
@@ -13,13 +13,14 @@ from .tag_classes import YamlPairs, YamlTagged
 
 
 def yaml_construct_undefined(
-        loader: SafeLoader, node: Union[ScalarNode, SequenceNode, MappingNode]
+    loader: SafeLoader,
+    node: ScalarNode | SequenceNode | MappingNode,
 ) -> YamlTagged:
     """Construct a YAML tagged object for undefined tags.
 
     Args:
         loader (SafeLoader): The YAML loader.
-        node (Union[ScalarNode, SequenceNode, MappingNode]): The YAML node.
+        node (ScalarNode | SequenceNode | MappingNode): The YAML node.
 
     Returns:
         YamlTagged: The constructed YAML tagged object.
@@ -32,13 +33,15 @@ def yaml_construct_undefined(
     elif isinstance(node, MappingNode):
         value = loader.construct_mapping(node)
     else:
-        raise TypeError(f"Unexpected node type: {type(node).__name__}")
+        node_type = type(node).__name__
+        raise TypeError(f"Unexpected node type: {node_type}")  # noqa: TRY003, EM102
     return YamlTagged(node.tag, value)
 
 
 def yaml_construct_pairs(
-        loader: SafeLoader, node: MappingNode
-) -> Union[Dict, YamlPairs]:
+    loader: SafeLoader,
+    node: MappingNode,
+) -> dict | YamlPairs:
     """Construct YAML pairs.
 
     Args:
@@ -46,7 +49,7 @@ def yaml_construct_pairs(
         node (MappingNode): The YAML mapping node.
 
     Returns:
-        Union[Dict, YamlPairs]: The constructed YAML pairs.
+        dict | YamlPairs: The constructed YAML pairs.
     """
     value = loader.construct_pairs(node)
     try:

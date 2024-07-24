@@ -2,7 +2,7 @@
 
 This library provides extended functionality for handling various data types in Python.
 It includes utilities for YAML, JSON, Base64, file paths, strings, lists, maps, and more.
-""" # noqa: E501
+"""  # noqa: E501
 
 from .base64_utils import base64_encode
 from .export_utils import wrap_raw_data_for_export
@@ -58,6 +58,7 @@ from .yaml_utils import (
     yaml_represent_tagged,
     yaml_str_representer,
 )
+
 
 __all__ = [
     "base64_encode",

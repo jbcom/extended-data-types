@@ -1,5 +1,4 @@
 import pytest
-from sortedcontainers import SortedDict
 
 from extended_data_types.map_data_type import (
     all_values_from_map,
@@ -11,9 +10,10 @@ from extended_data_types.map_data_type import (
     unhump_map,
     zipmap,
 )
+from sortedcontainers import SortedDict
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_map():
     return {
         "key1": "value1",
@@ -24,21 +24,21 @@ def test_map():
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def duplicated_map():
     return {
         "key1": ["value1", "value1", "value2"],
-        "key2": {"subkey1": "value1", "subkey2": "value2", "subkey2": "value2"},
+        "key2": {"subkey1": "value1", "subkey2": "value2"},
         "key3": "value3",
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def test_keys():
     return ["key2", "key4", "key1"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def flattened_map():
     return {
         "key1": "value1",
@@ -53,22 +53,22 @@ def flattened_map():
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def a_list():
     return ["a", "b", "c"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def b_list():
     return ["1", "2", "3"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def zipmap_result():
     return {"a": "1", "b": "2", "c": "3"}
 
 
-@pytest.fixture
+@pytest.fixture()
 def camel_case_map():
     return {
         "camelCaseKey": "value1",
@@ -77,7 +77,7 @@ def camel_case_map():
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def snake_case_map():
     return {
         "camel_case_key": "value1",
@@ -85,7 +85,7 @@ def snake_case_map():
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def filter_map_data():
     return {
         "allowed1": "value1",
@@ -95,12 +95,12 @@ def filter_map_data():
     }
 
 
-@pytest.fixture
+@pytest.fixture()
 def allowlist():
     return ["allowed1", "allowed2"]
 
 
-@pytest.fixture
+@pytest.fixture()
 def denylist():
     return ["denied1", "denied2"]
 
@@ -157,7 +157,7 @@ def test_get_default_dict_sorted():
     assert isinstance(result["key"], SortedDict)
 
 
-def test_unhump_map(camel_case_map, snake_case_map):
+def test_unhump_map(camel_case_map):
     result = unhump_map(camel_case_map, drop_without_prefix=None)
     assert result == {
         "camel_case_key": "value1",
@@ -168,7 +168,7 @@ def test_unhump_map(camel_case_map, snake_case_map):
 
 def test_filter_map(filter_map_data, allowlist, denylist):
     filtered, remaining = filter_map(
-        filter_map_data, allowlist=allowlist, denylist=denylist
+        filter_map_data, allowlist=allowlist, denylist=denylist,
     )
     assert filtered == {"allowed1": "value1", "allowed2": "value2"}
     assert remaining == {"denied1": "value3", "denied2": "value4"}

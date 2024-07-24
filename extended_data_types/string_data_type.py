@@ -3,16 +3,18 @@
 It includes functions to sanitize keys, truncate messages, manipulate character
 cases, validate URLs, convert camelCase to TitleCase, and convert string representations
 of truth to boolean values.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
-from typing import Optional, Union
+from typing import TYPE_CHECKING
 
 import inflection
 import validators
 
-from extended_data_types.file_data_type import FilePath
+
+if TYPE_CHECKING:
+    from extended_data_types.file_data_type import FilePath
 
 
 def sanitize_key(key: str, delim: str = "_") -> str:
@@ -26,7 +28,7 @@ def sanitize_key(key: str, delim: str = "_") -> str:
     Returns:
         str: The sanitized key.
     """  # noqa: E501
-    return "".join((x if (x.isalnum() or x == delim) else delim for x in key))
+    return "".join(x if (x.isalnum() or x == delim) else delim for x in key)
 
 
 def truncate(msg: str, max_length: int, ender: str = "...") -> str:
@@ -94,18 +96,16 @@ def titleize_name(name: str) -> str:
     return inflection.titleize(inflection.underscore(name))
 
 
-def strtobool(
-        val: Union[str, bool, None], raise_on_error: bool = False
-) -> Optional[bool]:
+def strtobool(val: str | bool | None, raise_on_error: bool = False) -> bool | None:
     """Converts a string representation of truth to boolean.
 
     Args:
-        val (Union[str, bool, None]): The value to convert.
+        val (str | bool | None): The value to convert.
         raise_on_error (bool, optional): Whether to raise an error on invalid value.
             Defaults to False.
 
     Returns:
-        Optional[bool]: The converted boolean value, or None if invalid and
+        bool | None: The converted boolean value, or None if invalid and
             raise_on_error is False.
     """
     if isinstance(val, bool) or val is None:
@@ -115,10 +115,11 @@ def strtobool(
         val = val.lower()
         if val in ("y", "yes", "t", "true", "on", "1"):
             return True
-        elif val in ("n", "no", "f", "false", "off", "0"):
+        if val in ("n", "no", "f", "false", "off", "0"):
             return False
 
     if raise_on_error:
-        raise ValueError(f"invalid truth value {val!r}")
+        error_msg = f"invalid truth value {val!r}"
+        raise ValueError(error_msg)
 
     return None

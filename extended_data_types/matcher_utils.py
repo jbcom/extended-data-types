@@ -2,18 +2,20 @@
 
 It includes functions to partially match strings and to compare non-empty values
 for equality, handling different data types including strings, mappings, and lists.
-"""  # noqa: E501
+"""
 
-from __future__ import annotations, division, print_function, unicode_literals
+from __future__ import annotations
 
-from typing import Any, Mapping, Optional
+from typing import Any, Mapping
 
 from extended_data_types.json_utils import encode_json
 from extended_data_types.nothing_utils import is_nothing
 
 
 def is_partial_match(
-        a: Optional[str], b: Optional[str], check_prefix_only: bool = False
+    a: str | None,
+    b: str | None,
+    check_prefix_only: bool = False,
 ) -> bool:
     """Checks if two strings partially match.
 

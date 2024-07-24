@@ -4,7 +4,7 @@ from extended_data_types.matcher_utils import is_non_empty_match, is_partial_mat
 
 
 @pytest.mark.parametrize(
-    "a, b, check_prefix_only, expected",
+    ("a", "b", "check_prefix_only", "expected"),
     [
         ("HelloWorld", "helloworld", False, True),
         ("Hello", "hello world", False, True),
@@ -15,11 +15,11 @@ from extended_data_types.matcher_utils import is_non_empty_match, is_partial_mat
     ],
 )
 def test_is_partial_match(a, b, check_prefix_only, expected):
-    assert is_partial_match(a, b, check_prefix_only) == expected
+    assert is_partial_match(a, b, check_prefix_only=check_prefix_only) == expected
 
 
 @pytest.mark.parametrize(
-    "a, b, expected",
+    ("a", "b", "expected"),
     [
         ("Hello", "hello", True),
         ({"key": "value"}, {"key": "value"}, True),
