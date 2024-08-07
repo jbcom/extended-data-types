@@ -55,11 +55,6 @@ tests = [
     "coverage[toml]>=7.6.0",
 ]
 
-dev = [
-    "commitizen>=3.28.0",
-    "python-semantic-release>=9.8.6",
-]
-
 [tool.hatch.version]
 path = "src/extended_data_types/__about__.py"
 
@@ -94,6 +89,15 @@ extra-dependencies = [
 ]
 [tool.hatch.envs.docs.scripts]
 build = "sphinx-build -W -n --jobs auto -b html -d docs/_build/doctrees docs docs/_build/html"
+
+[tool.hatch.envs.release]
+extra-dependencies = [
+    "python-semantic-release>=9.8.6",
+]
+
+[tool.hatch.envs.release.scripts]
+version = "semantic-release version --print"
+version-no-release = "semantic-release version --no-vcs-release --print"
 
 [tool.coverage.run]
 branch = true
@@ -185,16 +189,9 @@ ignore_errors = true
 module = "tests.typing.*"
 ignore_errors = false
 
-[tool.commitizen]
-name = "cz_conventional_commits"
-tag_format = "v$version"
-version_scheme = "pep440"
-version_provider = "poetry"
-update_changelog_on_bump = false
-bump_message = "release $current_version → $new_version [skip-ci]"
-
 [tool.semantic_release]
 assets = []
+build_command = "hatch build"
 build_command_env = []
 commit_message = "release {version} [skip actions]"
 commit_parser = "angular"
@@ -203,10 +200,6 @@ major_on_zero = true
 allow_zero_version = false
 no_git_verify = false
 tag_format = "v{version}"
-
-version_toml = [
-    "pyproject.toml:tool.poetry.version",
-]
 
 version_variables = [
     "docs/conf.py:version",

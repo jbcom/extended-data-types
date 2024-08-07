@@ -1,33 +1,28 @@
 name: Release
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 on:
   push:
     branches: [main]
     tags: ["*"]
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 permissions:
+  attestations: write
+  contents: read
   id-token: write
-  contents: write
 
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
 
-  release:
-    name: Release
+  build:
     runs-on: ubuntu-latest
-    environment: Testing
-    needs:
-      - ci
-
+    needs: ci
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - uses: actions/setup-python@v5
@@ -35,24 +30,55 @@ jobs:
           python-version-file: .python-version
           cache: 'pip'
       - uses: hynek/setup-cached-uv@v2
-      - name: Install Hatch
-        uses: pypa/hatch@install
-      - name: Python Semantic Release
-        id: release
-        uses: python-semantic-release/python-semantic-release@v9.8.6
+      - uses: pypa/hatch@install
+      - name: Generate Release Version
+        id: generate_version
+        run: |
+          set -e
+          output=$(hatch run release:version-no-release)
+          echo "$output"
+          if echo "$output" | grep -q "No release will be made"; then
+            echo "No release will be made. Exiting."
+            exit 0
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: hynek/build-and-inspect-python-package@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build project
-        run: hatch build
-      - name: Publish package distributions to Test PyPI
-        if: steps.release.outputs.released == 'true'
+          attest-build-provenance-github: 'true'
+
+  release-testing:
+    name: Release to test.pypi.org
+    environment: Testing
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download packages built by build-and-inspect-python-package
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+
+      - name: Upload package to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
-      - name: Publish package distributions to GitHub Releases
-        if: steps.release.outputs.released == 'true'
-        uses: python-semantic-release/upload-to-gh-release@v9.8.6
+
+  release-production:
+    name: Release to pypi.org
+    environment: Production
+    if: github.event.action == 'published'
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download packages built by build-and-inspect-python-package
+        uses: actions/download-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.release.outputs.tag }}
+          name: Packages
+          path: dist
+
+      - name: Upload package to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
