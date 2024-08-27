@@ -128,7 +128,7 @@ ignore_missing_imports = true
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.0.1"
+version = "1.0.2"
 version_files = [
     "src/extended_data_types/__init__.py:__version__",
     "docs/conf.py:version",

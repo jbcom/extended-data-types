@@ -6,7 +6,7 @@ It includes utilities for YAML, JSON, Base64, file paths, strings, lists, maps, 
 
 from __future__ import annotations
 
-from .base64_utils import base64_encode
+from .base64_utils import base64_decode, base64_encode
 from .export_utils import wrap_raw_data_for_export
 from .hcl2_utils import decode_hcl2
 from .json_utils import decode_json, encode_json
@@ -51,9 +51,10 @@ from .string_data_type import (
 from .yaml_utils import decode_yaml, encode_yaml, is_yaml_data
 
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 __all__ = [
+    "base64_decode",
     "base64_encode",
     "wrap_raw_data_for_export",
     "decode_hcl2",
