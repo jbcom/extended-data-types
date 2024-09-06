@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of various map (dictionary) operations using the
+"""This module contains test functions for verifying the functionality of various map (dictionary) operations using the
 `extended_data_types` package. It includes fixtures for sample maps and lists, and tests for filtering, flattening,
 deduplicating, and other map manipulations.
 
@@ -48,8 +47,7 @@ from sortedcontainers import SortedDict
 
 @pytest.fixture()
 def test_map() -> dict:
-    """
-    Provides a sample map with nested structures for testing.
+    """Provides a sample map with nested structures for testing.
 
     Returns:
         dict: A sample map.
@@ -65,8 +63,7 @@ def test_map() -> dict:
 
 @pytest.fixture()
 def duplicated_map() -> dict:
-    """
-    Provides a map with duplicate values for testing deduplication.
+    """Provides a map with duplicate values for testing deduplication.
 
     Returns:
         dict: A map with duplicate values.
@@ -80,8 +77,7 @@ def duplicated_map() -> dict:
 
 @pytest.fixture()
 def test_keys() -> list[str]:
-    """
-    Provides a list of keys for testing.
+    """Provides a list of keys for testing.
 
     Returns:
         list[str]: A list of keys.
@@ -91,8 +87,7 @@ def test_keys() -> list[str]:
 
 @pytest.fixture()
 def flattened_map() -> dict:
-    """
-    Provides the expected flat map for testing.
+    """Provides the expected flat map for testing.
 
     Returns:
         dict: The expected flat map.
@@ -112,8 +107,7 @@ def flattened_map() -> dict:
 
 @pytest.fixture()
 def a_list() -> list[str]:
-    """
-    Provides a sample list of strings for testing zipmap.
+    """Provides a sample list of strings for testing zipmap.
 
     Returns:
         list[str]: A sample list of strings.
@@ -123,8 +117,7 @@ def a_list() -> list[str]:
 
 @pytest.fixture()
 def b_list() -> list[str]:
-    """
-    Provides another sample list of strings for testing zipmap.
+    """Provides another sample list of strings for testing zipmap.
 
     Returns:
         list[str]: A sample list of strings.
@@ -134,8 +127,7 @@ def b_list() -> list[str]:
 
 @pytest.fixture()
 def zipmap_result() -> dict:
-    """
-    Provides the expected result of the zipmap operation.
+    """Provides the expected result of the zipmap operation.
 
     Returns:
         dict: The expected result of zipmap.
@@ -145,8 +137,7 @@ def zipmap_result() -> dict:
 
 @pytest.fixture()
 def camel_case_map() -> dict:
-    """
-    Provides a sample map with camelCase keys for testing unhump_map.
+    """Provides a sample map with camelCase keys for testing unhump_map.
 
     Returns:
         dict: A sample map with camelCase keys.
@@ -160,8 +151,7 @@ def camel_case_map() -> dict:
 
 @pytest.fixture()
 def snake_case_map() -> dict:
-    """
-    Provides the expected snake_case map after unhump_map.
+    """Provides the expected snake_case map after unhump_map.
 
     Returns:
         dict: The expected snake_case map.
@@ -174,8 +164,7 @@ def snake_case_map() -> dict:
 
 @pytest.fixture()
 def filter_map_data() -> dict:
-    """
-    Provides a sample map for testing filter_map.
+    """Provides a sample map for testing filter_map.
 
     Returns:
         dict: A sample map for filtering.
@@ -190,8 +179,7 @@ def filter_map_data() -> dict:
 
 @pytest.fixture()
 def allowlist() -> list[str]:
-    """
-    Provides a list of allowed keys for filter_map.
+    """Provides a list of allowed keys for filter_map.
 
     Returns:
         list[str]: A list of allowed keys.
@@ -201,8 +189,7 @@ def allowlist() -> list[str]:
 
 @pytest.fixture()
 def denylist() -> list[str]:
-    """
-    Provides a list of denied keys for filter_map.
+    """Provides a list of denied keys for filter_map.
 
     Returns:
         list[str]: A list of denied keys.
@@ -211,8 +198,7 @@ def denylist() -> list[str]:
 
 
 def test_first_non_empty_value_from_map(test_map: dict, test_keys: list[str]) -> None:
-    """
-    Tests finding the first non-empty value from a map given a list of keys.
+    """Tests finding the first non-empty value from a map given a list of keys.
 
     Args:
         test_map (dict): A sample map provided by the fixture.
@@ -226,8 +212,7 @@ def test_first_non_empty_value_from_map(test_map: dict, test_keys: list[str]) ->
 
 
 def test_deduplicate_map(duplicated_map: dict) -> None:
-    """
-    Tests deduplication of map values.
+    """Tests deduplication of map values.
 
     Args:
         duplicated_map (dict): A map with duplicate values provided by the fixture.
@@ -244,8 +229,7 @@ def test_deduplicate_map(duplicated_map: dict) -> None:
 
 
 def test_all_values_from_map(test_map: dict) -> None:
-    """
-    Tests retrieving all values from a map.
+    """Tests retrieving all values from a map.
 
     Args:
         test_map (dict): A sample map provided by the fixture.
@@ -268,8 +252,7 @@ def test_all_values_from_map(test_map: dict) -> None:
 
 
 def test_flatten_map(test_map: dict, flattened_map: dict) -> None:
-    """
-    Tests flattening of a nested map.
+    """Tests flattening of a nested map.
 
     Args:
         test_map (dict): A sample nested map provided by the fixture.
@@ -283,8 +266,7 @@ def test_flatten_map(test_map: dict, flattened_map: dict) -> None:
 
 
 def test_zipmap(a_list: list[str], b_list: list[str], zipmap_result: dict) -> None:
-    """
-    Tests the zipmap operation for combining two lists into a map.
+    """Tests the zipmap operation for combining two lists into a map.
 
     Args:
         a_list (list[str]): The first list of strings provided by the fixture.
@@ -299,8 +281,7 @@ def test_zipmap(a_list: list[str], b_list: list[str], zipmap_result: dict) -> No
 
 
 def test_get_default_dict() -> None:
-    """
-    Tests creation of a default dictionary.
+    """Tests creation of a default dictionary.
 
     Asserts:
         The default dictionary can have nested keys assigned.
@@ -311,8 +292,7 @@ def test_get_default_dict() -> None:
 
 
 def test_get_default_dict_sorted() -> None:
-    """
-    Tests creation of a sorted default dictionary.
+    """Tests creation of a sorted default dictionary.
 
     Asserts:
         The sorted default dictionary can have nested keys assigned and is an instance of SortedDict.
@@ -324,8 +304,7 @@ def test_get_default_dict_sorted() -> None:
 
 
 def test_unhump_map(camel_case_map: dict) -> None:
-    """
-    Tests converting camelCase keys to snake_case.
+    """Tests converting camelCase keys to snake_case.
 
     Args:
         camel_case_map (dict): A map with camelCase keys provided by the fixture.
@@ -344,8 +323,7 @@ def test_unhump_map(camel_case_map: dict) -> None:
 def test_filter_map(
     filter_map_data: dict, allowlist: list[str], denylist: list[str]
 ) -> None:
-    """
-    Tests filtering a map using allowlist and denylist.
+    """Tests filtering a map using allowlist and denylist.
 
     Args:
         filter_map_data (dict): A sample map for filtering provided by the fixture.

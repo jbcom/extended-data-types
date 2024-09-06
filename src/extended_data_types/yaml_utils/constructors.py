@@ -34,7 +34,7 @@ def yaml_construct_undefined(
         value = loader.construct_mapping(node)
     else:
         node_type = type(node).__name__
-        raise TypeError(f"Unexpected node type: {node_type}")  # noqa: TRY003, EM102
+        raise TypeError(f"Unexpected node type: {node_type}")
     return YamlTagged(node.tag, value)
 
 

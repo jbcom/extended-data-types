@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of string and collection matching utilities using
+"""This module contains test functions for verifying the functionality of string and collection matching utilities using
 the `extended_data_types` package. It includes parameterized tests for partial matching, non-empty matching of
 various types, and matching types to their primitive equivalents.
 
@@ -30,8 +29,7 @@ from extended_data_types.matcher_utils import is_non_empty_match, is_partial_mat
 def test_is_partial_match(
     a: str, b: str, check_prefix_only: bool, expected: bool
 ) -> None:
-    """
-    Tests partial matching of strings with optional prefix check.
+    """Tests partial matching of strings with optional prefix check.
 
     Args:
         a (str): The first string to compare.
@@ -59,8 +57,7 @@ def test_is_partial_match(
     ],
 )
 def test_is_non_empty_match(a: any, b: any, expected: bool) -> None:
-    """
-    Tests non-empty matching of various types including strings, dictionaries, and lists.
+    """Tests non-empty matching of various types including strings, dictionaries, and lists.
 
     Args:
         a (any): The first item to compare.

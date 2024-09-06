@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of HCL2 encoding and decoding using the
+"""This module contains test functions for verifying the functionality of HCL2 encoding and decoding using the
 `extended_data_types` package. It includes fixtures for HCL2 data and expected output, and tests for decoding and
 encoding HCL2 data.
 
@@ -23,8 +22,7 @@ from extended_data_types.hcl2_utils import decode_hcl2, encode_hcl2
 
 @pytest.fixture()
 def hcl2_data() -> str:
-    """
-    Provides a sample HCL2 string for testing.
+    """Provides a sample HCL2 string for testing.
 
     Returns:
         str: A sample HCL2 string.
@@ -44,8 +42,7 @@ def hcl2_data() -> str:
 
 @pytest.fixture()
 def expected_output() -> dict:
-    """
-    Provides the expected decoded output for the sample HCL2 string.
+    """Provides the expected decoded output for the sample HCL2 string.
 
     Returns:
         dict: The expected decoded output.
@@ -66,8 +63,7 @@ def expected_output() -> dict:
 
 
 def test_decode_hcl2_valid(hcl2_data: str, expected_output: dict) -> None:
-    """
-    Tests decoding of valid HCL2 data.
+    """Tests decoding of valid HCL2 data.
 
     Args:
         hcl2_data (str): A sample HCL2 string provided by the fixture.
@@ -81,8 +77,7 @@ def test_decode_hcl2_valid(hcl2_data: str, expected_output: dict) -> None:
 
 
 def test_decode_hcl2_empty() -> None:
-    """
-    Tests decoding of empty HCL2 data.
+    """Tests decoding of empty HCL2 data.
 
     Asserts:
         The result of decode_hcl2 matches an empty dictionary.
@@ -94,8 +89,7 @@ def test_decode_hcl2_empty() -> None:
 
 
 def test_decode_hcl2_invalid() -> None:
-    """
-    Tests decoding of invalid HCL2 data.
+    """Tests decoding of invalid HCL2 data.
 
     Asserts:
         A ValueError is raised with an appropriate error message.
@@ -106,8 +100,7 @@ def test_decode_hcl2_invalid() -> None:
 
 
 def test_encode_hcl2() -> None:
-    """
-    Tests encoding of data to HCL2 format.
+    """Tests encoding of data to HCL2 format.
 
     Asserts:
         The result of encode_hcl2 matches the expected HCL2 string.

@@ -3,7 +3,7 @@ import os
 project = "Extended Data Types"
 author = "Jon Bogaty"
 copyright = f"2024, {author}"
-version = "1.0.2"
+version = "2.0.0"
 
 extensions = [
     "autodoc2",
@@ -51,6 +51,7 @@ nitpick_ignore = [
     ("py:obj", "wrapt.ObjectProxy"),
     ("py:obj", "yaml.SafeDumper"),
     ("py:obj", "yaml.SafeLoader"),
+    ("py:obj", "orjson"),
 ]
 
 nitpick_ignore_regex = [
@@ -59,6 +60,7 @@ nitpick_ignore_regex = [
     ("py:class", r"yaml\..*\.Safe.*"),
     ("py:obj", r"extended_data_types\.yaml_utils\..*\.Pure.*"),
     ("py:obj", r"extended_data_types\.yaml_utils\.tag_classes\..*.__init__"),
+    ("py:obj", r"orjson"),
 ]
 
 intersphinx_mapping = {

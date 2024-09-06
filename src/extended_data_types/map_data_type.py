@@ -7,13 +7,14 @@ convert keys from camelCase to snake_case.
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Any, Mapping, MutableMapping
+from collections.abc import Mapping, MutableMapping
+from typing import Any
 
 import inflection
 
 from sortedcontainers import SortedDict
 
-from .export_utils import make_raw_data_export_safe
+from .type_utils import convert_special_types
 
 
 def first_non_empty_value_from_map(m: Mapping[str, Any], *keys: str) -> Any:
@@ -41,7 +42,7 @@ def deduplicate_map(m: Mapping[str, Any]) -> dict[str, Any]:
     Returns:
         dict[str, Any]: The deduplicated map.
     """
-    deduplicated_map: dict[str, Any] = make_raw_data_export_safe(m)
+    deduplicated_map: dict[str, Any] = convert_special_types(m)
 
     for k, v in m.items():
         if isinstance(v, list):

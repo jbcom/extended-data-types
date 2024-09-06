@@ -9,6 +9,8 @@ from typing import Any
 
 import tomlkit
 
+from .type_utils import convert_special_types
+
 
 def decode_toml(toml_data: str) -> Any:
     """Decodes a TOML string into a Python object using tomlkit.
@@ -17,7 +19,7 @@ def decode_toml(toml_data: str) -> Any:
         toml_data (str): The TOML string to decode.
 
     Returns:
-        Any: The decoded Python object.
+        Any: The decoded Python object with any special types processed.
     """
     return tomlkit.parse(toml_data)
 
@@ -31,4 +33,6 @@ def encode_toml(raw_data: Any) -> str:
     Returns:
         str: The encoded TOML string.
     """
-    return tomlkit.dumps(raw_data)
+    # Convert unsupported types to simpler forms before encoding
+    converted_data = convert_special_types(raw_data)
+    return tomlkit.dumps(converted_data)

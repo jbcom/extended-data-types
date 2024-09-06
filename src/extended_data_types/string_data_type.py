@@ -7,8 +7,9 @@ of truth to boolean values.
 
 from __future__ import annotations
 
+from urllib.parse import urlparse
+
 import inflection
-import validators
 
 from .stack_utils import current_python_version_is_at_least
 
@@ -67,15 +68,16 @@ def upper_first_char(inp: str) -> str:
 
 
 def is_url(url: str) -> bool:
-    """Checks if the given string is a valid URL.
+    """Checks if the given string is a valid URL using urlparse.
 
     Args:
         url (str): The string to check.
 
     Returns:
-        bool: True if the file path is a valid URL, False otherwise.
+        bool: True if the string is a valid URL, False otherwise.
     """
-    return validators.url(url.strip()) is True
+    parsed = urlparse(url.strip())
+    return all([parsed.scheme, parsed.netloc])
 
 
 def titleize_name(name: str) -> str:
@@ -88,33 +90,6 @@ def titleize_name(name: str) -> str:
         str: The TitleCase name.
     """
     return inflection.titleize(inflection.underscore(name))
-
-
-def strtobool(val: str | bool | None, raise_on_error: bool = False) -> bool | None:
-    """Converts a string representation of truth to boolean.
-
-    Args:
-        val (str | bool | None): The value to convert.
-        raise_on_error (bool): Whether to raise an error on invalid value. Defaults to False.
-
-    Returns:
-        bool | None: The converted boolean value, or None if invalid and raise_on_error is False.
-    """
-    if isinstance(val, bool) or val is None:
-        return val
-
-    if isinstance(val, str):
-        val = val.lower()
-        if val in ("y", "yes", "t", "true", "on", "1"):
-            return True
-        if val in ("n", "no", "f", "false", "off", "0"):
-            return False
-
-    if raise_on_error:
-        error_msg = f"invalid truth value {val!r}"
-        raise ValueError(error_msg)
-
-    return None
 
 
 def removeprefix(string: str, prefix: str) -> str:

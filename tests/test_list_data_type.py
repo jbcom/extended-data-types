@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of list operations using the
+"""This module contains test functions for verifying the functionality of list operations using the
 `extended_data_types` package. It includes fixtures for nested lists, flat lists, and test lists with allowlists and
 denylists, and tests for flattening and filtering lists.
 
@@ -28,8 +27,7 @@ from extended_data_types.list_data_type import filter_list, flatten_list
 
 @pytest.fixture()
 def nested_list() -> list[list[int]]:
-    """
-    Provides a nested list for testing.
+    """Provides a nested list for testing.
 
     Returns:
         list[list[int]]: A nested list of integers.
@@ -39,8 +37,7 @@ def nested_list() -> list[list[int]]:
 
 @pytest.fixture()
 def flat_list() -> list[int]:
-    """
-    Provides the expected flat list for testing.
+    """Provides the expected flat list for testing.
 
     Returns:
         list[int]: A flat list of integers.
@@ -50,8 +47,7 @@ def flat_list() -> list[int]:
 
 @pytest.fixture()
 def test_list() -> list[str]:
-    """
-    Provides a sample list of strings for testing.
+    """Provides a sample list of strings for testing.
 
     Returns:
         list[str]: A sample list of strings.
@@ -61,8 +57,7 @@ def test_list() -> list[str]:
 
 @pytest.fixture()
 def allowlist() -> list[str]:
-    """
-    Provides a list of allowed items for filtering.
+    """Provides a list of allowed items for filtering.
 
     Returns:
         list[str]: A list of allowed items.
@@ -72,8 +67,7 @@ def allowlist() -> list[str]:
 
 @pytest.fixture()
 def denylist() -> list[str]:
-    """
-    Provides a list of denied items for filtering.
+    """Provides a list of denied items for filtering.
 
     Returns:
         list[str]: A list of denied items.
@@ -83,8 +77,7 @@ def denylist() -> list[str]:
 
 @pytest.fixture()
 def allowlist_and_denylist() -> dict[str, list[str]]:
-    """
-    Provides both allowlist and denylist for combined filtering.
+    """Provides both allowlist and denylist for combined filtering.
 
     Returns:
         dict[str, list[str]]: A dictionary containing both allowlist and denylist.
@@ -93,8 +86,7 @@ def allowlist_and_denylist() -> dict[str, list[str]]:
 
 
 def test_flatten_list(nested_list: list[list[int]], flat_list: list[int]) -> None:
-    """
-    Tests flattening of a nested list.
+    """Tests flattening of a nested list.
 
     Args:
         nested_list (list[list[int]]): A nested list provided by the fixture.
@@ -108,8 +100,7 @@ def test_flatten_list(nested_list: list[list[int]], flat_list: list[int]) -> Non
 
 
 def test_filter_list_allowlist(test_list: list[str], allowlist: list[str]) -> None:
-    """
-    Tests filtering a list with an allowlist.
+    """Tests filtering a list with an allowlist.
 
     Args:
         test_list (list[str]): A sample list of strings provided by the fixture.
@@ -123,8 +114,7 @@ def test_filter_list_allowlist(test_list: list[str], allowlist: list[str]) -> No
 
 
 def test_filter_list_denylist(test_list: list[str], denylist: list[str]) -> None:
-    """
-    Tests filtering a list with a denylist.
+    """Tests filtering a list with a denylist.
 
     Args:
         test_list (list[str]): A sample list of strings provided by the fixture.
@@ -140,8 +130,7 @@ def test_filter_list_denylist(test_list: list[str], denylist: list[str]) -> None
 def test_filter_list_allowlist_and_denylist(
     test_list: list[str], allowlist_and_denylist: dict[str, list[str]]
 ) -> None:
-    """
-    Tests filtering a list with both allowlist and denylist.
+    """Tests filtering a list with both allowlist and denylist.
 
     Args:
         test_list (list[str]): A sample list of strings provided by the fixture.
@@ -159,8 +148,7 @@ def test_filter_list_allowlist_and_denylist(
 
 
 def test_filter_list_none_input() -> None:
-    """
-    Tests filtering with None as input.
+    """Tests filtering with None as input.
 
     Asserts:
         The result of filter_list with None input is an empty list.

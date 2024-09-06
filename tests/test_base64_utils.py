@@ -1,5 +1,4 @@
-"""
-This module contains test functions for encoding and decoding Base64 data using the utility functions from the
+"""This module contains test functions for encoding and decoding Base64 data using the utility functions from the
 `extended_data_types` package. The tests cover various scenarios, including encoding and decoding strings and bytes,
 with and without additional wrapping of the raw data.
 
@@ -26,8 +25,7 @@ from extended_data_types.export_utils import wrap_raw_data_for_export
 
 
 def test_base64_encode_string() -> None:
-    """
-    Tests Base64 encoding of a standard string.
+    """Tests Base64 encoding of a standard string.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string.
@@ -41,8 +39,7 @@ def test_base64_encode_string() -> None:
 
 
 def test_base64_encode_bytes() -> None:
-    """
-    Tests Base64 encoding of bytes data.
+    """Tests Base64 encoding of bytes data.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string.
@@ -56,8 +53,7 @@ def test_base64_encode_bytes() -> None:
 
 
 def test_base64_encode_with_wrap() -> None:
-    """
-    Tests Base64 encoding of a string with wrapping.
+    """Tests Base64 encoding of a string with wrapping.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string with wrapping applied.
@@ -72,8 +68,7 @@ def test_base64_encode_with_wrap() -> None:
 
 
 def test_base64_encode_with_bytes_and_wrap() -> None:
-    """
-    Tests Base64 encoding of bytes data with wrapping.
+    """Tests Base64 encoding of bytes data with wrapping.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string with wrapping applied.
@@ -88,8 +83,7 @@ def test_base64_encode_with_bytes_and_wrap() -> None:
 
 
 def test_base64_encode_empty_string() -> None:
-    """
-    Tests Base64 encoding of an empty string.
+    """Tests Base64 encoding of an empty string.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string for an empty input.
@@ -103,8 +97,7 @@ def test_base64_encode_empty_string() -> None:
 
 
 def test_base64_encode_empty_bytes() -> None:
-    """
-    Tests Base64 encoding of empty bytes data.
+    """Tests Base64 encoding of empty bytes data.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string for empty bytes input.
@@ -118,8 +111,7 @@ def test_base64_encode_empty_bytes() -> None:
 
 
 def test_base64_encode_empty_string_with_wrap() -> None:
-    """
-    Tests Base64 encoding of an empty string with wrapping.
+    """Tests Base64 encoding of an empty string with wrapping.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string for an empty input with wrapping.
@@ -134,8 +126,7 @@ def test_base64_encode_empty_string_with_wrap() -> None:
 
 
 def test_base64_encode_empty_bytes_with_wrap() -> None:
-    """
-    Tests Base64 encoding of empty bytes data with wrapping.
+    """Tests Base64 encoding of empty bytes data with wrapping.
 
     Asserts:
         The result of base64_encode matches the expected Base64 encoded string for empty bytes input with wrapping.
@@ -150,8 +141,7 @@ def test_base64_encode_empty_bytes_with_wrap() -> None:
 
 
 def test_base64_decode_string() -> None:
-    """
-    Tests Base64 decoding of a standard encoded string.
+    """Tests Base64 decoding of a standard encoded string.
 
     Asserts:
         The result of base64_decode matches the expected decoded string.
@@ -165,8 +155,7 @@ def test_base64_decode_string() -> None:
 
 
 def test_base64_decode_bytes() -> None:
-    """
-    Tests Base64 decoding of bytes data.
+    """Tests Base64 decoding of bytes data.
 
     Asserts:
         The result of base64_decode matches the expected decoded string.
@@ -180,8 +169,7 @@ def test_base64_decode_bytes() -> None:
 
 
 def test_base64_decode_with_unwrap() -> None:
-    """
-    Tests Base64 decoding with unwrapping.
+    """Tests Base64 decoding with unwrapping.
 
     Asserts:
         The result of base64_decode matches the expected decoded string with unwrapping applied.

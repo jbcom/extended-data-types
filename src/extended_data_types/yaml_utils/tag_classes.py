@@ -5,7 +5,7 @@ It includes a wrapper class for YAML tagged objects and a class to represent YAM
 
 from __future__ import annotations
 
-from typing import Any, List
+from typing import Any
 
 import wrapt
 
@@ -41,7 +41,7 @@ class YamlTagged(wrapt.ObjectProxy):  # type: ignore[misc]
         return self._self_tag
 
 
-class YamlPairs(List[Any]):
+class YamlPairs(list[Any]):
     """Class to represent YAML pairs."""
 
     def __repr__(self) -> str:

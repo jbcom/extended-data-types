@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of wrapping raw YAML data for export using the
+"""This module contains test functions for verifying the functionality of wrapping raw YAML data for export using the
 `extended_data_types` package. It includes fixtures for simple and complex YAML data and tests for ensuring the proper
 encoding and wrapping of this data.
 
@@ -22,8 +21,7 @@ from extended_data_types.yaml_utils import decode_yaml
 
 @pytest.fixture()
 def simple_yaml_fixture() -> str:
-    """
-    Provides a simple YAML string for testing.
+    """Provides a simple YAML string for testing.
 
     Returns:
         str: A simple YAML string.
@@ -33,8 +31,7 @@ def simple_yaml_fixture() -> str:
 
 @pytest.fixture()
 def complex_yaml_fixture() -> str:
-    """
-    Provides a complex YAML string representing an AWS CloudFormation template for testing.
+    """Provides a complex YAML string representing an AWS CloudFormation template for testing.
 
     Returns:
         str: A complex YAML string.
@@ -57,8 +54,7 @@ Outputs:
 
 
 def test_wrap_raw_data_for_export_yaml(simple_yaml_fixture: str) -> None:
-    """
-    Tests wrapping and encoding of simple YAML data.
+    """Tests wrapping and encoding of simple YAML data.
 
     Args:
         simple_yaml_fixture (str): A simple YAML string provided by the fixture.
@@ -75,8 +71,7 @@ def test_wrap_raw_data_for_export_yaml(simple_yaml_fixture: str) -> None:
 
 
 def test_wrap_raw_data_for_export_yaml_complex(complex_yaml_fixture: str) -> None:
-    """
-    Tests wrapping and encoding of complex YAML data.
+    """Tests wrapping and encoding of complex YAML data.
 
     Args:
         complex_yaml_fixture (str): A complex YAML string provided by the fixture.

@@ -43,7 +43,6 @@ from .string_data_type import (
     is_url,
     lower_first_char,
     sanitize_key,
-    strtobool,
     titleize_name,
     truncate,
     upper_first_char,
@@ -52,7 +51,7 @@ from .toml_utils import decode_toml, encode_toml
 from .yaml_utils import decode_yaml, encode_yaml, is_yaml_data
 
 
-__version__ = "1.0.2"
+__version__ = "2.0.0"
 
 __all__ = [
     "base64_decode",

@@ -6,7 +6,8 @@ for equality, handling different data types including strings, mappings, and lis
 
 from __future__ import annotations
 
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 from .json_utils import encode_json
 from .state_utils import is_nothing
@@ -30,12 +31,15 @@ def is_partial_match(
     if is_nothing(a) or is_nothing(b):
         return False
 
-    a = a.casefold() if a is not None else ""
-    b = b.casefold() if b is not None else ""
+    # Convert strings to lowercase for case-insensitive comparison
+    a = a.casefold() if a else ""
+    b = b.casefold() if b else ""
 
+    # Check if one string is a prefix of the other
     if check_prefix_only:
         return a.startswith(b) or b.startswith(a)
 
+    # Check if one string is contained within the other
     return a in b or b in a
 
 
@@ -52,17 +56,26 @@ def is_non_empty_match(a: Any, b: Any) -> bool:
     if is_nothing(a) or is_nothing(b):
         return False
 
+    # Ensure both values are of the same type
     if not isinstance(a, type(b)):
         return False
 
+    # Handle string comparisons case-insensitively
     if isinstance(a, str):
         a = a.casefold()
         b = b.casefold()
+    # Handle mapping types by encoding to JSON with sorted keys
     elif isinstance(a, Mapping):
         a = encode_json(a, sort_keys=True)
         b = encode_json(b, sort_keys=True)
-    elif isinstance(a, list):
-        a.sort()
-        b.sort()
+    # Handle lists by sorting, ensuring types within lists are comparable
+    elif isinstance(a, list) and isinstance(b, list):
+        try:
+            a.sort()
+            b.sort()
+        except TypeError:
+            # If elements are not comparable, return False
+            return False
 
-    return bool(a == b)
+    # Return comparison result
+    return a == b

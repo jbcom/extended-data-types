@@ -1,3 +1,22 @@
+"""Test Suite for State Utilities.
+
+This module contains tests for the `state_utils` functions from the `extended_data_types` package.
+These functions are used to evaluate whether certain values or collections of values are considered
+"nothing" (i.e., empty, None, or containing no meaningful data), and to extract non-empty values
+from various inputs.
+
+Functions Tested:
+    - is_nothing: Determines if a single value is considered "nothing".
+    - are_nothing: Checks if all values in a set of inputs are "nothing".
+    - all_non_empty: Retrieves all non-empty elements from a collection of inputs.
+    - first_non_empty: Finds the first non-empty value from a set of inputs.
+    - any_non_empty: Retrieves any non-empty values from a mapping given a set of keys.
+    - yield_non_empty: Yields non-empty values from a mapping.
+
+Each test function provides specific scenarios to ensure the robustness and correctness of the
+`state_utils` functions under various conditions.
+"""
+
 from __future__ import annotations
 
 from typing import Any
@@ -29,8 +48,7 @@ from extended_data_types.state_utils import (
     ],
 )
 def test_is_nothing(value: Any, expected: bool) -> None:
-    """
-    Tests determining if a value is considered "nothing".
+    """Tests determining if a value is considered "nothing".
 
     Args:
         value (Any): The value to check.
@@ -54,8 +72,7 @@ def test_is_nothing(value: Any, expected: bool) -> None:
 def test_are_nothing(
     values: tuple[Any, ...], kwargs: dict[str, Any], expected: bool
 ) -> None:
-    """
-    Tests determining if all values in a set of inputs are "nothing".
+    """Tests determining if all values in a set of inputs are "nothing".
 
     Args:
         values (tuple): A tuple of values to check.
@@ -95,8 +112,7 @@ def test_are_nothing(
     ],
 )
 def test_all_non_empty(args, kwargs, expected):
-    """
-    Tests the all_non_empty function for various input scenarios.
+    """Tests the all_non_empty function for various input scenarios.
 
     Args:
         args (tuple): Positional arguments to be passed to all_non_empty.
@@ -132,8 +148,7 @@ def test_all_non_empty(args, kwargs, expected):
     ],
 )
 def test_first_non_empty(values: tuple[Any, ...], expected: Any) -> None:
-    """
-    Tests retrieving the first non-empty value from a set of inputs.
+    """Tests retrieving the first non-empty value from a set of inputs.
 
     Args:
         values (tuple): A tuple of values to check.
@@ -156,8 +171,7 @@ def test_first_non_empty(values: tuple[Any, ...], expected: Any) -> None:
 def test_any_non_empty(
     mapping: dict[str, Any], keys: tuple[str, ...], expected: dict[str, Any]
 ) -> None:
-    """
-    Tests retrieving any non-empty values from a mapping given a set of keys.
+    """Tests retrieving any non-empty values from a mapping given a set of keys.
 
     Args:
         mapping (dict): The mapping to check.
@@ -171,8 +185,7 @@ def test_any_non_empty(
 
 
 def test_yield_non_empty() -> None:
-    """
-    Tests yielding non-empty values from a mapping given a set of keys.
+    """Tests yielding non-empty values from a mapping given a set of keys.
 
     Asserts:
         The result of yield_non_empty matches the expected list of non-empty mappings.

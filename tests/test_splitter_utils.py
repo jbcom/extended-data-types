@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of utility functions
+"""This module contains test functions for verifying the functionality of utility functions
 in `splitter_utils` for splitting lists and dictionaries by the type of their elements.
 
 Functions:
@@ -38,8 +37,7 @@ from extended_data_types.splitter_utils import split_dict_by_type, split_list_by
 def test_split_list_by_type(
     input_list: list[Any], expected_output: defaultdict[type, list[Any]]
 ) -> None:
-    """
-    Tests splitting a list by the type of its items.
+    """Tests splitting a list by the type of its items.
 
     Args:
         input_list (List[Any]): The list to split.
@@ -53,8 +51,7 @@ def test_split_list_by_type(
 
 
 def test_split_list_by_type_empty() -> None:
-    """
-    Tests splitting an empty list.
+    """Tests splitting an empty list.
 
     Asserts:
         The result of split_list_by_type is an empty defaultdict.
@@ -93,8 +90,7 @@ def test_split_list_by_type_empty() -> None:
 def test_split_dict_by_type(
     input_dict: dict[Any, Any], expected_output: defaultdict[type, dict[Any, Any]]
 ) -> None:
-    """
-    Tests splitting a dictionary by the type of its values.
+    """Tests splitting a dictionary by the type of its values.
 
     Args:
         input_dict (Dict[Any, Any]): The dictionary to split.
@@ -108,8 +104,7 @@ def test_split_dict_by_type(
 
 
 def test_split_dict_by_type_empty() -> None:
-    """
-    Tests splitting an empty dictionary.
+    """Tests splitting an empty dictionary.
 
     Asserts:
         The result of split_dict_by_type is an empty defaultdict.

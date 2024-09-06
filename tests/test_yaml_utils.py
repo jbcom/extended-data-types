@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of YAML encoding and decoding using the
+"""This module contains test functions for verifying the functionality of YAML encoding and decoding using the
 `extended_data_types` package. It includes fixtures for simple and complex YAML data, and tests for encoding,
 decoding, and handling custom YAML tags and pairs.
 
@@ -32,8 +31,7 @@ CUSTOM_TAG_VALUE = 12345
 
 @pytest.fixture()
 def simple_yaml_fixture() -> str:
-    """
-    Provides a simple YAML string for testing.
+    """Provides a simple YAML string for testing.
 
     Returns:
         str: A simple YAML string.
@@ -43,8 +41,7 @@ def simple_yaml_fixture() -> str:
 
 @pytest.fixture()
 def complex_yaml_fixture() -> str:
-    """
-    Provides a complex YAML string representing an AWS CloudFormation template for testing.
+    """Provides a complex YAML string representing an AWS CloudFormation template for testing.
 
     Returns:
         str: A complex YAML string.
@@ -67,8 +64,7 @@ Outputs:
 
 
 def test_encode_yaml(simple_yaml_fixture: str) -> None:
-    """
-    Tests encoding of YAML data to string format.
+    """Tests encoding of YAML data to string format.
 
     Args:
         simple_yaml_fixture (str): A simple YAML string provided by the fixture.
@@ -84,8 +80,7 @@ def test_encode_yaml(simple_yaml_fixture: str) -> None:
 
 
 def test_yaml_construct_undefined() -> None:
-    """
-    Tests decoding of YAML data with a custom tag.
+    """Tests decoding of YAML data with a custom tag.
 
     Asserts:
         The decoded data is an instance of YamlTagged with the expected tag and values.
@@ -99,8 +94,7 @@ def test_yaml_construct_undefined() -> None:
 
 
 def test_yaml_represent_tagged() -> None:
-    """
-    Tests encoding of YamlTagged data to string format.
+    """Tests encoding of YamlTagged data to string format.
 
     Asserts:
         The encoded string contains the custom tag and the expected key-value pairs.
@@ -113,8 +107,7 @@ def test_yaml_represent_tagged() -> None:
 
 
 def test_yaml_pairs_representation() -> None:
-    """
-    Tests encoding of YamlPairs data to string format.
+    """Tests encoding of YamlPairs data to string format.
 
     Asserts:
         The encoded string contains the expected key-value pairs.
@@ -126,8 +119,7 @@ def test_yaml_pairs_representation() -> None:
 
 
 def test_decode_and_encode_complex_yaml(complex_yaml_fixture: str) -> None:
-    """
-    Tests decoding and encoding of complex YAML data.
+    """Tests decoding and encoding of complex YAML data.
 
     Args:
         complex_yaml_fixture (str): A complex YAML string provided by the fixture.

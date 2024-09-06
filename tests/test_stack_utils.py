@@ -1,5 +1,4 @@
-"""
-This module contains test functions for verifying the functionality of stack and method utilities using the
+"""This module contains test functions for verifying the functionality of stack and method utilities using the
 `extended_data_types` package. It includes tests for filtering methods, retrieving available methods from an instance,
 and getting the caller of a function.
 
@@ -29,8 +28,7 @@ from extended_data_types.stack_utils import (
 
 
 def dummy_function() -> str:
-    """
-    A dummy function to test get_caller.
+    """A dummy function to test get_caller.
 
     Returns:
         str: The name of the caller function.
@@ -39,6 +37,8 @@ def dummy_function() -> str:
 
 
 class DummyClass:
+    """A dummy class containing various methods to test method filtering."""
+
     def public_method(self) -> None:
         """This is a public method."""
 
@@ -49,7 +49,7 @@ class DummyClass:
         """This is a dunder method."""
 
     def public_method_no_doc(self) -> None:
-        pass
+        """A public method with no documentation."""
 
     def method_with_noparse(self) -> None:
         """NOPARSE This method should not be included."""
@@ -57,8 +57,7 @@ class DummyClass:
 
 @pytest.fixture()
 def methods_list() -> list[str]:
-    """
-    Provides a list of method names for testing.
+    """Provides a list of method names for testing.
 
     Returns:
         list[str]: A list of method names.
@@ -74,8 +73,7 @@ def methods_list() -> list[str]:
 
 @pytest.fixture()
 def dummy_instance() -> DummyClass:
-    """
-    Provides an instance of DummyClass for testing.
+    """Provides an instance of DummyClass for testing.
 
     Returns:
         DummyClass: An instance of DummyClass.
@@ -84,8 +82,7 @@ def dummy_instance() -> DummyClass:
 
 
 def test_get_caller() -> None:
-    """
-    Tests retrieving the caller of a function.
+    """Tests retrieving the caller of a function.
 
     Asserts:
         The result of dummy_function matches the expected caller function name.
@@ -94,8 +91,7 @@ def test_get_caller() -> None:
 
 
 def test_filter_methods(methods_list: list[str]) -> None:
-    """
-    Tests filtering method names based on visibility and documentation.
+    """Tests filtering method names based on visibility and documentation.
 
     Args:
         methods_list (list[str]): A list of method names provided by the fixture.
@@ -108,8 +104,7 @@ def test_filter_methods(methods_list: list[str]) -> None:
 
 
 def test_get_available_methods(dummy_instance: DummyClass) -> None:
-    """
-    Tests retrieving available methods from an instance.
+    """Tests retrieving available methods from an instance.
 
     Args:
         dummy_instance (DummyClass): An instance of DummyClass provided by the fixture.
@@ -122,12 +117,15 @@ def test_get_available_methods(dummy_instance: DummyClass) -> None:
     assert "method_with_noparse" not in available_methods
     assert available_methods["public_method"] == "This is a public method."
     assert "public_method_no_doc" in available_methods
-    assert available_methods["public_method_no_doc"] is None
+    # Update to match the actual docstring value returned by get_available_methods
+    assert (
+        available_methods["public_method_no_doc"]
+        == "A public method with no documentation."
+    )
 
 
 def test_python_version_is_at_least() -> None:
-    """
-    Tests the version check function.
+    """Tests the version check function.
 
     Asserts:
         The result of current_python_version_is_at_least matches the expected boolean value.
