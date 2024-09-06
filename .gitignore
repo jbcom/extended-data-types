@@ -157,6 +157,7 @@ dmypy.json
 cython_debug/
 
 .idea/
+.vscode
 *.iml
 
 # General
@@ -185,3 +186,4 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+.aider*

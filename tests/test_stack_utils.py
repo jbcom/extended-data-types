@@ -24,6 +24,8 @@ from extended_data_types.stack_utils import (
     filter_methods,
     get_available_methods,
     get_caller,
+    get_inputs_from_docstring,
+    update_docstring,
 )
 
 
@@ -103,25 +105,101 @@ def test_filter_methods(methods_list: list[str]) -> None:
     assert filtered == ["public_method", "public_method_no_doc", "method_with_noparse"]
 
 
-def test_get_available_methods(dummy_instance: DummyClass) -> None:
-    """Tests retrieving available methods from an instance.
-
-    Args:
-        dummy_instance (DummyClass): An instance of DummyClass provided by the fixture.
+def test_get_available_methods() -> None:
+    """Tests retrieving available methods from a class.
 
     Asserts:
-        The available methods in dummy_instance match the expected methods and documentation.
+        The available methods in DummyClass match the expected methods and documentation.
     """
-    available_methods = get_available_methods(dummy_instance)
+    available_methods = get_available_methods(DummyClass)
     assert "public_method" in available_methods
     assert "method_with_noparse" not in available_methods
     assert available_methods["public_method"] == "This is a public method."
     assert "public_method_no_doc" in available_methods
-    # Update to match the actual docstring value returned by get_available_methods
     assert (
         available_methods["public_method_no_doc"]
         == "A public method with no documentation."
     )
+
+
+def test_get_inputs_from_docstring() -> None:
+    """Tests extracting input details from a method's docstring.
+
+    Asserts:
+        Extracted inputs match the expected dictionary structure.
+    """
+    docstring = """
+    env=name: API_KEY, required: true, sensitive: false
+    env=name: DB_PASSWORD, required: true, sensitive: true
+    env=name: USERNAME, required: false, sensitive: false
+    """
+    expected = {
+        "api_key": {"required": "true", "sensitive": "false"},
+        "db_password": {"required": "true", "sensitive": "true"},
+        "username": {"required": "false", "sensitive": "false"},
+    }
+
+    result = get_inputs_from_docstring(docstring)
+    assert result == expected
+
+
+def test_get_inputs_from_docstring_empty() -> None:
+    """Tests extracting input details from an empty docstring.
+
+    Asserts:
+        Extracted inputs are an empty dictionary.
+    """
+    docstring = ""
+    expected = {}
+
+    result = get_inputs_from_docstring(docstring)
+    assert result == expected
+
+
+def test_update_docstring() -> None:
+    """Test updating a docstring with new input definitions.
+
+    Asserts:
+        - The updated docstring contains all new inputs in the correct format.
+    """
+    original_docstring = """
+    env=name: API_KEY, required: true, sensitive: false
+    """
+    new_inputs = {
+        "DB_PASSWORD": {"required": "true", "sensitive": "true"},
+        "USERNAME": {"required": "false", "sensitive": "false"},
+    }
+    expected_docstring = """
+    env=name: API_KEY, required: true, sensitive: false
+    env=name: DB_PASSWORD, required: true, sensitive: true
+    env=name: USERNAME, required: false, sensitive: false
+    """
+
+    result = update_docstring(original_docstring, new_inputs)
+    assert result.strip() == expected_docstring.strip()
+
+
+def test_update_docstring_idempotency() -> None:
+    """Test that updating a docstring is idempotent.
+
+    Asserts:
+        - Repeated updates do not change the docstring further.
+    """
+    original_docstring = """
+    env=name: API_KEY, required: true, sensitive: false
+    env=name: DB_PASSWORD, required: true, sensitive: true
+    """
+    new_inputs = {
+        "API_KEY": {"required": "true", "sensitive": "false"},
+        "DB_PASSWORD": {"required": "true", "sensitive": "true"},
+    }
+    expected_docstring = """
+    env=name: API_KEY, required: true, sensitive: false
+    env=name: DB_PASSWORD, required: true, sensitive: true
+    """
+
+    result = update_docstring(original_docstring, new_inputs)
+    assert result.strip() == expected_docstring.strip()
 
 
 def test_python_version_is_at_least() -> None:

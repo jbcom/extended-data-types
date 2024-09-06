@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Mapping, MutableMapping
-from typing import Any
+from typing import Any, Callable, TypeVar
 
 import inflection
 
@@ -141,24 +141,86 @@ def zipmap(a: list[str], b: list[str]) -> dict[str, str]:
     return zipped
 
 
-def get_default_dict(
-    use_sorted_dict: bool = False,
-    default_type: type[dict[str, Any]] = dict,
-) -> Any:
-    """Returns a default dictionary with nested default dictionaries.
+KT = TypeVar("KT")
+VT = TypeVar("VT")
+
+
+class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignore[misc]
+    """A dictionary that combines :class:`collections.defaultdict` and :class:`sortedcontainers.SortedDict` functionality.
+
+    This class inherits from both :class:`collections.defaultdict` and :class:`sortedcontainers.SortedDict`,
+    providing a dictionary that both automatically creates values for missing keys and maintains
+    its keys in sorted order.
+
+    The sorting behavior is inherited from :class:`sortedcontainers.SortedDict`, while the default value behavior
+    comes from :class:`collections.defaultdict`. When keys are accessed that don't exist, the
+    default_factory is called to create a value, just like a regular :class:`collections.defaultdict`.
 
     Args:
-        use_sorted_dict (bool): Whether to use SortedDict for sorting keys.
-        default_type (Type[Dict[str, Any]]): The type of the default dictionary.
+        default_factory (Callable[[], VT] | None): A callable that provides the default value for missing keys.
+            If None, attempts to access missing keys will raise KeyError.
 
-    Returns:
-        Any: The default dictionary.
+    Example:
+        >>> d = SortedDefaultDict(list)
+        >>> d['c'].append(3)
+        >>> d['a'].append(1)
+        >>> d['b'].append(2)
+        >>> list(d.keys())
+        ['a', 'b', 'c']
+        >>> d['d']  # Creates new list automatically
+        []
     """
 
-    def default_factory() -> Any:
-        return SortedDict() if use_sorted_dict else default_type()
+    def __init__(self, default_factory: Callable[[], VT] | None = None) -> None:
+        """Initialize a new SortedDefaultDict.
 
-    return defaultdict(default_factory)
+        Args:
+            default_factory: Callable that provides the default value for missing keys.
+                When a key is accessed that doesn't exist, this callable is invoked
+                without arguments to provide the missing value. If None, accessing a
+                missing key raises a KeyError.
+
+        Raises:
+            TypeError: If default_factory is not callable or None.
+        """
+        defaultdict.__init__(self, default_factory)
+        SortedDict.__init__(self)
+
+
+def get_default_dict(
+    use_sorted_dict: bool = False,
+    default_type: type[dict[Any, Any]] = dict,
+    levels: int = 2,
+) -> defaultdict[str, Any] | Any:
+    """Create a nested `defaultdict` with the specified number of levels.
+
+    Args:
+        use_sorted_dict (bool): Whether to use a sorted dictionary.
+        default_type (type): The default type for the dictionary.
+        levels (int): The number of levels for nesting.
+
+    Returns:
+        defaultdict | Any: A nested `defaultdict` or a dictionary of the specified type.
+
+    Raises:
+        ValueError: If levels is less than 1.
+    """
+    if levels < 1:
+        error_message = "The number of levels must be greater than or equal to 1."
+        raise ValueError(error_message)
+
+    dict_type = SortedDict if use_sorted_dict else default_type
+
+    if levels == 1:
+        return dict_type()
+
+    if use_sorted_dict:
+        return defaultdict(SortedDefaultDict)
+
+    def nested_dict() -> defaultdict[str, Any]:
+        return defaultdict(nested_dict)
+
+    return nested_dict()
 
 
 def unhump_map(

@@ -10,11 +10,11 @@ from typing import Any, Callable
 import orjson
 
 
-def decode_json(json_data: str | bytes) -> Any:
+def decode_json(json_data: str | memoryview | bytes | bytearray) -> Any:
     """Decodes a JSON string or bytes into a Python object using orjson.
 
     Args:
-        json_data (str | bytes): The JSON string or bytes to decode.
+        json_data (str | memoryview | bytes | bytearray): The JSON string or bytes to decode.
 
     Returns:
         Any: The decoded Python object.
@@ -60,7 +60,7 @@ def encode_json(
         str: The encoded JSON string.
 
     Raises:
-        orjson.JSONEncodeError: If an unsupported type is encountered and `default` is not provided.
+        orjson.JSONEncodeError: If an unsupported type is encountered and default is not provided.
     """
     # Calculate the bitmask for orjson options based on the parameters
     option = 0

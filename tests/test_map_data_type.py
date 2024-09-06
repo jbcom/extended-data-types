@@ -30,6 +30,8 @@ Functions:
 
 from __future__ import annotations
 
+from collections import defaultdict
+
 import pytest
 
 from extended_data_types.map_data_type import (
@@ -42,7 +44,6 @@ from extended_data_types.map_data_type import (
     unhump_map,
     zipmap,
 )
-from sortedcontainers import SortedDict
 
 
 @pytest.fixture()
@@ -284,23 +285,116 @@ def test_get_default_dict() -> None:
     """Tests creation of a default dictionary.
 
     Asserts:
-        The default dictionary can have nested keys assigned.
+        - The default dictionary can have nested keys assigned.
+        - The nested levels match the expected structure.
+        - Default type at the final level is a standard dictionary.
     """
     result = get_default_dict()
     result["key"]["subkey"] = "value"
+
     assert result["key"]["subkey"] == "value"
+    assert isinstance(result["key"], dict)
+    assert isinstance(
+        result["key"]["subkey"], str
+    )  # Final level contains the assigned value.
 
 
 def test_get_default_dict_sorted() -> None:
     """Tests creation of a sorted default dictionary.
 
     Asserts:
-        The sorted default dictionary can have nested keys assigned and is an instance of SortedDict.
+        - The sorted default dictionary can have nested keys assigned.
+        - Keys maintain sorted order when using SortedDict.
+        - Nested levels use defaultdict with SortedDict.
     """
-    result = get_default_dict(use_sorted_dict=True)
-    result["key"]["subkey"] = "value"
-    assert result["key"]["subkey"] == "value"
-    assert isinstance(result["key"], SortedDict)
+    from sortedcontainers import SortedDict
+
+    # Test single level
+    result_single = get_default_dict(use_sorted_dict=True, levels=1)
+    result_single["c"] = 3
+    result_single["a"] = 1
+    result_single["b"] = 2
+
+    # Keys should be in sorted order
+    assert list(result_single.keys()) == ["a", "b", "c"]
+    assert isinstance(result_single, SortedDict)
+
+    # Test multiple levels
+    result_multi = get_default_dict(use_sorted_dict=True, levels=2)
+    result_multi["key1"]["c"] = 3
+    result_multi["key1"]["a"] = 1
+    result_multi["key1"]["b"] = 2
+
+    # Nested level should maintain sorted order
+    assert list(result_multi["key1"].keys()) == ["a", "b", "c"]
+    assert isinstance(result_multi, defaultdict)
+    assert isinstance(result_multi["key1"], defaultdict)
+
+
+def test_get_default_dict_multiple_levels() -> None:
+    """Tests creation of a nested default dictionary with multiple levels.
+
+    Asserts:
+        - The number of nested levels matches the specified argument.
+        - Nested keys can be assigned up to the specified level.
+        - Final level uses the correct default type.
+    """
+    levels = 3
+    result = get_default_dict(levels=levels)
+    result["key1"]["key2"]["key3"] = "value"
+
+    assert result["key1"]["key2"]["key3"] == "value"
+    assert isinstance(
+        result["key1"]["key2"], defaultdict
+    )  # Intermediate levels are defaultdict.
+    assert isinstance(
+        result["key1"]["key2"]["key3"], str
+    )  # Final level contains the assigned value.
+
+
+def test_get_default_dict_single_level() -> None:
+    """Test the creation of a default dictionary with a single level.
+
+    Asserts:
+        - A single-level dictionary does not create additional nesting.
+        - The final level uses the correct default type.
+    """
+    result = get_default_dict(levels=1)
+    result["key"] = {"inner_key": "value"}  # Create a dict instead of a set
+
+    assert result["key"]["inner_key"] == "value"
+    assert isinstance(result["key"], dict)  # Single-level uses the default type
+
+
+def test_get_default_dict_with_custom_default_type() -> None:
+    """Test the creation of a default dictionary with a custom default type.
+
+    Asserts:
+        - The dictionary is of the custom type.
+        - The custom method `add` works as expected.
+    """
+
+    class CustomDict(dict):
+        def add(self, key, value):
+            self[key] = value
+
+    result = get_default_dict(default_type=CustomDict, levels=1)
+    result.add("key", "value")
+
+    assert isinstance(result, CustomDict)
+    assert result["key"] == "value"
+
+
+def test_get_default_dict_invalid_levels() -> None:
+    """Tests that an invalid level value raises an exception.
+
+    Asserts:
+        - A ValueError is raised when levels < 1.
+    """
+    with pytest.raises(
+        ValueError, match="The number of levels must be greater than or equal to 1."
+    ):
+        get_default_dict(levels=0)
 
 
 def test_unhump_map(camel_case_map: dict) -> None:

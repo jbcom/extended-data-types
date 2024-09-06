@@ -6,23 +6,27 @@ build-backend = "hatchling.build"
 name = "extended-data-types"
 dynamic = ["version"]
 description = "Extended functionality for data types"
-requires-python = ">=3.9"
-license = "MIT"
+requires-python = ">=3.8"
+license = { text = "MIT" }
 readme = "README.md"
 keywords = ["python3"]
 authors = [{ name = "Jon Bogaty", email = "jon@jonbogaty.com" }]
 maintainers = [{ name = "Jon Bogaty", email = "jon@jonbogaty.com" }]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Typing :: Typed",
 ]
 dependencies = [
     "future>=1.0.0",
+    "gitpython>=3.1.0",
     "inflection>=0.5.1",
     "orjson>=3.10.7",
     "python-hcl2>=4.3.4",
@@ -30,6 +34,7 @@ dependencies = [
     "requests>=2.32.3",
     "sortedcontainers>=2.4.0",
     "tomlkit>=0.13.2",
+    "typing_extensions>=4.3.0; python_version < '3.10'",
     "wrapt>=1.16.0",
 ]
 
@@ -63,10 +68,7 @@ docs = [
 
 [tool.hatch.version]
 path = "src/extended_data_types/__init__.py"
-
-[tool.hatch.envs.default]
-type = "virtual"
-path = ".venv"
+pattern = "^__version__ = ['\"](?P<version>.+)['\"]$"
 
 [tool.pytest.ini_options]
 addopts = ["-ra", "--strict-markers", "--strict-config"]
@@ -74,18 +76,27 @@ testpaths = "tests"
 xfail_strict = true
 filterwarnings = []
 
+[tool.coverage.paths]
+source = ["src", ".tox/*/lib/python*/site-packages"]
+
 [tool.coverage.run]
 branch = true
 parallel = true
-source = ["extended_data_types"]
-
-[tool.coverage.paths]
-source = ["src", ".tox/py*/**/site-packages"]
+source = ["src/extended_data_types"]
 
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if __name__ == '__main__':",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "raise ImportError",
+    "except ImportError:",
+    "pass",
+]
 
 [tool.codespell]
 skip = '*.js,*.css,*.inv,*.lock,*.toml,*.json,*.yml,*.yaml'
@@ -107,37 +118,37 @@ exclude = ["docs"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN", # Type annotations checks are better handled by Mypy, which provides more comprehensive type analysis and type-checking capabilities.
-    "C901", # Ignore overly complex functions: Occasionally, complex code is necessary for performance optimization or to handle intricate logic that can't be easily simplified without sacrificing efficiency or clarity.
-    "COM", # Black automatically handles commas in formatting, ensuring consistent style without the need for additional comma-specific linting.
-    "D205", # One blank line required between the summary line and description: Inconsistent enforcement often leads to style churn and unnecessary changes in documentation-heavy code.
-    "D415", # First line should end with a period, question mark, or exclamation point: This rule is overly strict and often doesn't impact the clarity or usefulness of docstrings.
-    "DTZ007", # Naive datetime usage without timezone information is sometimes intentional, especially when working with legacy code or when timezone awareness is not required.
-    "E501", # Line length is managed by Black, which reflows lines according to its style guide, maintaining readability without enforcing arbitrary line length limits.
-    "EM102", # Using f-string without variable assignments: F-strings are often used for quick formatting even when not assigning values, especially in logging or print statements.
-    "FBT", # Allow boolean arguments in function signatures; they provide simple, clear control over behavior.
-    "FIX", # FIXME markers are useful for highlighting areas needing further attention or future fixes, and ignoring this rule allows these markers to remain as intentional reminders.
+    "ANN",     # Type annotations checks are better handled by Mypy, which provides more comprehensive type analysis and type-checking capabilities.
+    "C901",    # Ignore overly complex functions: Occasionally, complex code is necessary for performance optimization or to handle intricate logic that can't be easily simplified without sacrificing efficiency or clarity.
+    "COM",     # Black automatically handles commas in formatting, ensuring consistent style without the need for additional comma-specific linting.
+    "D205",    # One blank line required between the summary line and description: Inconsistent enforcement often leads to style churn and unnecessary changes in documentation-heavy code.
+    "D415",    # First line should end with a period, question mark, or exclamation point: This rule is overly strict and often doesn't impact the clarity or usefulness of docstrings.
+    "DTZ007",  # Naive datetime usage without timezone information is sometimes intentional, especially when working with legacy code or when timezone awareness is not required.
+    "E501",    # Line length is managed by Black, which reflows lines according to its style guide, maintaining readability without enforcing arbitrary line length limits.
+    "EM102",   # Using f-string without variable assignments: F-strings are often used for quick formatting even when not assigning values, especially in logging or print statements.
+    "FBT",     # Allow boolean arguments in function signatures; they provide simple, clear control over behavior.
+    "FIX",     # FIXME markers are useful for highlighting areas needing further attention or future fixes, and ignoring this rule allows these markers to remain as intentional reminders.
     "PLR0911", # Too many return statements: Functions with multiple exit points can improve code readability and maintainability by avoiding deeply nested logic.
     "PLR0913", # Too many arguments in function definition: Sometimes, functions require many parameters to handle complex configurations or provide flexibility, particularly in factory functions or when adhering to specific interface contracts.
-    "RET505", # Unnecessary `elif` after `return`: Often used for clarity in maintaining separate conditional branches, enhancing readability despite technically being redundant.
-    "TCH", # TYPE_CHECKING blocks: These are essential for type hinting without importing unnecessary dependencies at runtime, especially useful for preventing circular imports and keeping runtime environments lean, though they may affect automatic documentation generation.
-    "TD", # TODO comments are a common part of development workflows for tracking pending tasks, and there’s often no need to enforce a specific style or behavior for these comments.
-    "TID252", # Relative imports are perfectly acceptable within well-structured modules and packages, especially when maintaining a clear and logical project layout.
-    "TRY003", # Simple strings are acceptable in exceptions without specifying type: Providing explicit exception messages improves readability and understanding, even when not adding extra error details.
-    "TRY300", # Allow broad exception catches in certain contexts where specific handling of multiple exceptions is complex or unnecessary.
+    "RET505",  # Unnecessary `elif` after `return`: Often used for clarity in maintaining separate conditional branches, enhancing readability despite technically being redundant.
+    "TCH",     # TYPE_CHECKING blocks: These are essential for type hinting without importing unnecessary dependencies at runtime, especially useful for preventing circular imports and keeping runtime environments lean, though they may affect automatic documentation generation.
+    "TD",      # TODO comments are a common part of development workflows for tracking pending tasks, and there’s often no need to enforce a specific style or behavior for these comments.
+    "TID252",  # Relative imports are perfectly acceptable within well-structured modules and packages, especially when maintaining a clear and logical project layout.
+    "TRY003",  # Simple strings are acceptable in exceptions without specifying type: Providing explicit exception messages improves readability and understanding, even when not adding extra error details.
+    "TRY300",  # Allow broad exception catches in certain contexts where specific handling of multiple exceptions is complex or unnecessary.
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
-    "B018", # In tests, expressions that seem "useless" can often serve as assertions or necessary side effects, making them valuable.
-    "BLE", # Tests often intentionally handle exceptions differently, allowing for exploratory testing of failure cases and behavior under error conditions.
-    "EM", # Exception handling in tests frequently diverges from typical patterns to deliberately provoke or verify specific failure paths.
-    "LOG001", # Instantiating log messages directly in tests can help verify logging behavior and content, ensuring the logging system works as expected.
+    "B018",    # In tests, expressions that seem "useless" can often serve as assertions or necessary side effects, making them valuable.
+    "BLE",     # Tests often intentionally handle exceptions differently, allowing for exploratory testing of failure cases and behavior under error conditions.
+    "EM",      # Exception handling in tests frequently diverges from typical patterns to deliberately provoke or verify specific failure paths.
+    "LOG001",  # Instantiating log messages directly in tests can help verify logging behavior and content, ensuring the logging system works as expected.
     "PLC1901", # Empty strings as test values may be intentional to specifically validate how empty or falsy data is handled by the system.
-    "RUF012", # Type hints in tests can be more distracting than helpful, as test code is often more flexible and subject to change than production code.
-    "S", # Security rules around input validation, like potential vulnerabilities, can be less critical in the controlled context of test code.
-    "SIM300", # "Yoda conditions" (using literal comparisons like `if "value" == var:`) can sometimes make tests more readable, clarifying the expected values.
-    "TRY", # The handling of exceptions in tests often needs to be more permissive and less structured to accommodate the exploration of edge cases and failure modes.
+    "RUF012",  # Type hints in tests can be more distracting than helpful, as test code is often more flexible and subject to change than production code.
+    "S",       # Security rules around input validation, like potential vulnerabilities, can be less critical in the controlled context of test code.
+    "SIM300",  # "Yoda conditions" (using literal comparisons like `if "value" == var:`) can sometimes make tests more readable, clarifying the expected values.
+    "TRY",     # The handling of exceptions in tests often needs to be more permissive and less structured to accommodate the exploration of edge cases and failure modes.
 ]
 
 # Specific ignore rules for tests/__init__.py
@@ -169,15 +180,84 @@ ignore_errors = true
 module = "wrapt.*"
 ignore_missing_imports = true
 
-[tool.commitizen]
-name = "cz_conventional_commits"
-version = "2.0.0"
-version_files = [
-    "src/extended_data_types/__init__.py:__version__",
-    "docs/conf.py:version",
+[tool.semantic_release]
+assets = []
+build_command_env = []
+commit_message = "{version}\n\nAutomatically generated by python-semantic-release"
+commit_parser = "angular"
+logging_use_named_masks = false
+major_on_zero = false
+allow_zero_version = false
+no_git_verify = false
+tag_format = "v{version}"
+
+[tool.semantic_release.branches.main]
+match = "main"
+prerelease_token = "rc"
+prerelease = false
+
+[tool.semantic_release.changelog]
+exclude_commit_patterns = []
+mode = "init"
+insertion_flag = "<!-- version list -->"
+template_dir = "templates"
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"
+output_format = "md"
+mask_initial_release = false
+
+[tool.semantic_release.changelog.environment]
+block_start_string = "{%"
+block_end_string = "%}"
+variable_start_string = "{{"
+variable_end_string = "}}"
+comment_start_string = "{#"
+comment_end_string = "#}"
+trim_blocks = false
+lstrip_blocks = false
+newline_sequence = "\n"
+keep_trailing_newline = false
+extensions = []
+autoescape = false
+
+[tool.semantic_release.commit_author]
+env = "GIT_COMMIT_AUTHOR"
+default = "semantic-release <semantic-release>"
+
+[tool.semantic_release.commit_parser_options]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf"]
+other_allowed_tags = [
+    "build",
+    "chore",
+    "ci",
+    "docs",
+    "style",
+    "refactor",
+    "test",
 ]
-tag_format = "$version"
-annotated_tag = true
-update_changelog_on_bump = true
-bump_message = "New release: $current_version → $new_version [skip actions]"
-template = "docs/templates/CHANGELOG.md.j2"
+allowed_tags = [
+    "feat",
+    "fix",
+    "perf",
+    "build",
+    "chore",
+    "ci",
+    "docs",
+    "style",
+    "refactor",
+    "test",
+]
+default_bump_level = 0
+parse_squash_commits = false
+
+[tool.semantic_release.remote]
+name = "origin"
+type = "github"
+ignore_token_for_push = false
+insecure = false
+
+[tool.semantic_release.publish]
+dist_glob_patterns = ["dist/*"]
+upload_to_vcs_release = true

@@ -10,20 +10,28 @@ from typing import Any
 
 import yaml
 
+from extended_data_types.string_data_type import bytestostr
+
 from .dumpers import PureDumper
 from .loaders import PureLoader
 from .tag_classes import YamlTagged
 
 
-def decode_yaml(yaml_data: str) -> Any:
-    """Decode a YAML string into a Python object.
+def decode_yaml(yaml_data: str | memoryview | bytes | bytearray) -> Any:
+    """Decode YAML data into a Python object.
 
     Args:
-        yaml_data (str): The YAML string to decode.
+        yaml_data (str | memoryview | bytes | bytearray): The YAML data to decode.
 
     Returns:
         Any: The decoded Python object.
     """
+    try:
+        yaml_data = bytestostr(yaml_data)
+    except UnicodeDecodeError as exc:
+        raise yaml.YAMLError(
+            f"Failed to decode bytes to string: {yaml_data!r}"
+        ) from exc
     return yaml.load(yaml_data, Loader=PureLoader)  # noqa: S506
 
 

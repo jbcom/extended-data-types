@@ -17,27 +17,31 @@ from typing import Any
 
 import hcl2
 
-from lark.exceptions import UnexpectedToken
+from lark.exceptions import ParseError
+
+from .string_data_type import bytestostr
 
 
-def decode_hcl2(hcl2_data: str) -> Any:
+def decode_hcl2(hcl2_data: str | memoryview | bytes | bytearray) -> Any:
     """Decodes HCL2 data into a Python object.
 
     Args:
-        hcl2_data (str): The HCL2 data to decode.
+        hcl2_data (str | memoryview | bytes | bytearray): The HCL2 data to decode.
 
     Returns:
         Any: The decoded Python object.
 
     Raises:
-        ValueError: If the HCL2 data cannot be parsed.
+        ParseError If the HCL2 data cannot be decoded.
+        UnexpectedToken If the HCL2 data cannot be parsed.
     """
-    hcl2_data_stream = StringIO(hcl2_data)
     try:
-        return hcl2.load(hcl2_data_stream)  # type: ignore[attr-defined]
-    except UnexpectedToken as e:
-        error_message = f"Invalid HCL2 data: {e}"
-        raise ValueError(error_message) from e
+        hcl2_data = bytestostr(hcl2_data)
+    except UnicodeDecodeError as exc:
+        raise ParseError(f"Failed to decode bytes to string: {hcl2_data!r}") from exc
+
+    hcl2_data_stream = StringIO(hcl2_data)
+    return hcl2.load(hcl2_data_stream)  # type: ignore[attr-defined]
 
 
 def encode_hcl2(data: Any) -> str:

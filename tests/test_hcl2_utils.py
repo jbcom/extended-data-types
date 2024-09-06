@@ -18,6 +18,7 @@ from __future__ import annotations
 import pytest
 
 from extended_data_types.hcl2_utils import decode_hcl2, encode_hcl2
+from lark.exceptions import UnexpectedToken
 
 
 @pytest.fixture()
@@ -92,10 +93,10 @@ def test_decode_hcl2_invalid() -> None:
     """Tests decoding of invalid HCL2 data.
 
     Asserts:
-        A ValueError is raised with an appropriate error message.
+        A UnexpectedToken error is raised with an appropriate error message.
     """
     hcl2_data = "invalid hcl2 data"
-    with pytest.raises(ValueError, match="Invalid HCL2 data:"):
+    with pytest.raises(UnexpectedToken):
         decode_hcl2(hcl2_data)
 
 

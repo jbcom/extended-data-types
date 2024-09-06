@@ -2,8 +2,8 @@ import os
 
 project = "Extended Data Types"
 author = "Jon Bogaty"
-copyright = f"2024, {author}"
-version = "2.0.0"
+copyright = f"2025, {author}"
+version = "5.0.0"
 
 extensions = [
     "autodoc2",
@@ -22,7 +22,7 @@ source_suffix = {
 }
 
 # Default role
-default_role = "any"
+default_role = "py:obj"
 
 # HTML output settings
 html_theme = "sphinxawesome_theme"
@@ -43,8 +43,14 @@ html_logo = "_static/logo.png"
 
 html_permalinks_icon = "<span>⚓</span>"
 
+autodoc_typehints = "description"
+autodoc_typehints_format = "fully-qualified"  # Add this line
+autodoc_type_aliases = {
+    "FilePath": "extended_data_types.file_data_type.FilePath",
+}
+
 nitpick_ignore = [
-    ("py:class", "FilePath"),
+    ("py:class", "git.Repo"),
     ("py:class", "ObjectProxy"),
     ("py:class", "yaml.SafeDumper"),
     ("py:class", "yaml.SafeLoader"),
@@ -52,6 +58,9 @@ nitpick_ignore = [
     ("py:obj", "yaml.SafeDumper"),
     ("py:obj", "yaml.SafeLoader"),
     ("py:obj", "orjson"),
+    ("py:obj", "defaultdict"),
+    ("py:class", "extended_data_types.map_data_type.VT"),
+    ("py:class", "extended_data_types.map_data_type.KT"),
 ]
 
 nitpick_ignore_regex = [
@@ -61,12 +70,10 @@ nitpick_ignore_regex = [
     ("py:obj", r"extended_data_types\.yaml_utils\..*\.Pure.*"),
     ("py:obj", r"extended_data_types\.yaml_utils\.tag_classes\..*.__init__"),
     ("py:obj", r"orjson"),
+    (r"py:.*", r"extended_data_types\.file_data_type\.FilePath"),
 ]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-}
-
-TYPE_ALIASES = {
-    "FilePath": "extended_data_types.file_data_type.",
+    "sortedcontainers": ("https://grantjenks.com/docs/sortedcontainers/", None),
 }

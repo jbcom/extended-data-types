@@ -14,6 +14,36 @@ import inflection
 from .stack_utils import current_python_version_is_at_least
 
 
+def bytestostr(bstr: str | memoryview | bytes | bytearray) -> str:
+    """Converts bytes, memoryview, or bytearray to a UTF-8 decoded string.
+
+    This function takes an input which could be a string, memoryview, bytes, or bytearray,
+    and returns the corresponding UTF-8 decoded string. If the input is already a string,
+    it returns it unchanged.
+
+    Args:
+        bstr (str | memoryview | bytes | bytearray): The input to convert to a string.
+            Can be a `str`, `memoryview`, `bytes`, or `bytearray`.
+
+    Returns:
+        str: The UTF-8 decoded string representation of the input.
+
+    Raises:
+        UnicodeDecodeError: If the bytes or bytearray cannot be decoded into a valid UTF-8 string.
+    """
+    if isinstance(bstr, str):
+        return bstr
+
+    if isinstance(bstr, memoryview):
+        bstr = bstr.tobytes()
+
+    if isinstance(bstr, (bytes, bytearray)):
+        return bstr.decode("utf-8")
+
+    # This return handles both bytes, bytearray, and memoryview after conversion to bytes
+    return str(bstr)
+
+
 def sanitize_key(key: str, delim: str = "_") -> str:
     """Sanitizes a key by replacing non-alphanumeric characters with a delimiter.
 

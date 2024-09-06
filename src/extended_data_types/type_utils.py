@@ -68,22 +68,55 @@ class ConversionError(ValueError):
     """Custom error class for handling conversion failures.
 
     This error is raised during type conversions when the input value does not
-    conform to the expected type format.
+    conform to the expected type format. For Path types, it ensures consistent
+    error messaging across Python versions by normalizing the type representation.
 
     Args:
         expected_type (type): The expected Python type.
         value (Any): The actual value being converted.
 
+    Raises:
+        ValueError: Always raises as this is an error class.
+
     Example:
         >>> raise ConversionError(int, 'invalid')
         ConversionError: Invalid <class 'int'> value: 'invalid'
+        >>> raise ConversionError(Path, 'invalid:://path')
+        ConversionError: Invalid <class 'pathlib.Path'> value: 'invalid:://path'
+        >>> raise ConversionError(float, 'not_a_number')
+        ConversionError: Invalid <class 'float'> value: 'not_a_number'
+
+    Note:
+        When the expected_type is pathlib.Path, the error message will consistently
+        display as "<class 'pathlib.Path'>" regardless of the internal Path implementation
+        in different Python versions.
     """
 
     def __init__(self, expected_type: type, value: Any):
-        """Initialize the ConversionError with expected type and value."""
+        """Initialize the ConversionError with expected type and value.
+
+        Args:
+            expected_type (type): The expected Python type. Special handling is
+                applied for pathlib.Path to ensure consistent error messages across
+                Python versions.
+            value (Any): The actual value that failed conversion. Will be
+                represented using repr() in the error message.
+
+        Note:
+            For Path types, the error message will always use 'pathlib.Path'
+            notation regardless of the internal implementation details of the
+            Path class in different Python versions.
+        """
         self.expected_type = expected_type
         self.value = value
-        super().__init__(f"Invalid {self.expected_type} value: {self.value!r}")
+
+        # Handle Path type specially to ensure consistent error messages
+        if expected_type == Path:
+            type_str = "<class 'pathlib.Path'>"
+        else:
+            type_str = str(self.expected_type)
+
+        super().__init__(f"Invalid {type_str} value: {self.value!r}")
 
 
 def strtobool(val: str | bool | None, raise_on_error: bool = False) -> bool | None:

@@ -48,6 +48,7 @@ from typing import Any
 import pytest
 
 from extended_data_types.string_data_type import (
+    bytestostr,
     is_url,
     lower_first_char,
     removeprefix,
@@ -168,6 +169,41 @@ def removesuffix_data(request: Any) -> tuple[str, str, str]:
         tuple[str, str, str]: A tuple containing the input string, suffix, and expected result.
     """
     return request.param
+
+
+@pytest.mark.parametrize(
+    ("input_value", "expected_output"),
+    [
+        ("simple string", "simple string"),  # String input
+        (b"bytes data", "bytes data"),  # Bytes input
+        (bytearray(b"bytes array data"), "bytes array data"),  # Bytearray input
+        (memoryview(b"memoryview data"), "memoryview data"),  # Memoryview input
+    ],
+)
+def test_bytestostr(
+    input_value: str | memoryview | bytes | bytearray, expected_output: str
+) -> None:
+    """Tests converting various byte-like objects and strings into a UTF-8 decoded string.
+
+    Args:
+        input_value (str | memoryview | bytes | bytearray): The input value to convert to a string.
+        expected_output (str): The expected UTF-8 decoded string.
+
+    Asserts:
+        The result of bytestostr matches the expected UTF-8 decoded string for valid inputs.
+    """
+    assert bytestostr(input_value) == expected_output
+
+
+def test_bytestostr_invalid_bytes() -> None:
+    """Tests handling of invalid byte sequences during conversion to string.
+
+    Asserts:
+        The bytestostr function raises a ConversionError when invalid bytes cannot be decoded.
+    """
+    invalid_bytes = b"\x80invalid"
+    with pytest.raises(UnicodeDecodeError):
+        bytestostr(invalid_bytes)
 
 
 def test_sanitize_key(test_key: str, sanitized_key: str) -> None:

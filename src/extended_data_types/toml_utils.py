@@ -9,18 +9,25 @@ from typing import Any
 
 import tomlkit
 
+from tomlkit.exceptions import TOMLKitError
+
+from .string_data_type import bytestostr
 from .type_utils import convert_special_types
 
 
-def decode_toml(toml_data: str) -> Any:
+def decode_toml(toml_data: str | memoryview | bytes | bytearray) -> Any:
     """Decodes a TOML string into a Python object using tomlkit.
 
     Args:
-        toml_data (str): The TOML string to decode.
+        toml_data (str | memoryview | bytes | bytearray): The TOML string to decode.
 
     Returns:
         Any: The decoded Python object with any special types processed.
     """
+    try:
+        toml_data = bytestostr(toml_data)
+    except UnicodeDecodeError as exc:
+        raise TOMLKitError(f"Failed to decode bytes to string: {toml_data!r}") from exc
     return tomlkit.parse(toml_data)
 
 

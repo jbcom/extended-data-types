@@ -1,4 +1,4 @@
-"""The `state_utils` module provides utility functions for handling and evaluating data structure "emptiness".
+"""The state_utils module provides utility functions for handling and evaluating data structure "emptiness".
 
 It includes functions to determine whether a value is considered "nothing", to extract
 non-empty values, and to assess the state of provided arguments and keyword arguments.

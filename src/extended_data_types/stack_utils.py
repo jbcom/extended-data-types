@@ -6,9 +6,10 @@ methods and their docstrings for a class.
 
 from __future__ import annotations
 
+import re
 import sys
 
-from inspect import getmembers, ismethod
+from inspect import getmembers, isfunction
 from typing import Any
 
 
@@ -60,16 +61,102 @@ def get_available_methods(cls: type[Any]) -> dict[str, str | None]:
     Returns:
         dict[str, str | None]: A dictionary of method names and their docstrings.
     """
-    module_name = cls.__class__.__module__
-    methods = getmembers(cls, ismethod)
+    module_name = cls.__module__
+    methods = getmembers(cls, isfunction)
 
     return {
         method_name: method_signature.__doc__
         for method_name, method_signature in methods
         if "__" not in method_name
-        and method_signature.__self__.__class__.__module__ == module_name
+        and method_signature.__module__ == module_name
         and "NOPARSE" not in (method_signature.__doc__ or "")
     }
+
+
+def get_inputs_from_docstring(docstring: str) -> dict[str, dict[str, str]]:
+    """Extract existing input details from a method's docstring.
+
+    This function parses a docstring to identify inputs defined with specific properties:
+    name, required, and sensitive. The extraction is case-insensitive, and the results
+    are returned as a dictionary with input names as keys (lowercase) and their properties
+    as values.
+
+    Args:
+        docstring (str): The docstring to parse for input definitions.
+
+    Returns:
+        A dictionary where each key is an input name (in lowercase),
+        and the value is another dictionary containing:
+
+        - "required": Whether the input is required ("true" or "false")
+        - "sensitive": Whether the input is sensitive ("true" or "false")
+
+    Example:
+        For a docstring containing::
+
+            env=name: API_KEY, required: true, sensitive: false
+            env=name: DB_PASSWORD, required: true, sensitive: true
+
+        The output will be::
+
+            {
+                "api_key": {"required": "true", "sensitive": "false"},
+                "db_password": {"required": "true", "sensitive": "true"}
+            }
+    """
+    input_pattern = r"name: (\w+), required: (true|false), sensitive: (true|false)"
+    matches = re.findall(input_pattern, docstring or "")
+    return {
+        name.lower(): {"required": required, "sensitive": sensitive}
+        for name, required, sensitive in matches
+    }
+
+
+def update_docstring(
+    original_docstring: str, new_inputs: dict[str, dict[str, str]]
+) -> str:
+    """Update the docstring with new input definitions.
+
+    Args:
+        original_docstring (str): The original docstring to update.
+        new_inputs (dict[str, dict[str, str]]): A dictionary of new inputs to add to the docstring.
+
+    Returns:
+        str: The updated docstring with new inputs.
+    """
+    # Split into lines and get indentation from first non-empty line
+    lines = original_docstring.splitlines()
+    base_indent = ""
+    for line in lines:
+        if line.strip():
+            base_indent = " " * (len(line) - len(line.lstrip()))
+            break
+
+    # Track existing entries to avoid duplicates
+    existing_entries: set[str] = set()
+    result_lines: list[str] = []
+
+    # Process existing lines
+    for line in lines:
+        stripped = line.strip()
+        if not stripped and not result_lines:
+            result_lines.append(line)
+            continue
+
+        if stripped.startswith("env=name:"):
+            entry_name = stripped.split(",")[0].split(":")[1].strip()
+            existing_entries.add(entry_name)
+            result_lines.append(line)
+        elif stripped:  # Keep non-empty, non-env lines
+            result_lines.append(line)
+
+    # Add new entries if they don't already exist
+    for key, attributes in new_inputs.items():
+        if key not in existing_entries:
+            line = f"{base_indent}env=name: {key}, required: {attributes['required']}, sensitive: {attributes['sensitive']}"
+            result_lines.append(line)
+
+    return "\n".join(result_lines)
 
 
 def current_python_version_is_at_least(minor: int, major: int = 3) -> bool:
