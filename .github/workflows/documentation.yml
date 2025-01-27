@@ -13,7 +13,7 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -21,19 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.13"
-
-      - uses: hynek/setup-cached-uv@v2
-
+          pyproject-file: "pyproject.toml"
+          enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
       - name: Build docs
         run: uvx --with tox-uv tox run -e docs
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

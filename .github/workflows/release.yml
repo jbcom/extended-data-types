@@ -1,32 +1,62 @@
-name: Release
+name: Continuous Delivery
 
 on:
-  release:
-    types:
-      - published
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
-  build-package:
-    name: Build & verify package
-    runs-on: ubuntu-latest
+  release:
+    name: Release signed build
+    runs-on: ubuntu-24.04
+    concurrency: release
     permissions:
       id-token: write
+      contents: write
       attestations: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: hynek/build-and-inspect-python-package@v2
-        id: baipp
-        with:
-          attest-build-provenance-github: 'true'
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+      signed_artifact_name: ${{ steps.signed_inspect.outputs.artifact-name }}
+      package_version: ${{ steps.signed_inspect.outputs.package-version }}
 
-  pypi-release:
-    name: Release to PyPI
-    needs: build-package
-    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository at workflow sha
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.sha }}
+      - name: Force correct release branch on workflow sha
+        run: |
+          git checkout -B ${{ github.ref_name }} ${{ github.sha }}
+      - name: Semantic Version Release
+        id: release
+        uses: python-semantic-release/python-semantic-release@v9.17.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git_committer_name: "github-actions"
+          git_committer_email: "actions@users.noreply.github.com"
+      - name: Publish to GitHub Releases
+        if: steps.release.outputs.released == 'true'
+        uses: python-semantic-release/publish-action@v9.17.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
+      - name: Signed Attestation Build
+        if: steps.release.outputs.released == 'true'
+        id: signed_inspect
+        uses: hynek/build-and-inspect-python-package@v2
+        with:
+          attest-build-provenance-github: "true"
+
+  publish:
+    name: Publish to PyPI
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    runs-on: ubuntu-24.04
     environment:
       name: pypi
-      url: https://pypi.org/project/extended-data-types/
+      url: https://pypi.org/project/extended-data-types/${{ needs.release.outputs.package_version }}
     permissions:
       id-token: write
 
@@ -36,6 +66,5 @@ jobs:
         with:
           name: Packages
           path: dist
-
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1

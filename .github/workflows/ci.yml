@@ -6,96 +6,155 @@ on:
   pull_request:
   workflow_dispatch:
 
-permissions:
-  pull-requests: write
-  contents: read
-
 jobs:
+  build-package:
+    name: Build & verify package
+    runs-on: ubuntu-24.04
+    outputs:
+      python-versions: ${{ steps.baipp.outputs.supported_python_classifiers_json_array }}
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: hynek/build-and-inspect-python-package@v2
+        id: baipp
+      - name: Upload pyproject.toml
+        uses: actions/upload-artifact@v4
+        with:
+          name: pyproject-toml
+          path: pyproject.toml
+
   tests:
-    name: Tests on Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    name: Tests on ${{ matrix.python-version }}
+    runs-on: ubuntu-24.04
+    needs: build-package
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ${{ fromJson(needs.build-package.outputs.python-versions) }}
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Download pyproject.toml
+        uses: actions/download-artifact@v4
+        with:
+          name: pyproject-toml
+          path: .
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
           python-version: ${{ matrix.python-version }}
+          pyproject-file: "pyproject.toml"
+          enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
+      - name: Download pre-built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+      - run: ls -lhat dist/
       - name: Run tests
-        run: |
-          pip install tox-gh-actions
-          tox
+        run: uvx --with tox-uv tox run --installpkg dist/*.whl
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-${{ matrix.python-version }}
+          name: coverage-data-${{ matrix.python-version }}
           path: .coverage.*
-          if-no-files-found: error
+          include-hidden-files: true
+          if-no-files-found: ignore
 
-  coverage-report:
-    name: Generate Coverage Report
-    runs-on: ubuntu-latest
-    needs: tests
-    if: always()
+  typechecking:
+    name: Typechecking
+    runs-on: ubuntu-24.04
+    needs: build-package
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Download pyproject.toml
+        uses: actions/download-artifact@v4
         with:
+          name: pyproject-toml
+          path: .
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          pyproject-file: "pyproject.toml"
           python-version: "3.13"
-      - run: pip install coverage[toml]
+          enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
+      - name: Download pre-built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+      - run: ls -lhat dist/
+      - name: Typechecking with pyright
+        run: uvx --with tox-uv tox run -e pyright
+
+  linting:
+    name: Lint checks
+    runs-on: ubuntu-24.04
+    needs: build-package
+
+    steps:
+      - name: Download pyproject.toml
+        uses: actions/download-artifact@v4
+        with:
+          name: pyproject-toml
+          path: .
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          pyproject-file: "pyproject.toml"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
+      - name: Download pre-built packages
+        uses: actions/download-artifact@v4
+        with:
+          name: Packages
+          path: dist
+      - run: ls -lhat dist/
+      - name: Typechecking with pyright
+        run: uvx --with tox-uv tox run -e pre-commit
+
+  coverage:
+    name: Ensure test coverage
+    runs-on: ubuntu-24.04
+    needs: tests
+
+    steps:
+      - name: Download pyproject.toml
+        uses: actions/download-artifact@v4
+        with:
+          name: pyproject-toml
+          path: .
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          pyproject-file: "pyproject.toml"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "**/pyproject.toml"
       - name: Download coverage data
         uses: actions/download-artifact@v4
         with:
-          pattern: coverage-*
+          pattern: coverage-data-*
           merge-multiple: true
-      - name: Generate reports
-        id: coverage
+      - name: Combine coverage and fail if it's <100%.
         run: |
+          uv tool install coverage
+
           coverage combine
-          coverage html
-          echo "report<<EOF" >> $GITHUB_OUTPUT
-          coverage report >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          coverage html --skip-covered --skip-empty
+
+          # Report and write to summary.
+          coverage report --format=markdown >> $GITHUB_STEP_SUMMARY
+
+          # Report again and fail if under 75%.
+          coverage report --fail-under=75
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-html-report
+          name: html-report
           path: htmlcov
-      - name: Comment on PR
-        if: github.event_name == 'pull_request'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const coverage = process.env.COVERAGE_REPORT;
-            const body = `## Coverage Report\n\n\`\`\`\n${coverage}\n\`\`\``;
-
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const botComment = comments.find(comment =>
-              comment.user.type === 'Bot' &&
-              comment.body.startsWith('## Coverage Report')
-            );
-
-            if (botComment) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: botComment.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.issue.number,
-                body,
-              });
-            }
-        env:
-          COVERAGE_REPORT: ${{ steps.coverage.outputs.report }}

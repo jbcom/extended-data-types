@@ -1,18 +1,34 @@
 # CHANGELOG
 
 
-## v10.0.0 (2025-01-27)
+## v5.0.1 (2025-01-27)
+
+### Bug Fixes
+
+- Typo in CI workflow
+  ([`48414e3`](https://github.com/jbcom/extended-data-types/commit/48414e39b3c355ec34b187c2b1684bbc70291ae0))
+
+### Continuous Integration
+
+- Improvements to testing
+  ([`8d6d5ae`](https://github.com/jbcom/extended-data-types/commit/8d6d5ae7ac8dacbeb9cafbef8cc2e1ded32cceb9))
+
+* Streamlined tox configuration and CI / CD workflows * Ensured coverage reporting works both
+  locally and in CI environment
+
+
+## v5.0.0 (2025-01-27)
 
 ### Features
 
 - Python 3.13 support, CI/CD improvements
-  ([`c147cf1`](https://github.com/jbcom/extended-data-types/commit/c147cf1afab6eb195166dc5d4021b66243f57cab))
+  ([`2c48d9a`](https://github.com/jbcom/extended-data-types/commit/2c48d9afbbb7ab2b7dc947d8e81326c5d21d8de2))
 
 * Improvements to structure for CI / CD and documentation * Support for Python 3.13 * Additional
   methods in stack_utils and map_utils
 
 
-## v1.0.0 (2025-01-27)
+## v3.0.0 (2025-01-27)
 
 ### Features
 
@@ -31,7 +47,7 @@ BREAKING CHANGE: Moving forward 3.8 will not be supported as it adds too much co
   compatibility
 
 
-## v0.1.0 (2025-01-27)
+## v1.0.0 (2025-01-27)
 
 ### Features
 
