@@ -84,7 +84,10 @@ xfail_strict = true
 filterwarnings = []
 
 [tool.coverage.paths]
-source = ["src"]
+source = [
+    "src/extended_data_types",
+    ".tox/*/lib/python*/site-packages/extended_data_types",
+]
 
 [tool.coverage.run]
 branch = true
@@ -94,6 +97,7 @@ source = ["extended_data_types"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+fail_under = 75
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
