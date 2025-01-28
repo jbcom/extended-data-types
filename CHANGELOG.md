@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v5.0.3 (2025-01-28)
+
+### Bug Fixes
+
+- Coverage, linting, and typechecking in ci
+  ([`b3ec354`](https://github.com/jbcom/extended-data-types/commit/b3ec354e46a16e012044e180de34733a9628052e))
+
+
 ## v5.0.2 (2025-01-28)
 
 ### Bug Fixes
