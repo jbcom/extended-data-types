@@ -1,17 +1,17 @@
 # CHANGELOG
 
 
-## v5.0.1 (2025-01-27)
+## v5.0.1 (2025-01-28)
 
 ### Bug Fixes
 
-- Typo in CI workflow
-  ([`48414e3`](https://github.com/jbcom/extended-data-types/commit/48414e39b3c355ec34b187c2b1684bbc70291ae0))
+- Pipeline issues
+  ([`f86c139`](https://github.com/jbcom/extended-data-types/commit/f86c139312eddf57ca4725eda1e9cea4a59cb44b))
 
 ### Continuous Integration
 
 - Improvements to testing
-  ([`8d6d5ae`](https://github.com/jbcom/extended-data-types/commit/8d6d5ae7ac8dacbeb9cafbef8cc2e1ded32cceb9))
+  ([`0433562`](https://github.com/jbcom/extended-data-types/commit/04335629a52cdb0710e5e16a950244f678304c0c))
 
 * Streamlined tox configuration and CI / CD workflows * Ensured coverage reporting works both
   locally and in CI environment
