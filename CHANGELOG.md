@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v5.0.2 (2025-01-28)
+
+### Bug Fixes
+
+- Ci improvements
+  ([`ed816b7`](https://github.com/jbcom/extended-data-types/commit/ed816b72c558374617a8b337a55b288fb9f3ae9f))
+
+
 ## v5.0.1 (2025-01-28)
 
 ### Bug Fixes
