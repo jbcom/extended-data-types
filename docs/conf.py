@@ -44,40 +44,34 @@ else:
     }
 
 html_logo = "_static/logo.png"
-
 html_permalinks_icon = "<span>⚓</span>"
 
-autodoc_typehints = "description"
-autodoc_typehints_format = "fully-qualified"  # Add this line
+# Type aliases for documentation
 autodoc_type_aliases = {
     "FilePath": "extended_data_types.file_data_type.FilePath",
+    "ReturnType": "extended_data_types.file_operations.ReturnType",
+    "VT": "extended_data_types.map_data_type.VT",
+    "KT": "extended_data_types.map_data_type.KT",
 }
 
+# Essential ignores for external dependencies
 nitpick_ignore = [
     ("py:class", "git.Repo"),
-    ("py:class", "ObjectProxy"),
-    ("py:class", "yaml.SafeDumper"),
-    ("py:class", "yaml.SafeLoader"),
+    ("py:obj", "orjson"),
     ("py:obj", "wrapt.ObjectProxy"),
     ("py:obj", "yaml.SafeDumper"),
     ("py:obj", "yaml.SafeLoader"),
-    ("py:obj", "orjson"),
+    ("py:class", "yaml.Node"),
+    ("py:class", "yaml.ScalarNode"),
+    ("py:class", "yaml.MappingNode"),
     ("py:obj", "defaultdict"),
+    ("py:class", "extended_data_types.file_data_type.FilePath"),
     ("py:class", "extended_data_types.map_data_type.VT"),
-    ("py:class", "extended_data_types.map_data_type.KT"),
+    ("py:class", "extended_data_types.file_operations.ReturnType"),
 ]
 
-nitpick_ignore_regex = [
-    ("py:class", r"Safe.*"),
-    ("py:class", r".*Node"),
-    ("py:class", r"yaml\..*\.Safe.*"),
-    ("py:obj", r"extended_data_types\.yaml_utils\..*\.Pure.*"),
-    ("py:obj", r"extended_data_types\.yaml_utils\.tag_classes\..*.__init__"),
-    ("py:obj", r"orjson"),
-    (r"py:.*", r"extended_data_types\.file_data_type\.FilePath"),
-]
-
+# Intersphinx configuration
 intersphinx_mapping = {
-    "python": ("https://docs.python.org/3", None),
-    "sortedcontainers": ("https://grantjenks.com/docs/sortedcontainers/", None),
+    'python': ('https://docs.python.org/3', None),
+    'sortedcontainers': ('https://grantjenks.com/docs/sortedcontainers/', None),
 }

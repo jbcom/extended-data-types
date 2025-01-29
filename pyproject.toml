@@ -37,6 +37,7 @@ dependencies = [
     "tomlkit>=0.13.2",
     "typing_extensions>=4.3.0; python_version < '3.10'",
     "wrapt>=1.16.0",
+    "filelock>=3.13.1",
 ]
 
 [project.urls]
@@ -144,7 +145,7 @@ ignore = [
     "PLR0913", # Too many arguments in function definition: Sometimes, functions require many parameters to handle complex configurations or provide flexibility, particularly in factory functions or when adhering to specific interface contracts.
     "RET505",  # Unnecessary `elif` after `return`: Often used for clarity in maintaining separate conditional branches, enhancing readability despite technically being redundant.
     "TCH",     # TYPE_CHECKING blocks: These are essential for type hinting without importing unnecessary dependencies at runtime, especially useful for preventing circular imports and keeping runtime environments lean, though they may affect automatic documentation generation.
-    "TD",      # TODO comments are a common part of development workflows for tracking pending tasks, and there’s often no need to enforce a specific style or behavior for these comments.
+    "TD",      # TODO comments are a common part of development workflows for tracking pending tasks, and there's often no need to enforce a specific style or behavior for these comments.
     "TID252",  # Relative imports are perfectly acceptable within well-structured modules and packages, especially when maintaining a clear and logical project layout.
     "TRY003",  # Simple strings are acceptable in exceptions without specifying type: Providing explicit exception messages improves readability and understanding, even when not adding extra error details.
     "TRY300",  # Allow broad exception catches in certain contexts where specific handling of multiple exceptions is complex or unnecessary.

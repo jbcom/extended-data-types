@@ -10,9 +10,8 @@ from __future__ import annotations
 import os
 import sys
 import tempfile
-
 from pathlib import Path
-
+from typing import TypeAlias, Union
 
 if sys.version_info >= (3, 10):
     from typing import TypeAlias, Union
@@ -21,11 +20,19 @@ else:
 
     from typing_extensions import TypeAlias
 
-from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError, Repo
+from git import (GitCommandError, InvalidGitRepositoryError, NoSuchPathError,
+                 Repo)
+
+FilePath: TypeAlias = Union[str, Path]
+"""Type alias for file paths that can be either strings or Path objects."""
 
 
-FilePath: TypeAlias = Union[str, os.PathLike[str]]
-"""Type alias for file paths that can be represented as strings or os.PathLike objects."""
+class FilePath:
+    """A class representing a file path with extended functionality.
+    
+    This class provides utilities for working with file paths, including
+    validation, manipulation, and repository-related operations.
+    """
 
 
 def get_parent_repository(
@@ -164,13 +171,13 @@ def match_file_extensions(
 
 
 def get_encoding_for_file_path(file_path: FilePath) -> str:
-    """Determines the encoding type based on the file extension.
+    """Get the appropriate encoding for a file path.
 
     Args:
-        file_path (FilePath): The path of the file to check.
+        file_path: The path to check.
 
     Returns:
-        str: The encoding type as a string (e.g., "yaml", "json", "hcl", "toml", or "raw").
+        The encoding to use for the file.
     """
     suffix = Path(file_path).suffix
     if suffix in [".yaml", ".yml"]:
