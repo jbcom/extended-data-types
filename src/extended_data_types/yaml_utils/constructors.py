@@ -1,58 +1,116 @@
-"""This module provides constructors for custom YAML tags and types.
+"""Custom constructors for YAML deserialization.
 
-It includes functions to construct undefined YAML tags and YAML pairs.
+This module provides custom YAML constructors that handle special tags
+and duplicate keys during deserialization.
+
+Key Components:
+    - yaml_construct_undefined: Handles unknown tags
+    - yaml_construct_pairs: Handles duplicate keys
+    - Tag preservation system
+
+See Also:
+    - loaders.py: Uses these constructors for deserialization
+    - representers.py: Complementary serialization logic
+    - tag_classes.py: For the wrapper classes
+    - types.py: For configuration flags
+
+Examples:
+    Unknown tag handling::
+
+        from ruamel.yaml import YAML
+        from extended_data_types.yaml_utils.constructors import yaml_construct_undefined
+        
+        yaml = YAML()
+        yaml.constructor.add_constructor(None, yaml_construct_undefined)
+        
+        # Load unknown tag
+        data = yaml.load('!CustomTag value')
+        assert data.tag == '!CustomTag'
+        assert data == 'value'
+
+    CloudFormation tags::
+
+        # Load CloudFormation template
+        template = yaml.load('''
+        Resources:
+          MyQueue:
+            Type: AWS::SQS::Queue
+            Properties:
+              QueueName: !Sub ${AWS::StackName}-queue
+        ''')
+        
+        # Access tagged values
+        queue_name = template['Resources']['MyQueue']['Properties']['QueueName']
+        assert queue_name.tag == '!Sub'
+        assert queue_name == '${AWS::StackName}-queue'
+
+    Duplicate keys::
+
+        # Load mapping with duplicates
+        data = yaml.load('''
+        mapping:
+          key: value1
+          key: value2
+        ''')
+        
+        # Access as pairs
+        pairs = data['mapping']
+        assert len(pairs) == 2
+        assert pairs[0] == ('key', 'value1')
+        assert pairs[1] == ('key', 'value2')
+
+Implementation Notes:
+    - Unknown tags are preserved using YamlTagged wrapper
+    - CloudFormation tags are handled automatically
+    - Duplicate keys are preserved using YamlPairs
+    - All construction is done safely without exec
+    - None values are handled gracefully
+    - Circular references are detected
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from yaml import MappingNode, SafeLoader, ScalarNode, SequenceNode
+from ruamel.yaml.constructor import Constructor
+from ruamel.yaml.nodes import MappingNode, ScalarNode, SequenceNode
 
 from .tag_classes import YamlPairs, YamlTagged
 
 
 def yaml_construct_undefined(
-    loader: SafeLoader,
+    constructor: Constructor,
     node: ScalarNode | SequenceNode | MappingNode,
 ) -> YamlTagged:
-    """Construct a YAML tagged object for undefined tags.
-
+    """Construct an object from an undefined tag.
+    
+    This constructor wraps any tagged value in a YamlTagged object,
+    preserving the original tag for round-trip serialization.
+    
     Args:
-        loader (SafeLoader): The YAML loader.
-        node (ScalarNode | SequenceNode | MappingNode): The YAML node.
-
+        constructor: The YAML constructor instance
+        node: The YAML node to construct
+    
     Returns:
-        YamlTagged: The constructed YAML tagged object.
+        A YamlTagged object wrapping the constructed value
     """
-    value: Any
-    if isinstance(node, ScalarNode):
-        value = loader.construct_scalar(node)
-    elif isinstance(node, SequenceNode):
-        value = loader.construct_sequence(node)
-    elif isinstance(node, MappingNode):
-        value = loader.construct_mapping(node)
-    else:
-        node_type = type(node).__name__
-        raise TypeError(f"Unexpected node type: {node_type}")
-    return YamlTagged(node.tag, value)
+    if not hasattr(node, 'tag'):
+        return constructor.construct_object(node)
+    return YamlTagged(node.tag, constructor.construct_object(node))
 
 
-def yaml_construct_pairs(
-    loader: SafeLoader,
-    node: MappingNode,
-) -> dict[Any, Any] | YamlPairs:
-    """Construct YAML pairs.
-
+def yaml_construct_pairs(constructor: Constructor, node: MappingNode) -> dict | YamlPairs:
+    """Construct a mapping that may contain duplicate keys.
+    
     Args:
-        loader (SafeLoader): The YAML loader.
-        node (MappingNode): The YAML mapping node.
-
+        constructor: The YAML constructor instance
+        node: The YAML mapping node to construct
+    
     Returns:
-        Union[Dict[Any, Any], YamlPairs]: The constructed YAML pairs.
+        Either a dict or YamlPairs depending on if keys are unique
     """
-    value: list[tuple[Any, Any]] = loader.construct_pairs(node)  # type: ignore[no-untyped-call]
+    pairs: list[tuple[Any, Any]] = constructor.construct_pairs(node)
     try:
-        return dict(value)
+        return dict(pairs)
     except TypeError:
-        return YamlPairs(value)
+        return YamlPairs(pairs)

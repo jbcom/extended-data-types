@@ -1,80 +1,164 @@
-"""This module provides custom representers for YAML serialization.
+"""Custom representers for YAML serialization.
 
-It includes functions to represent tagged objects, YAML pairs, and strings.
+This module provides custom YAML representers that handle special formatting
+and tag preservation during serialization.
+
+Key Components:
+    - yaml_str_representer: Smart string formatting
+    - yaml_represent_tagged: Tag preservation
+    - yaml_represent_pairs: Duplicate key handling
+
+See Also:
+    - dumpers.py: Uses these representers for serialization
+    - constructors.py: Complementary deserialization logic
+    - tag_classes.py: For the wrapped object types
+    - types.py: For configuration flags
+
+Examples:
+    String representation::
+
+        from ruamel.yaml import YAML
+        from extended_data_types.yaml_utils.representers import yaml_str_representer
+        
+        yaml = YAML()
+        yaml.representer.add_representer(str, yaml_str_representer)
+        
+        # Multi-line strings use block style
+        data = {
+            'block': '''
+                First line
+                Second line
+                Third line
+            '''
+        }
+        # Dumps as:
+        # block: |
+        #   First line
+        #   Second line
+        #   Third line
+
+    Tagged values::
+
+        from extended_data_types.yaml_utils.tag_classes import YamlTagged
+        
+        # Create and dump tagged value
+        tagged = YamlTagged('!Custom', 'value')
+        yaml.dump({'key': tagged})
+        # Dumps as:
+        # key: !Custom value
+
+    Duplicate keys::
+
+        from extended_data_types.yaml_utils.tag_classes import YamlPairs
+        
+        # Create and dump pairs
+        pairs = YamlPairs([
+            ('key', 'value1'),
+            ('key', 'value2')
+        ])
+        yaml.dump({'mapping': pairs})
+        # Dumps as:
+        # mapping:
+        #   key: value1
+        #   key: value2
+
+Implementation Notes:
+    - String style selection is context-aware:
+        - '|' for multi-line blocks
+        - '>' for folded text
+        - '"' for special characters
+        - plain for simple strings
+    - Tags are preserved exactly as specified
+    - Pairs maintain order and duplicates
+    - All representers handle None values safely
 """
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-
 if TYPE_CHECKING:
-    from yaml import MappingNode, Node, SafeDumper, ScalarNode
+    from ruamel.yaml import MappingNode, Node, SafeDumper, ScalarNode
 
-from .tag_classes import LiteralScalarString, YamlPairs, YamlTagged
+from .tag_classes import YamlPairs, YamlTagged
+from .types import YAMLFlags
+
+
+def yaml_str_representer(dumper: SafeDumper, data: str) -> ScalarNode:
+    """Represent a YAML string with appropriate formatting.
+    
+    Chooses the appropriate YAML string style based on content:
+        - Literal block style (|) for multi-line strings > 2 lines
+        - Folded style (>) for shorter multi-line strings
+        - Double-quoted style (") for strings with special characters
+        - Plain style for simple strings
+    
+    Args:
+        dumper: The YAML dumper instance
+        data: The string to represent
+    
+    Returns:
+        A YAML scalar node with appropriate style
+    """
+    if "\n" in data:
+        if data.count('\n') > 2:
+            return dumper.represent_scalar(
+                "tag:yaml.org,2002:str",
+                data,
+                style="|"
+            )
+        return dumper.represent_scalar(
+            "tag:yaml.org,2002:str",
+            data,
+            style=">"
+        )
+    
+    if any(char in data for char in ":{}[],&*#?|-><!%@`"):
+        return dumper.represent_scalar(
+            "tag:yaml.org,2002:str",
+            data,
+            style='"'
+        )
+    
+    return dumper.represent_scalar("tag:yaml.org,2002:str", data)
 
 
 def yaml_represent_tagged(dumper: SafeDumper, data: YamlTagged) -> Node:
     """Represent a YAML tagged object.
-
+    
     Args:
-        dumper (SafeDumper): The YAML dumper.
-        data (YamlTagged): The YAML tagged object.
-
+        dumper: The YAML dumper instance
+        data: The tagged object to represent
+    
     Returns:
-        Node: The represented YAML node.
+        A YAML node with the appropriate tag
+    
+    Raises:
+        TypeError: If data is not a YamlTagged instance
     """
     if not isinstance(data, YamlTagged):
         message = f"Expected YamlTagged, got {type(data).__name__}"
         raise TypeError(message)
+    
     node = dumper.represent_data(data.__wrapped__)
     node.tag = data.tag
     return node
 
 
 def yaml_represent_pairs(dumper: SafeDumper, data: YamlPairs) -> MappingNode:
-    """Represent YAML pairs.
-
+    """Represent YAML pairs that may contain duplicates.
+    
     Args:
-        dumper (SafeDumper): The YAML dumper.
-        data (YamlPairs): The YAML pairs object.
-
+        dumper: The YAML dumper instance
+        data: The pairs to represent
+    
     Returns:
-        MappingNode: The represented YAML node.
+        A YAML mapping node
+    
+    Raises:
+        TypeError: If data is not a YamlPairs instance
     """
     if not isinstance(data, YamlPairs):
         message = f"Expected YamlPairs, got {type(data).__name__}"
         raise TypeError(message)
     return dumper.represent_dict(data)
-
-
-def yaml_str_representer(dumper: SafeDumper, data: str) -> ScalarNode:
-    """Represent a YAML string.
-
-    Args:
-        dumper (SafeDumper): The YAML dumper.
-        data (str): The string to represent.
-
-    Returns:
-        ScalarNode: The represented YAML node.
-    """
-    if "\n" in data or "||" in data or "&&" in data:
-        return dumper.represent_scalar("tag:yaml.org,2002:str", data, style="|")
-    if any(char in data for char in ":{}[],&*#?|-><!%@`"):
-        return dumper.represent_scalar("tag:yaml.org,2002:str", data, style='"')
-    return dumper.represent_scalar("tag:yaml.org,2002:str", data)
-
-
-def yaml_literal_str_representer(
-    dumper: SafeDumper, data: LiteralScalarString
-) -> ScalarNode:
-    """Represent a LiteralScalarString as a literal block scalar in YAML.
-
-    Args:
-        dumper (SafeDumper): The YAML dumper.
-        data (LiteralScalarString): The literal string to represent.
-
-    Returns:
-        ScalarNode: The represented YAML node with literal style.
-    """
-    return dumper.represent_scalar("tag:yaml.org,2002:str", str(data), style="|")

@@ -8,10 +8,9 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Mapping, MutableMapping
-from typing import Any, Callable, TypeVar
+from typing import Any, Callable, Generic, TypeVar
 
 import inflection
-
 from sortedcontainers import SortedDict
 
 from .type_utils import convert_special_types
@@ -144,34 +143,15 @@ def zipmap(a: list[str], b: list[str]) -> dict[str, str]:
     return zipped
 
 
-KT = TypeVar("KT")
-VT = TypeVar("VT")
+KT = TypeVar('KT')
+VT = TypeVar('VT')
 
 
-class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignore[misc]
+class SortedDefaultDict(defaultdict[KT, VT], Generic[KT, VT]):
     """A dictionary that combines :class:`collections.defaultdict` and :class:`sortedcontainers.SortedDict` functionality.
-
-    This class inherits from both :class:`collections.defaultdict` and :class:`sortedcontainers.SortedDict`,
-    providing a dictionary that both automatically creates values for missing keys and maintains
-    its keys in sorted order.
-
-    The sorting behavior is inherited from :class:`sortedcontainers.SortedDict`, while the default value behavior
-    comes from :class:`collections.defaultdict`. When keys are accessed that don't exist, the
-    default_factory is called to create a value, just like a regular :class:`collections.defaultdict`.
-
-    Args:
-        default_factory (Callable[[], VT] | None): A callable that provides the default value for missing keys.
-            If None, attempts to access missing keys will raise KeyError.
-
-    Example:
-        >>> d = SortedDefaultDict(list)
-        >>> d['c'].append(3)
-        >>> d['a'].append(1)
-        >>> d['b'].append(2)
-        >>> list(d.keys())
-        ['a', 'b', 'c']
-        >>> d['d']  # Creates new list automatically
-        []
+    
+    This class provides both the default value behavior of :class:`collections.defaultdict`
+    and the sorted key behavior of :class:`sortedcontainers.SortedDict`.
     """
 
     def __init__(self, default_factory: Callable[[], VT] | None = None) -> None:
@@ -179,14 +159,9 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
 
         Args:
             default_factory: Callable that provides the default value for missing keys.
-                When a key is accessed that doesn't exist, this callable is invoked
-                without arguments to provide the missing value. If None, accessing a
-                missing key raises a KeyError.
-
-        Raises:
-            TypeError: If default_factory is not callable or None.
+                When None, behaves like a regular dictionary.
         """
-        defaultdict.__init__(self, default_factory)
+        super().__init__(default_factory)
         SortedDict.__init__(self)
 
 

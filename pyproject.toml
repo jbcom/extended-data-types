@@ -36,6 +36,7 @@ dependencies = [
     "sortedcontainers>=2.4.0",
     "tomlkit>=0.13.2",
     "typing_extensions>=4.3.0; python_version < '3.10'",
+    "ruamel.yaml>=0.17.40",
     "wrapt>=1.16.0",
     "filelock>=3.13.1",
 ]
@@ -58,6 +59,7 @@ typing = [
     "mypy>=1.0.0",
     "types-PyYAML>=6.0.12.20240724",
     "sortedcontainers-stubs>=2.4.2",
+    "types-requests>=2.31.0.20240311",
 ]
 
 docs = [
