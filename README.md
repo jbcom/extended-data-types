@@ -2,10 +2,10 @@
 
 [![Extended Data Types Logo](docs/_static/logo.png)](https://github.com/jbcom/extended-data-types)
 
-*🐍 Supercharge your Python data types! 🚀*
+_🐍 Supercharge your Python data types! 🚀_
 
 [![CI Status](https://github.com/jbcom/extended-data-types/workflows/CI/badge.svg)](https://github.com/jbcom/extended-data-types/actions?query=workflow%3ACI)
-[![Documentation Status](https://readthedocs.org/projects/extended-data-types/badge/?version=latest)](https://extended-data-types.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://github.com/jbcom/extended-data-types/workflows/Documentation/badge.svg)](https://jbcom.github.io/extended-data-types/)
 [![PyPI Package latest release](https://img.shields.io/pypi/v/extended-data-types.svg)](https://pypi.org/project/extended-data-types/)
 [![Supported versions](https://img.shields.io/pypi/pyversions/extended-data-types.svg)](https://pypi.org/project/extended-data-types/)
 
@@ -27,7 +27,7 @@ Extended Data Types is a Python library that provides additional functionality f
 
 ### Base64 Encoding
 
-```
+```python
 from extended_data_types import base64_encode
 
 data = "Hello, world!"
@@ -62,11 +62,11 @@ decoded_data = decode_yaml(yaml_str)
 print(decoded_data)  # Output: {'name': 'Alice', 'age': 30}
 ```
 
-For more usage examples, see the [Usage](https://extended-data-types.readthedocs.io/en/latest/usage.md) documentation.
+For more usage examples, see the [documentation](https://jbcom.github.io/extended-data-types/).
 
 ## Contributing
 
-Contributions are welcome! Please see the [Contributing Guidelines](https://github.com/jbcom/extended-data-types/blob/main/CONTRIBUTING.md) for more information.
+Contributions are welcome! Please see the [Contributing Guidelines](https://jbcom.github.io/extended-data-types/guides/contributing.html) for more information.
 
 ## Credit
 
@@ -74,9 +74,8 @@ Extended Data Types is written and maintained by [Jon Bogaty](mailto:jon@jonboga
 
 ## Project Links
 
-- [**Get Help**](https://stackoverflow.com/questions/tagged/extended-data-types) (use the *extended-data-types* tag on
-  Stack Overflow)
-- [**PyPI**](https://pypi.org/project/extended-data-types/)
-- [**GitHub**](https://github.com/jbcom/extended-data-types)
-- [**Documentation**](https://extended-data-types.readthedocs.io/en/latest/)
+- [**Documentation**](https://jbcom.github.io/extended-data-types/)
+- [**PyPI Package**](https://pypi.org/project/extended-data-types/)
+- [**GitHub Repository**](https://github.com/jbcom/extended-data-types)
+- [**Issue Tracker**](https://github.com/jbcom/extended-data-types/issues)
 - [**Changelog**](https://github.com/jbcom/extended-data-types/tree/main/CHANGELOG.md)

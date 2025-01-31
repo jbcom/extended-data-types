@@ -1,76 +1,91 @@
 Overview
---------
+========
 
-Extended Data Types extends Python's standard data types with additional methods and utilities to simplify common tasks. It includes features like:
+Extended Data Types enhances Python's standard data types with additional functionality and utilities to simplify common tasks.
 
-- **Base64 encoding and decoding**: Efficiently encode and decode data to and from Base64 format.
-- **Import utilities**: Convert data to and from various formats such as JSON and YAML.
-- **Export utilities**: Convert data to and from various formats such as JSON and YAML.
-- **File path manipulation and validation**: Manage and validate file paths with ease.
-- **Extended string manipulation functions**: Perform advanced string operations.
-- **YAML utilities**: Handle custom data structures within YAML.
-- **List utilities**: Simplify list operations such as filtering and flattening.
-- **Map utilities**: Enhance dictionary operations with additional functionalities.
-- **Matcher utilities**: Improve matching capabilities for various use cases.
-- **Stack utilities**: Access and filter stack frames.
-- **Nothing utilities**: Work with empty and non-empty values seamlessly.
+Key Features
+-----------
 
-Usage Examples
---------------
+Data Type Extensions
+~~~~~~~~~~~~~~~~~~
 
-Here are a few examples to get you started:
+- **List Operations**: Advanced list manipulation including flattening, filtering, and type-safe operations
+- **Map Operations**: Enhanced dictionary operations with sorting, filtering, and type validation
+- **String Operations**: Comprehensive string manipulation and validation utilities
+- **Type Utilities**: Robust type checking, conversion, and validation
 
-### Base64 Encoding and Decoding
+Format Support
+~~~~~~~~~~~~
 
-.. code-block:: python
+- **YAML**: Enhanced YAML handling with custom tags and advanced features
+- **JSON**: High-performance JSON operations using orjson
+- **Base64**: Flexible encoding/decoding with wrapping options
+- **TOML**: Comprehensive TOML format support
+- **HCL2**: HashiCorp Configuration Language parsing
 
-    from extended_data_types import base64_encode
+File and Path Handling
+~~~~~~~~~~~~~~~~~~~
 
-    encoded = base64_encode("Hello, World!")
-    print(encoded)  # Encoded Base64 string
+- **Path Operations**: Safe path manipulation and validation
+- **File Type Detection**: Automatic file type detection
+- **Encoding Support**: Automatic encoding detection and handling
 
-### Exporting Data
+Pattern Matching
+~~~~~~~~~~~~~~
 
-.. code-block:: python
+- **Type Patterns**: Advanced type-based pattern matching
+- **String Matching**: Flexible string matching with wildcards
+- **Custom Matchers**: Extensible matcher framework
 
-    from extended_data_types import wrap_raw_data_for_export
+State Management
+~~~~~~~~~~~~~~
 
-    data = {"name": "John", "age": 30}
-    wrapped_data = wrap_raw_data_for_export(data)
-    print(wrapped_data)  # Wrapped data ready for export
+- **State Tracking**: Type-safe state management
+- **Configuration**: Environment-aware configuration
+- **Validation**: Comprehensive state validation
 
-### File Path Validation
+Quick Examples
+------------
 
-.. code-block:: python
-
-    from extended_data_types import is_url
-
-    url = "https://example.com"
-    print(is_url(url))  # True
-
-### String Manipulation
-
-.. code-block:: python
-
-    from extended_data_types import sanitize_key, truncate
-
-    key = sanitize_key("Some Key With Spaces")
-    truncated = truncate("This is a very long message", 10)
-    print(key)        # Output: Some_Key_With_Spaces
-    print(truncated)  # Output: This is a...
-
-### YAML Utilities
+List Operations
+~~~~~~~~~~~~~
 
 .. code-block:: python
 
-    from extended_data_types import decode_yaml, encode_yaml
+    from extended_data_types import list_data_type
 
-    yaml_data = """
-    name: John
-    age: 30
+    # Flatten nested lists
+    nested = [[1, 2], [3, [4, 5]]]
+    flat = list_data_type.flatten_list(nested)  # [1, 2, 3, 4, 5]
+
+Map Operations
+~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from extended_data_types import map_data_type
+
+    # Sort dictionary
+    unsorted = {"c": 3, "a": 1, "b": 2}
+    sorted_map = map_data_type.sort_map(unsorted)  # {"a": 1, "b": 2, "c": 3}
+
+YAML Operations
+~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from extended_data_types import yaml_utils
+
+    # Parse YAML with custom tags
+    yaml_str = """
+    name: !ref ${USER}
+    config: !include config.yaml
     """
-    data = decode_yaml(yaml_data)
-    print(data)  # Output: {'name': 'John', 'age': 30}
+    data = yaml_utils.decode_yaml(yaml_str)
 
-    encoded_yaml = encode_yaml(data)
-    print(encoded_yaml)  # Encoded YAML string
+Next Steps
+---------
+
+- Check out the :doc:`installation` guide to get started
+- Review the :doc:`api/index` for detailed documentation
+- See the :doc:`guides/advanced_usage` for advanced features
