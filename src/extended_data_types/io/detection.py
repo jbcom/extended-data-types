@@ -13,13 +13,13 @@ from .types import EncodingType, FilePath
 
 def get_encoding_for_file_path(file_path: FilePath) -> EncodingType:
     """Determine encoding type based on file extension.
-    
+
     Args:
         file_path: Path to check
-        
+
     Returns:
         Detected encoding type
-        
+
     Examples:
         >>> get_encoding_for_file_path("config.yaml")
         'yaml'
@@ -29,7 +29,7 @@ def get_encoding_for_file_path(file_path: FilePath) -> EncodingType:
         'hcl'
     """
     suffix = Path(file_path).suffix.lower()
-    
+
     if suffix in {".yaml", ".yml"}:
         return "yaml"
     if suffix == ".json":
@@ -40,15 +40,16 @@ def get_encoding_for_file_path(file_path: FilePath) -> EncodingType:
         return "toml"
     return "raw"
 
+
 def is_config_file(file_path: FilePath) -> bool:
     """Check if file path matches common configuration file patterns.
-    
+
     Args:
         file_path: Path to check
-        
+
     Returns:
         True if path matches config file pattern
-        
+
     Examples:
         >>> is_config_file("config.yaml")
         True
@@ -57,4 +58,4 @@ def is_config_file(file_path: FilePath) -> bool:
         >>> is_config_file("main.tf")
         True
     """
-    return get_encoding_for_file_path(file_path) != "raw" 
+    return get_encoding_for_file_path(file_path) != "raw"

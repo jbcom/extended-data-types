@@ -20,11 +20,11 @@ from extended_data_types.string.types import ExtendedString
 
 def pluralize(text: str, count: int | None = None) -> str:
     """Convert string to plural form.
-    
+
     Args:
         text: String to pluralize
         count: Optional count to conditionally pluralize
-        
+
     Examples:
         >>> pluralize("cat")
         'cats'
@@ -37,4 +37,4 @@ def pluralize(text: str, count: int | None = None) -> str:
         return text
     return inflection.pluralize(text)
 
-[... continue with string inflectors ...] 
+[... continue with string inflectors ...]

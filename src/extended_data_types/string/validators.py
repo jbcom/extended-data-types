@@ -1,4 +1,4 @@
-"""String validation utilities.
+r"""String validation utilities.
 
 This module provides comprehensive validation functions for string formats and patterns:
 
@@ -62,6 +62,7 @@ import json
 import re
 import uuid
 import xml.etree.ElementTree as ET
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -69,8 +70,6 @@ from typing import Any
 import validators
 
 from extended_data_types.core.patterns import DATE_PATTERN, TIME_PATTERN
-
-from .types import ExtendedString
 
 
 @dataclass
@@ -82,13 +81,16 @@ class ValidationResult:
         message: Optional error message if validation failed
         details: Optional dictionary of additional validation details
     """
+
     valid: bool
     message: str | None = None
     details: dict[str, Any] | None = None
 
 
-def validate_pattern(text: str, pattern: str | re.Pattern, flags: int = 0) -> ValidationResult:
-    """Validate string matches a pattern.
+def validate_pattern(
+    text: str, pattern: str | re.Pattern, flags: int = 0
+) -> ValidationResult:
+    r"""Validate string matches a pattern.
 
     Args:
         text: The string to validate
@@ -105,12 +107,12 @@ def validate_pattern(text: str, pattern: str | re.Pattern, flags: int = 0) -> Va
     """
     if isinstance(pattern, str):
         pattern = re.compile(pattern, flags)
-    
+
     matches = bool(pattern.match(text))
     return ValidationResult(
         matches,
         None if matches else "String does not match pattern",
-        {"pattern": pattern.pattern}
+        {"pattern": pattern.pattern},
     )
 
 
@@ -129,10 +131,7 @@ def validate_date(text: str) -> ValidationResult:
         True
     """
     matches = bool(DATE_PATTERN.match(text))
-    return ValidationResult(
-        matches,
-        None if matches else "Invalid date format"
-    )
+    return ValidationResult(matches, None if matches else "Invalid date format")
 
 
 def validate_time(text: str) -> ValidationResult:
@@ -150,10 +149,7 @@ def validate_time(text: str) -> ValidationResult:
         True
     """
     matches = bool(TIME_PATTERN.match(text))
-    return ValidationResult(
-        matches,
-        None if matches else "Invalid time format"
-    )
+    return ValidationResult(matches, None if matches else "Invalid time format")
 
 
 def validate_length(
@@ -176,13 +172,13 @@ def validate_length(
         return ValidationResult(
             False,
             f"String length {length} is less than minimum {min_length}",
-            {"actual": length, "min": min_length}
+            {"actual": length, "min": min_length},
         )
     if max_length is not None and length > max_length:
         return ValidationResult(
             False,
             f"String length {length} exceeds maximum {max_length}",
-            {"actual": length, "max": max_length}
+            {"actual": length, "max": max_length},
         )
     return ValidationResult(True)
 
@@ -203,10 +199,7 @@ def validate_url(url: str, public: bool = False) -> ValidationResult:
         True
     """
     is_valid = bool(validators.url(url, public=public))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid URL format"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid URL format")
 
 
 def validate_email(email: str) -> ValidationResult:
@@ -224,10 +217,7 @@ def validate_email(email: str) -> ValidationResult:
         True
     """
     is_valid = bool(validators.email(email))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid email format"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid email format")
 
 
 def validate_ipv4(ip: str) -> ValidationResult:
@@ -245,10 +235,7 @@ def validate_ipv4(ip: str) -> ValidationResult:
         True
     """
     is_valid = bool(validators.ipv4(ip))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid IPv4 address"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid IPv4 address")
 
 
 def validate_ipv6(ip: str) -> ValidationResult:
@@ -266,10 +253,7 @@ def validate_ipv6(ip: str) -> ValidationResult:
         True
     """
     is_valid = bool(validators.ipv6(ip))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid IPv6 address"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid IPv6 address")
 
 
 def validate_domain(domain: str) -> ValidationResult:
@@ -287,10 +271,7 @@ def validate_domain(domain: str) -> ValidationResult:
         True
     """
     is_valid = bool(validators.domain(domain))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid domain name"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid domain name")
 
 
 def validate_mac_address(mac: str) -> ValidationResult:
@@ -308,10 +289,7 @@ def validate_mac_address(mac: str) -> ValidationResult:
         True
     """
     is_valid = bool(validators.mac_address(mac))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid MAC address"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid MAC address")
 
 
 def validate_slug(slug: str) -> ValidationResult:
@@ -329,10 +307,7 @@ def validate_slug(slug: str) -> ValidationResult:
         True
     """
     is_valid = bool(validators.slug(slug))
-    return ValidationResult(
-        is_valid,
-        None if is_valid else "Invalid slug format"
-    )
+    return ValidationResult(is_valid, None if is_valid else "Invalid slug format")
 
 
 def validate_uuid(text: str, version: int | None = None) -> ValidationResult:
@@ -351,7 +326,7 @@ def validate_uuid(text: str, version: int | None = None) -> ValidationResult:
             return ValidationResult(
                 False,
                 f"UUID version {uuid_obj.version} does not match required version {version}",
-                {"actual_version": uuid_obj.version, "required_version": version}
+                {"actual_version": uuid_obj.version, "required_version": version},
             )
         return ValidationResult(True)
     except ValueError as e:
@@ -431,8 +406,7 @@ def validate_numeric(text: str) -> ValidationResult:
     """
     is_numeric = text.isdigit()
     return ValidationResult(
-        is_numeric,
-        None if is_numeric else "String contains non-numeric characters"
+        is_numeric, None if is_numeric else "String contains non-numeric characters"
     )
 
 
@@ -453,10 +427,9 @@ def validate_alphanumeric(
         is_valid = all(c.isalnum() or c.isspace() for c in text)
     else:
         is_valid = text.isalnum()
-    
+
     return ValidationResult(
-        is_valid,
-        None if is_valid else "String contains non-alphanumeric characters"
+        is_valid, None if is_valid else "String contains non-alphanumeric characters"
     )
 
 
@@ -472,5 +445,5 @@ def validate_printable(text: str) -> ValidationResult:
     is_printable = text.isprintable()
     return ValidationResult(
         is_printable,
-        None if is_printable else "String contains non-printable characters"
-    ) 
+        None if is_printable else "String contains non-printable characters",
+    )

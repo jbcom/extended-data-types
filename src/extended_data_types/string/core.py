@@ -34,7 +34,6 @@ from __future__ import annotations
 from typing import Any
 
 from extended_data_types.core.conversion import TypeRegistry
-from extended_data_types.core.types import coerce_to_type
 
 from .types import ExtendedString, Pattern
 
@@ -92,9 +91,7 @@ def join_extended(*parts: Any, separator: str = "") -> ExtendedString:
 
 
 def wrap_string(
-    text: str,
-    wrapper: str | tuple[str, str],
-    condition: bool = True
+    text: str, wrapper: str | tuple[str, str], condition: bool = True
 ) -> ExtendedString:
     """Wrap a string with prefix/suffix if condition is met.
 
@@ -120,4 +117,4 @@ def wrap_string(
     else:
         prefix = suffix = wrapper
 
-    return ExtendedString(f"{prefix}{text}{suffix}") 
+    return ExtendedString(f"{prefix}{text}{suffix}")

@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable
+from typing import Any, TypeVar
 
 from .transform import Transform
 
-T = TypeVar('T')
-U = TypeVar('U')
+
+T = TypeVar("T")
+U = TypeVar("U")
 
 
 def validate_type(expected_type: type[T]) -> Callable[[Any], bool]:
@@ -30,8 +32,7 @@ def validate_type(expected_type: type[T]) -> Callable[[Any], bool]:
 
 
 def validate_predicate(
-    predicate: Callable[[T], bool],
-    message: str | None = None
+    predicate: Callable[[T], bool], message: str | None = None
 ) -> Transform[T, T]:
     """Create a validation transform.
 
@@ -49,10 +50,12 @@ def validate_predicate(
         >>> is_positive(-1)  # Raises ValueError
         ValueError: Validation failed
     """
+
     def validate(value: T) -> T:
         if not predicate(value):
             raise ValueError(message or "Validation failed")
         return value
+
     return Transform(validate)
 
 
@@ -73,17 +76,16 @@ def optional(transform: Transform[T, U]) -> Transform[T | None, U | None]:
         >>> optional_upper(None)
         None
     """
+
     def handle_none(value: T | None) -> U | None:
         if value is None:
             return None
         return transform(value)
+
     return Transform(handle_none)
 
 
-def fallback(
-    transform: Transform[T, U],
-    default: U
-) -> Transform[T, U]:
+def fallback(transform: Transform[T, U], default: U) -> Transform[T, U]:
     """Add fallback value to transform.
 
     Args:
@@ -101,9 +103,11 @@ def fallback(
         >>> safe_int("not a number")
         0
     """
+
     def with_fallback(value: T) -> U:
         try:
             return transform(value)
         except Exception:
             return default
-    return Transform(with_fallback) 
+
+    return Transform(with_fallback)

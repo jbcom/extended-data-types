@@ -6,13 +6,11 @@ from typing import Literal
 
 import roman
 
+
 NotationType = Literal["scientific", "engineering", "percent", "roman"]
 
 
-def to_scientific(
-    number: float,
-    precision: int = 2
-) -> str:
+def to_scientific(number: float, precision: int = 2) -> str:
     """Convert to scientific notation.
 
     Args:
@@ -29,10 +27,7 @@ def to_scientific(
     return f"{number:.{precision}e}"
 
 
-def to_engineering(
-    number: float,
-    precision: int = 2
-) -> str:
+def to_engineering(number: float, precision: int = 2) -> str:
     """Convert to engineering notation.
 
     Args:
@@ -49,10 +44,7 @@ def to_engineering(
     return f"{number:.{precision}E}"
 
 
-def to_percent(
-    number: float,
-    precision: int = 2
-) -> str:
+def to_percent(number: float, precision: int = 2) -> str:
     """Convert to percentage.
 
     Args:
@@ -104,4 +96,4 @@ def from_roman(numeral: str) -> int:
     Raises:
         ValueError: If invalid Roman numeral
     """
-    return roman.fromRoman(numeral) 
+    return roman.fromRoman(numeral)

@@ -8,7 +8,8 @@ from typing import Any, TypeVar
 
 from ..structures.lists import ListHandler
 
-T = TypeVar('T')
+
+T = TypeVar("T")
 
 # Global handler instance for compatibility functions
 _handler = ListHandler()
@@ -25,4 +26,4 @@ def filter_list(
     denylist: list[T] | None = None,
 ) -> list[T]:
     """Maintains compatibility with bob.list_data_type.filter_list."""
-    return _handler.filter_list(items, allowlist, denylist) 
+    return _handler.filter_list(items, allowlist, denylist)

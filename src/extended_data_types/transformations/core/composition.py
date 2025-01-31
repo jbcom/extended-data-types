@@ -7,7 +7,8 @@ from typing import Any, TypeVar
 from .chain import TransformChain
 from .transform import Transform
 
-T = TypeVar('T')
+
+T = TypeVar("T")
 
 
 def pipe(value: T, *transforms: Transform[Any, Any]) -> Any:
@@ -32,4 +33,4 @@ def compose(*transforms: Transform[Any, Any]) -> Transform[Any, Any]:
     Returns:
         A single transform that applies all transforms in sequence
     """
-    return Transform(lambda x: pipe(x, *transforms)) 
+    return Transform(lambda x: pipe(x, *transforms))

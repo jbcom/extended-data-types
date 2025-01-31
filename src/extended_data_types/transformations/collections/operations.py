@@ -10,21 +10,18 @@ This module provides utilities for transforming collections:
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Any, Callable, Sequence, TypeVar
-
-from extended_data_types.core.types import convert_special_types
+from collections.abc import Callable, Sequence
+from typing import Any, TypeVar
 
 from ..core import Transform
 
-T = TypeVar('T')
-K = TypeVar('K')
+
+T = TypeVar("T")
+K = TypeVar("K")
 
 
 def chunk(
-    items: Sequence[T],
-    size: int,
-    pad: bool = False,
-    fill_value: Any = None
+    items: Sequence[T], size: int, pad: bool = False, fill_value: Any = None
 ) -> list[list[T]]:
     """Split sequence into chunks of specified size.
 
@@ -43,7 +40,7 @@ def chunk(
         >>> chunk([1, 2, 3, 4, 5], 2, pad=True)
         [[1, 2], [3, 4], [5, None]]
     """
-    chunks = [items[i:i + size] for i in range(0, len(items), size)]
+    chunks = [items[i : i + size] for i in range(0, len(items), size)]
     if pad and chunks and len(chunks[-1]) < size:
         chunks[-1].extend([fill_value] * (size - len(chunks[-1])))
     return chunks
@@ -52,7 +49,7 @@ def chunk(
 def flatten(
     items: Sequence[Any],
     depth: int | None = None,
-    types: tuple[type, ...] = (list, tuple)
+    types: tuple[type, ...] = (list, tuple),
 ) -> list[Any]:
     """Flatten nested sequence.
 
@@ -73,11 +70,11 @@ def flatten(
     result = []
     for item in items:
         if isinstance(item, types) and (depth is None or depth > 0):
-            result.extend(flatten(
-                item,
-                depth=depth - 1 if depth is not None else None,
-                types=types
-            ))
+            result.extend(
+                flatten(
+                    item, depth=depth - 1 if depth is not None else None, types=types
+                )
+            )
         else:
             result.append(item)
     return result
@@ -114,9 +111,7 @@ def group_by(
 
 
 def sort_by(
-    items: Sequence[T],
-    key: Callable[[T], Any] | str,
-    reverse: bool = False
+    items: Sequence[T], key: Callable[[T], Any] | str, reverse: bool = False
 ) -> list[T]:
     """Sort items by key function or attribute.
 
@@ -146,4 +141,4 @@ def sort_by(
 chunk_transform = Transform(chunk)
 flatten_transform = Transform(flatten)
 group_by_transform = Transform(group_by)
-sort_by_transform = Transform(sort_by) 
+sort_by_transform = Transform(sort_by)

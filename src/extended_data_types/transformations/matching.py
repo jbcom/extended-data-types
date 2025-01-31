@@ -26,15 +26,15 @@ def is_partial_match(
     check_prefix_only: bool = False,
 ) -> bool:
     """Check if two strings partially match.
-    
+
     Args:
         a: The first string
         b: The second string
         check_prefix_only: Whether to check only the prefix
-        
+
     Returns:
         bool: True if there is a partial match
-        
+
     Examples:
         >>> is_partial_match("hello", "hell")
         True
@@ -59,16 +59,17 @@ def is_partial_match(
     # Check if one string is contained within the other
     return a in b or b in a
 
+
 def is_non_empty_match(a: Any, b: Any) -> bool:
     """Check if two non-empty values match.
-    
+
     Args:
         a: The first value
         b: The second value
-        
+
     Returns:
         bool: True if the values match
-        
+
     Examples:
         >>> is_non_empty_match("Hello", "HELLO")
         True
@@ -104,4 +105,4 @@ def is_non_empty_match(a: Any, b: Any) -> bool:
             return False
 
     # Return comparison result
-    return a == b 
+    return a == b

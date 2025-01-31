@@ -14,17 +14,19 @@ from __future__ import annotations
 
 from typing import Any, TypeVar
 
-T = TypeVar('T')
+
+T = TypeVar("T")
+
 
 def flatten_list(matrix: list[Any]) -> list[Any]:
     """Flatten a nested list structure into a single list.
-    
+
     Args:
         matrix: The nested list structure to flatten
-        
+
     Returns:
         list[Any]: The flattened list
-        
+
     Examples:
         >>> flatten_list([[1, 2], [3, [4, 5]]])
         [1, 2, 3, 4, 5]
@@ -33,6 +35,7 @@ def flatten_list(matrix: list[Any]) -> list[Any]:
         >>> flatten_list([])
         []
     """
+
     def _flatten(lst: list[Any]) -> list[Any]:
         """Recursively flatten a nested list."""
         flattened = []
@@ -45,21 +48,22 @@ def flatten_list(matrix: list[Any]) -> list[Any]:
 
     return _flatten(matrix)
 
+
 def filter_list(
     items: list[T] | None = None,
     allowlist: list[T] | None = None,
     denylist: list[T] | None = None,
 ) -> list[T]:
     """Filter a list based on allowlist and denylist.
-    
+
     Args:
         items: The list to filter
         allowlist: List of allowed items
         denylist: List of denied items
-        
+
     Returns:
         list[T]: The filtered list
-        
+
     Examples:
         >>> filter_list(['a', 'b', 'c'], allowlist=['a', 'b'])
         ['a', 'b']
@@ -73,6 +77,7 @@ def filter_list(
     denylist = denylist or []
 
     return [
-        item for item in items
+        item
+        for item in items
         if (not allowlist or item in allowlist) and item not in denylist
-    ] 
+    ]

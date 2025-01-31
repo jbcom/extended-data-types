@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import re
-from typing import Any, Mapping
+from collections.abc import Mapping
+from typing import Any
 
 
 def format_template(
-    template: str,
-    values: Mapping[str, Any],
-    default: str | None = None
+    template: str, values: Mapping[str, Any], default: str | None = None
 ) -> str:
     """Format string template with values.
 
@@ -34,10 +32,7 @@ def format_template(
 
 
 def truncate(
-    text: str,
-    length: int,
-    suffix: str = "...",
-    word_boundary: bool = True
+    text: str, length: int, suffix: str = "...", word_boundary: bool = True
 ) -> str:
     """Truncate text to specified length.
 
@@ -54,7 +49,7 @@ def truncate(
         return text
 
     if word_boundary:
-        return text[:length].rsplit(' ', 1)[0] + suffix
+        return text[:length].rsplit(" ", 1)[0] + suffix
     return text[:length] + suffix
 
 
@@ -62,7 +57,7 @@ def pad(
     text: str,
     length: int,
     char: str = " ",
-    align: Literal["left", "right", "center"] = "left"
+    align: Literal[left, right, center] = "left",
 ) -> str:
     """Pad text to specified length.
 
@@ -79,4 +74,4 @@ def pad(
         return text.ljust(length, char)
     elif align == "right":
         return text.rjust(length, char)
-    return text.center(length, char) 
+    return text.center(length, char)

@@ -8,6 +8,7 @@ from typing import Any
 
 from ..inspection.stack import StackInspector
 
+
 # Global inspector instance for compatibility functions
 _inspector = StackInspector()
 
@@ -26,9 +27,9 @@ def get_available_methods(
     # Convert to old format for compatibility
     return {
         name: {
-            'doc': info.doc,
-            'signature': info.signature,
-            'is_public': info.is_public
+            "doc": info.doc,
+            "signature": info.signature,
+            "is_public": info.is_public,
         }
         for name, info in methods.items()
     }
@@ -39,4 +40,4 @@ def current_python_version_is_at_least(
     major: int = 3,
 ) -> bool:
     """Maintains compatibility with bob.stack_utils.current_python_version_is_at_least."""
-    return _inspector.current_python_version_is_at_least(minor, major) 
+    return _inspector.current_python_version_is_at_least(minor, major)

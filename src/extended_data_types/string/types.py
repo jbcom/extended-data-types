@@ -14,14 +14,16 @@ Key Features:
 from __future__ import annotations
 
 import re
+
 from collections import UserString
 from pathlib import Path
-from typing import Literal, TypeVar, Union
+from typing import Literal, Union
+
 
 # Type aliases
 StrOrBytes = Union[str, bytes, bytearray, memoryview]
 StrPath = Union[str, Path]
-CaseStyle = Literal['camel', 'pascal', 'snake', 'kebab', 'title', 'upper', 'lower']
+CaseStyle = Literal["camel", "pascal", "snake", "kebab", "title", "upper", "lower"]
 FormatPattern = Union[str, re.Pattern[str]]
 
 
@@ -44,7 +46,7 @@ class ExtendedString(UserString):
         """
         if len(self.data) <= max_length:
             return ExtendedString(self.data)
-        return ExtendedString(self.data[:max_length - len(ender)] + ender)
+        return ExtendedString(self.data[: max_length - len(ender)] + ender)
 
     def sanitize(self, delim: str = "_") -> ExtendedString:
         """Replace non-alphanumeric characters with a delimiter.
@@ -55,10 +57,9 @@ class ExtendedString(UserString):
         Returns:
             A new ExtendedString with non-alphanumeric characters replaced.
         """
-        return ExtendedString("".join(
-            x if (x.isalnum() or x == delim) else delim 
-            for x in self.data
-        ))
+        return ExtendedString(
+            "".join(x if (x.isalnum() or x == delim) else delim for x in self.data)
+        )
 
     def is_url(self) -> bool:
         """Check if the string is a valid URL.
@@ -68,6 +69,7 @@ class ExtendedString(UserString):
         """
         try:
             from urllib.parse import urlparse
+
             result = urlparse(self.data)
             return all([result.scheme, result.netloc])
         except Exception:
@@ -129,9 +131,9 @@ class ExtendedString(UserString):
             ValueError: If the string cannot be converted to a boolean.
         """
         normalized = self.data.lower().strip()
-        if normalized in ('true', 'yes', '1', 'on'):
+        if normalized in ("true", "yes", "1", "on"):
             return True
-        if normalized in ('false', 'no', '0', 'off'):
+        if normalized in ("false", "no", "0", "off"):
             return False
         raise ValueError(f"Cannot convert '{self.data}' to boolean")
 
@@ -202,4 +204,4 @@ class Pattern:
         return self._pattern.pattern
 
     def __repr__(self) -> str:
-        return f"Pattern({self._pattern.pattern!r}, flags={self._flags})" 
+        return f"Pattern({self._pattern.pattern!r}, flags={self._flags})"

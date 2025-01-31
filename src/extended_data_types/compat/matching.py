@@ -8,6 +8,7 @@ from typing import Any
 
 from ..matching.patterns import Matcher
 
+
 # Global matcher instance for compatibility functions
 _matcher = Matcher()
 
@@ -27,4 +28,4 @@ def is_value_match(
     ignore_case: bool = True,
 ) -> bool:
     """Maintains compatibility with bob.matcher_utils.is_value_match."""
-    return _matcher.is_value_match(a, b, ignore_case) 
+    return _matcher.is_value_match(a, b, ignore_case)

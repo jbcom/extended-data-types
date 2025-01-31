@@ -13,15 +13,16 @@ Typical usage:
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from typing import Any, Literal, cast
 
 from ..core.exceptions import SerializationError
-from ..core.types import strtobool, typeof
+from ..core.types import typeof
 from .detection import is_yaml_compatible
 from .registry import serialize
 
+
 ExportFormat = Literal["yaml", "json", "toml", "hcl2", "raw"]
+
 
 def wrap_for_export(
     data: Any,
@@ -29,18 +30,18 @@ def wrap_for_export(
     **kwargs: Any,
 ) -> str:
     """Prepare and serialize data for export.
-    
+
     Args:
         data: Data to export
         format: Target format or auto-detect flag
         **kwargs: Format-specific options
-        
+
     Returns:
         Serialized data string
-        
+
     Raises:
         SerializationError: If serialization fails
-        
+
     Examples:
         >>> data = {"key": "value"}
         >>> wrap_for_export(data, format="json")
@@ -52,26 +53,25 @@ def wrap_for_export(
     """
     # Convert special types first
     converted_data = convert_special_types(data)
-    
+
     # Handle raw format
     if format == "raw":
         return str(converted_data)
-    
+
     # Handle boolean format (auto-detect)
     if isinstance(format, bool):
         if not format:
             return str(converted_data)
         # Auto-detect best format
         format = cast(
-            ExportFormat,
-            "yaml" if is_yaml_compatible(converted_data) else "json"
+            ExportFormat, "yaml" if is_yaml_compatible(converted_data) else "json"
         )
-    
+
     try:
         # Serialize to specified format
         return serialize(converted_data, format, **kwargs)
-        
+
     except Exception as e:
         raise SerializationError(
             f"Failed to serialize {typeof(converted_data)} to {format}: {e}"
-        ) from e 
+        ) from e

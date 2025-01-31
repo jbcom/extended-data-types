@@ -16,11 +16,11 @@ Basic unit testing patterns:
     def test_yaml_encoding():
         # Arrange
         data = {"key": "value", "list": [1, 2, 3]}
-        
+
         # Act
         yaml_str = yaml_utils.encode_yaml(data)
         decoded = yaml_utils.decode_yaml(yaml_str)
-        
+
         # Assert
         assert decoded == data
         assert isinstance(decoded["key"], str)
@@ -30,7 +30,7 @@ Basic unit testing patterns:
         # Test valid cases
         assert type_utils.validate_type(42, int)
         assert type_utils.validate_type("test", str)
-        
+
         # Test invalid cases
         assert not type_utils.validate_type("42", int)
         assert not type_utils.validate_type(42, str)
@@ -117,7 +117,7 @@ Testing integrated components:
             },
             "data": [1, 2, 3]
         }
-        
+
         # Create pipeline
         pipeline = Pipeline()
         pipeline.add_step(lambda x: type_utils.convert_types(
@@ -125,10 +125,10 @@ Testing integrated components:
             {"timeout": int, "retries": int}
         ))
         pipeline.add_step(map_data_type.sort_map)
-        
+
         # Process data
         result = pipeline.process(input_data)
-        
+
         # Verify results
         assert isinstance(result["config"]["timeout"], int)
         assert isinstance(result["config"]["retries"], int)
@@ -137,25 +137,25 @@ Best Practices
 ------------
 
 1. **Test Organization**:
-   
+
    - Group related tests
    - Use descriptive names
    - Maintain test independence
 
 2. **Test Coverage**:
-   
+
    - Test edge cases
    - Include error cases
    - Test type combinations
 
 3. **Test Performance**:
-   
+
    - Use appropriate fixtures
    - Minimize test duration
    - Profile test suite
 
 4. **Maintenance**:
-   
+
    - Keep tests simple
    - Update with code changes
-   - Document test requirements 
+   - Document test requirements

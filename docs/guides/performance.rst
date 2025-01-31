@@ -55,13 +55,13 @@ Implementing effective caching:
             self.max_size = max_size_bytes
             self.current_size = 0
             self.cache: Dict[str, Any] = {}
-        
+
         def add(self, key: str, value: Any):
             size = len(str(value).encode())
             if size + self.current_size <= self.max_size:
                 self.cache[key] = value
                 self.current_size += size
-        
+
         def get(self, key: str) -> Any:
             return self.cache.get(key)
 
@@ -108,7 +108,7 @@ Performance monitoring tools:
         profiler = cProfile.Profile()
         profiler.enable()
         start_time = time.time()
-        
+
         try:
             yield
         finally:
@@ -123,25 +123,25 @@ Best Practices
 ------------
 
 1. **Memory Management**:
-   
+
    - Use generators for large datasets
    - Implement streaming where possible
    - Monitor memory usage
 
 2. **Caching**:
-   
+
    - Cache expensive operations
    - Use appropriate cache sizes
    - Implement cache eviction
 
 3. **Parallel Processing**:
-   
+
    - Choose appropriate concurrency model
    - Handle errors in parallel code
    - Monitor resource usage
 
 4. **Optimization Strategy**:
-   
+
    - Profile before optimizing
    - Measure improvements
-   - Document performance characteristics 
+   - Document performance characteristics

@@ -43,6 +43,7 @@ def is_nothing(v: Any) -> bool:
 
     return False
 
+
 def are_nothing(*args: Any, **kwargs: Any) -> bool:
     """Checks if all provided values (both args and kwargs) are considered 'nothing'.
 
@@ -75,6 +76,7 @@ def are_nothing(*args: Any, **kwargs: Any) -> bool:
 
     return False
 
+
 def is_something(value: Any) -> bool:
     """Check if a value is not considered "nothing".
 
@@ -92,6 +94,7 @@ def is_something(value: Any) -> bool:
     """
     return not is_nothing(value)
 
+
 def are_something(*values: Any) -> bool:
     """Check if all values are not considered "nothing".
 
@@ -108,6 +111,7 @@ def are_something(*values: Any) -> bool:
         False
     """
     return all(is_something(value) for value in values)
+
 
 def all_non_empty(
     *args: Any, **kwargs: Any
@@ -145,6 +149,7 @@ def all_non_empty(
 
     return results, all_non_empty_in_dict(dict(kwargs))
 
+
 def all_non_empty_in_list(input_list: list[Any]) -> list[Any]:
     """Returns a list of all non-empty values from the input list.
 
@@ -160,6 +165,7 @@ def all_non_empty_in_list(input_list: list[Any]) -> list[Any]:
     """
     return [item for item in input_list if not is_nothing(item)]
 
+
 def all_non_empty_in_dict(input_dict: dict[Any, Any]) -> dict[Any, Any]:
     """Returns a dictionary of all non-empty values from the input dictionary.
 
@@ -174,6 +180,7 @@ def all_non_empty_in_dict(input_dict: dict[Any, Any]) -> dict[Any, Any]:
         {'a': 'text'}
     """
     return {key: value for key, value in input_dict.items() if not is_nothing(value)}
+
 
 def first_non_empty(*vals: Any) -> Any:
     """Returns the first non-empty value.
@@ -197,6 +204,7 @@ def first_non_empty(*vals: Any) -> Any:
         else None
     )
 
+
 def any_non_empty(m: dict[Any, Any], *keys: Any) -> dict[Any, Any]:
     """Returns the first non-empty value from a mapping for the given keys.
 
@@ -219,6 +227,7 @@ def any_non_empty(m: dict[Any, Any], *keys: Any) -> dict[Any, Any]:
             return {k: v}
     return {}
 
+
 def yield_non_empty(
     m: dict[Any, Any], *keys: Any
 ) -> Generator[dict[Any, Any], None, None]:
@@ -238,4 +247,4 @@ def yield_non_empty(
     for k in keys:
         v = m.get(k)
         if not is_nothing(v):
-            yield {k: v} 
+            yield {k: v}

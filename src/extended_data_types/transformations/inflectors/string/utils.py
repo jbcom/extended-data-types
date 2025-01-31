@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import re
-from typing import Sequence
+
+from collections.abc import Sequence
 
 
 def split_words(text: str) -> list[str]:
@@ -15,13 +16,10 @@ def split_words(text: str) -> list[str]:
     Returns:
         List of words
     """
-    return re.findall(r'[A-Za-z][a-z]*', text)
+    return re.findall(r"[A-Za-z][a-z]*", text)
 
 
-def join_words(
-    words: Sequence[str],
-    separator: str = " "
-) -> str:
+def join_words(words: Sequence[str], separator: str = " ") -> str:
     """Join words with separator.
 
     Args:
@@ -43,4 +41,4 @@ def clean_whitespace(text: str) -> str:
     Returns:
         Text with normalized whitespace
     """
-    return " ".join(text.split()) 
+    return " ".join(text.split())

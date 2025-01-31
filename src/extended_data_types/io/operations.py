@@ -4,23 +4,27 @@ from __future__ import annotations
 
 import contextlib
 import os
+
 from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any, TypeVar, cast
 
 import requests
+
 from filelock import FileLock, Timeout
 
-from extended_data_types.core.state import is_nothing
 from extended_data_types.log_utils import LoggerProtocol, get_null_logger
-from extended_data_types.serialization.decoders import (decode_hcl2,
-                                                        decode_json,
-                                                        decode_yaml)
+from extended_data_types.serialization.decoders import (
+    decode_hcl2,
+    decode_json,
+    decode_yaml,
+)
 from extended_data_types.string.core import is_url
 
 from .types import FilePath, FilePathWrapper
 
-T = TypeVar('T', bound=dict[str, Any])
+
+T = TypeVar("T", bound=dict[str, Any])
 FileContent = str | dict[str, Any]
 ContentType = str | dict[str, Any]
 ReturnPathType = ContentType | tuple[ContentType, str]
@@ -96,11 +100,11 @@ def check_file_writable(file_path: FilePath) -> bool:
         True if the file is writable or can be created
     """
     path = Path(str(file_path))
-    
+
     # If file exists, check write permission
     if path.exists():
         return os.access(path, os.W_OK)
-        
+
     # If file doesn't exist, check parent directory
     parent = path.parent
     return parent.exists() and os.access(parent, os.W_OK)
@@ -294,4 +298,4 @@ def match_file_extensions(
 
     if denied and ext in denied:
         return False
-    return not (allowed and ext not in allowed) 
+    return not (allowed and ext not in allowed)

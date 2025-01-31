@@ -5,13 +5,12 @@ from __future__ import annotations
 from decimal import ROUND_HALF_UP, Decimal
 from typing import Literal
 
+
 RoundingMode = Literal["up", "down", "nearest"]
 
 
 def round_number(
-    number: float,
-    precision: int = 0,
-    mode: RoundingMode = "nearest"
+    number: float, precision: int = 0, mode: RoundingMode = "nearest"
 ) -> float:
     """Round number to specified precision.
 
@@ -29,19 +28,19 @@ def round_number(
     """
     decimal = Decimal(str(number))
     if mode == "up":
-        return float(decimal.quantize(Decimal(f"0.{'0' * precision}"), 
-                                    rounding=ROUND_HALF_UP))
+        return float(
+            decimal.quantize(Decimal(f"0.{'0' * precision}"), rounding=ROUND_HALF_UP)
+        )
     elif mode == "down":
-        return float(decimal.quantize(Decimal(f"0.{'0' * precision}"), 
-                                    rounding=ROUND_DOWN))
-    return float(decimal.quantize(Decimal(f"0.{'0' * precision}"), 
-                                rounding=ROUND_HALF_EVEN))
+        return float(
+            decimal.quantize(Decimal(f"0.{'0' * precision}"), rounding=ROUND_DOWN)
+        )
+    return float(
+        decimal.quantize(Decimal(f"0.{'0' * precision}"), rounding=ROUND_HALF_EVEN)
+    )
 
 
-def format_thousands(
-    number: int | float,
-    separator: str = ","
-) -> str:
+def format_thousands(number: int | float, separator: str = ",") -> str:
     """Format number with thousand separators.
 
     Args:
@@ -58,11 +57,7 @@ def format_thousands(
     return f"{number:,}".replace(",", separator)
 
 
-def clamp(
-    number: float,
-    minimum: float,
-    maximum: float
-) -> float:
+def clamp(number: float, minimum: float, maximum: float) -> float:
     """Clamp number between minimum and maximum.
 
     Args:
@@ -79,4 +74,4 @@ def clamp(
         >>> clamp(-1, 0, 10)
         0
     """
-    return max(minimum, min(number, maximum)) 
+    return max(minimum, min(number, maximum))

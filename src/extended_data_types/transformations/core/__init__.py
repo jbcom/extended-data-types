@@ -14,29 +14,25 @@ from .parallel import batch_transform, parallel_transform
 from .transform import Transform, TransformFunc
 from .validation import fallback, optional, validate_type
 
+
 __all__ = [
     # Base classes
-    'Transform',
-    'TransformChain',
-    
+    "Transform",
+    "TransformChain",
     # Type hints
-    'TransformFunc',
-    
+    "TransformFunc",
     # Composition
-    'compose',
-    'pipe',
-    
+    "compose",
+    "pipe",
     # Parallel processing
-    'batch_transform',
-    'parallel_transform',
-    
+    "batch_transform",
+    "parallel_transform",
     # Conditional execution
-    'transform_if',
-    'transform_all',
-    'transform_any',
-    
+    "transform_if",
+    "transform_all",
+    "transform_any",
     # Validation
-    'validate_type',
-    'optional',
-    'fallback'
-] 
+    "validate_type",
+    "optional",
+    "fallback",
+]

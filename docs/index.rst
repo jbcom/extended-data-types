@@ -52,12 +52,12 @@ Basic usage:
 
    # File operations
    content = read_file("config.yaml")
-   
+
    # Git operations
    repo = get_parent_repository()
    if repo:
        print(f"Current branch: {get_current_branch(repo)}")
-   
+
    # YAML handling
    data = decode_yaml(content)
 
@@ -66,4 +66,4 @@ Indices and Tables
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search` 
+* :ref:`search`

@@ -2,6 +2,7 @@
 
 from .collections import SortedDefaultDict
 
+
 __all__ = [
-    'SortedDefaultDict',
-] 
+    "SortedDefaultDict",
+]

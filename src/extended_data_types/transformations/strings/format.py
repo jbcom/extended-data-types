@@ -3,31 +3,34 @@
 from __future__ import annotations
 
 import textwrap
+
+from collections.abc import Mapping
 from string import Template
-from typing import Any, Literal, Mapping
+from typing import Any, Literal
 
 from ..core import Transform
 
-Alignment = Literal['left', 'right', 'center']
+
+Alignment = Literal["left", "right", "center"]
 
 
 def format_template(
     template: str,
     values: Mapping[str, Any],
     default: str | None = None,
-    safe: bool = True
+    safe: bool = True,
 ) -> str:
     """Format string template with values.
-    
+
     Args:
         template: Template string with placeholders
         values: Values to insert
         default: Default value for missing keys
         safe: Whether to use safe substitution
-        
+
     Returns:
         Formatted string
-        
+
     Example:
         >>> format_template("Hello, ${name}!", {"name": "World"})
         'Hello, World!'
@@ -44,22 +47,19 @@ def format_template(
 
 
 def truncate(
-    text: str,
-    length: int,
-    suffix: str = "...",
-    word_boundary: bool = True
+    text: str, length: int, suffix: str = "...", word_boundary: bool = True
 ) -> str:
     """Truncate text to specified length.
-    
+
     Args:
         text: Text to truncate
         length: Maximum length
         suffix: String to append
         word_boundary: Whether to truncate at word boundary
-        
+
     Returns:
         Truncated string
-        
+
     Example:
         >>> truncate("Hello world", 8)
         'Hello...'
@@ -68,27 +68,22 @@ def truncate(
         return text
 
     if word_boundary:
-        return text[:length].rsplit(' ', 1)[0] + suffix
+        return text[:length].rsplit(" ", 1)[0] + suffix
     return text[:length] + suffix
 
 
-def pad(
-    text: str,
-    length: int,
-    char: str = " ",
-    align: Alignment = "left"
-) -> str:
+def pad(text: str, length: int, char: str = " ", align: Alignment = "left") -> str:
     """Pad text to specified length.
-    
+
     Args:
         text: Text to pad
         length: Desired length
         char: Padding character
         align: Alignment direction
-        
+
     Returns:
         Padded string
-        
+
     Example:
         >>> pad("hello", 10)
         'hello     '
@@ -101,22 +96,19 @@ def pad(
 
 
 def wrap(
-    text: str,
-    width: int = 70,
-    indent: str = "",
-    initial_indent: str | None = None
+    text: str, width: int = 70, indent: str = "", initial_indent: str | None = None
 ) -> str:
     """Wrap text to specified width.
-    
+
     Args:
         text: Text to wrap
         width: Maximum line width
         indent: String to use for indentation
         initial_indent: First line indent (defaults to indent)
-        
+
     Returns:
         Wrapped text
-        
+
     Example:
         >>> wrap("A very long text", width=10)
         'A very\\nlong text'
@@ -125,27 +117,24 @@ def wrap(
         text,
         width=width,
         initial_indent=initial_indent or indent,
-        subsequent_indent=indent
+        subsequent_indent=indent,
     )
 
 
 def align(
-    text: str,
-    width: int,
-    alignment: Alignment = "left",
-    fill_char: str = " "
+    text: str, width: int, alignment: Alignment = "left", fill_char: str = " "
 ) -> str:
     """Align text within specified width.
-    
+
     Args:
         text: Text to align
         width: Total width
         alignment: Alignment direction
         fill_char: Character for filling space
-        
+
     Returns:
         Aligned text
-        
+
     Example:
         >>> align("hello", 10, "center")
         '  hello   '
@@ -162,4 +151,4 @@ format_template_transform = Transform(format_template)
 truncate_transform = Transform(truncate)
 pad_transform = Transform(pad)
 wrap_transform = Transform(wrap)
-align_transform = Transform(align) 
+align_transform = Transform(align)

@@ -110,25 +110,25 @@ Best Practices
 ------------
 
 1. **Code Quality**
-   
+
    - Write clear, documented code
    - Include type hints
    - Follow PEP 8 guidelines
 
 2. **Testing**
-   
+
    - Write unit tests for new features
    - Maintain test coverage
    - Test edge cases
 
 3. **Documentation**
-   
+
    - Update relevant documentation
    - Include docstrings
    - Add examples when appropriate
 
 4. **Git Commits**
-   
+
    - Write clear commit messages
    - Keep commits focused
-   - Reference issues when applicable 
+   - Reference issues when applicable

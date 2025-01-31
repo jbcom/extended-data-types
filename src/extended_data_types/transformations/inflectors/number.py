@@ -20,10 +20,10 @@ from extended_data_types.number.types import ExtendedNumber
 
 def to_words(number: int | float) -> str:
     """Convert number to words.
-    
+
     Args:
         number: Number to convert
-        
+
     Examples:
         >>> to_words(42)
         'forty-two'
@@ -32,4 +32,4 @@ def to_words(number: int | float) -> str:
     """
     return num2words(number)
 
-[... continue with number inflectors ...] 
+[... continue with number inflectors ...]

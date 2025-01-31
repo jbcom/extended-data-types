@@ -23,11 +23,5 @@ from .generator import HCL2Generator
 from .parser import HCL2Parser
 from .types import Block, BlockType, Expression
 
-__all__ = [
-    'HCL2',
-    'HCL2Parser',
-    'HCL2Generator',
-    'Block',
-    'BlockType',
-    'Expression'
-] 
+
+__all__ = ["HCL2", "HCL2Parser", "HCL2Generator", "Block", "BlockType", "Expression"]

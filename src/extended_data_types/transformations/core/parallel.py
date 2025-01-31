@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Sequence, TypeVar
+from typing import Any, TypeVar
 
 from .transform import Transform
 
-T = TypeVar('T')
-U = TypeVar('U')
+
+T = TypeVar("T")
+U = TypeVar("U")
 
 
 def batch_transform(
-    values: Sequence[T],
-    transform: Transform[T, U],
-    max_workers: int | None = None
+    values: Sequence[T], transform: Transform[T, U], max_workers: int | None = None
 ) -> list[U]:
     """Transform multiple values in parallel.
 
@@ -31,9 +31,7 @@ def batch_transform(
 
 
 def parallel_transform(
-    value: T,
-    transforms: Sequence[Transform[T, Any]],
-    max_workers: int | None = None
+    value: T, transforms: Sequence[Transform[T, Any]], max_workers: int | None = None
 ) -> list[Any]:
     """Apply transforms in parallel.
 
@@ -46,4 +44,4 @@ def parallel_transform(
         List of transformed values
     """
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        return list(executor.map(lambda t: t(value), transforms)) 
+        return list(executor.map(lambda t: t(value), transforms))

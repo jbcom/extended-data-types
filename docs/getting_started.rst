@@ -63,7 +63,7 @@ Type Safety
 
     # Type validation
     is_valid = validate_type(42, int)
-    
+
     # Type conversion
     value = convert_type("42", int)  # Returns 42
 
@@ -96,19 +96,19 @@ Best Practices
 ------------
 
 1. **Type Safety**
-   
+
    - Always use type hints
    - Validate input types
    - Handle conversion errors
 
 2. **Error Handling**
-   
+
    - Use try/except blocks
    - Validate input data
    - Provide meaningful errors
 
 3. **Performance**
-   
+
    - Use appropriate data structures
    - Consider memory usage
    - Cache when necessary
@@ -118,4 +118,4 @@ Next Steps
 
 - Review the :doc:`api/index` for detailed documentation
 - Check out the :doc:`guides/advanced_usage` guide
-- See :doc:`guides/performance` for optimization tips 
+- See :doc:`guides/performance` for optimization tips
