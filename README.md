@@ -11,6 +11,12 @@
 
 Extended Data Types is a Python library that provides additional functionality for Python's standard data types. It includes utilities for handling YAML, JSON, Base64, file paths, strings, lists, maps, and more.
 
+## Project Goals
+
+- Provide a reliable, typed utility layer for working with common serialization formats (YAML, JSON, TOML, HCL) without sacrificing readability or ergonomics.
+- Offer safe helpers for file-system aware workflows, including path handling and Git repository discovery, while keeping platform differences in mind.
+- Maintain a modern, well-tested codebase backed by automated CI/CD that validates packaging, linting, typing, coverage, and documentation builds.
+
 ## Key Features
 
 - 🔒 **Base64 encoding and decoding** - Easily encode data to Base64 format with optional wrapping for export.

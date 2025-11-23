@@ -46,14 +46,7 @@ def deduplicate_map(m: Mapping[str, Any]) -> dict[str, Any]:
 
     for k, v in m.items():
         if isinstance(v, list):
-            deduplicated_map[k] = []
-
-            for elem in v:
-                if elem in deduplicated_map[k]:
-                    continue
-
-                deduplicated_map[k].append(elem)
-
+            deduplicated_map[k] = list(dict.fromkeys(v))
             continue
 
         if isinstance(v, Mapping):

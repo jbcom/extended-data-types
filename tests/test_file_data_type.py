@@ -160,6 +160,7 @@ def test_get_tld(mocker) -> None:
     ("p", "allowed", "denied", "expected"),
     [
         ("/path/file.txt", [".txt"], None, True),
+        ("/path/FILE.TXT", [".txt"], None, True),
         ("/path/file.txt", None, [".txt"], False),
         ("/path/file.txt", [".md"], None, False),
         ("/path/file.txt", None, None, True),
