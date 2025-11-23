@@ -29,7 +29,7 @@ The automated release workflow (`.github/workflows/release.yml`) only publishes 
 if: needs.release.outputs.released == 'true'
 ```
 
-Since the semantic-release detected an existing tag, it set `released=false`, which prevented the PyPI publication step from running.
+Since the semantic-release detected an existing tag, it set `released='false'`, which prevented the PyPI publication step from running.
 
 ## Release Contents
 
@@ -114,11 +114,11 @@ Create a new patch release (v5.1.3) through the normal automated workflow:
 
 ### Option 3: Document and Skip
 
-Accept that v5.1.2 is a GitHub-only release:
+Accept that v5.1.2 is a GitHub-only release. This option has been implemented:
 
-1. Update CHANGELOG to note PyPI publication status (completed)
-2. Create this tracking document (completed)
-3. Direct users to install from GitHub if they need v5.1.2 specifically:
+1. CHANGELOG updated to note PyPI publication status
+2. Tracking document created with full analysis
+3. Users can install from GitHub if they need v5.1.2 specifically:
    ```bash
    pip install git+https://github.com/jbcom/extended-data-types.git@v5.1.2
    ```
