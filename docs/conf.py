@@ -12,6 +12,10 @@ extensions = [
     "myst_parser",
 ]
 
+suppress_warnings = [
+    "misc.highlighting_failure",
+]
+
 autodoc2_packages = [
     "../src/extended_data_types",
 ]
