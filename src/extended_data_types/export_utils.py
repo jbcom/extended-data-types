@@ -58,7 +58,7 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
             for v in raw_data
         ]
 
-    exported_data = copy(raw_data)
+    exported_data = raw_data
     
     # Convert datetime objects to ISO format strings
     if isinstance(exported_data, (datetime.date, datetime.datetime)):
