@@ -65,7 +65,9 @@ def yaml_str_representer(dumper: SafeDumper, data: str) -> ScalarNode:
     return dumper.represent_scalar("tag:yaml.org,2002:str", data)
 
 
-def yaml_literal_str_representer(dumper: SafeDumper, data: LiteralScalarString) -> ScalarNode:
+def yaml_literal_str_representer(
+    dumper: SafeDumper, data: LiteralScalarString
+) -> ScalarNode:
     """Represent a LiteralScalarString as a literal block scalar in YAML.
 
     Args:
@@ -76,4 +78,3 @@ def yaml_literal_str_representer(dumper: SafeDumper, data: LiteralScalarString) 
         ScalarNode: The represented YAML node with literal style.
     """
     return dumper.represent_scalar("tag:yaml.org,2002:str", str(data), style="|")
-

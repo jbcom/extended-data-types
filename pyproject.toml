@@ -160,7 +160,6 @@ ignore = [
     "PLC1901", # Empty strings as test values may be intentional to specifically validate how empty or falsy data is handled by the system.
     "PLR2004", # Magic values in tests are often test data and don't need to be constants.
     "RUF012",  # Type hints in tests can be more distracting than helpful, as test code is often more flexible and subject to change than production code.
-    "RUF043",  # Regex patterns in pytest.raises match strings are more readable without raw strings.
     "S",       # Security rules around input validation, like potential vulnerabilities, can be less critical in the controlled context of test code.
     "SIM300",  # "Yoda conditions" (using literal comparisons like `if "value" == var:`) can sometimes make tests more readable, clarifying the expected values.
     "TRY",     # The handling of exceptions in tests often needs to be more permissive and less structured to accommodate the exploration of edge cases and failure modes.

@@ -26,7 +26,7 @@ from extended_data_types.export_utils import (
 from extended_data_types.yaml_utils import decode_yaml
 
 
-@pytest.fixture
+@pytest.fixture()
 def simple_yaml_fixture() -> str:
     """Provides a simple YAML string for testing.
 
@@ -36,7 +36,7 @@ def simple_yaml_fixture() -> str:
     return "test_key: test_value\nnested:\n  key1: value1\n  key2: value2\nlist:\n  - item1\n  - item2\n"
 
 
-@pytest.fixture
+@pytest.fixture()
 def complex_yaml_fixture() -> str:
     """Provides a complex YAML string representing an AWS CloudFormation template for testing.
 
@@ -107,9 +107,7 @@ def test_make_raw_data_export_safe_tuple_with_datetime() -> None:
 
     data = {
         "tuple_with_dates": (test_date, test_datetime, "string"),
-        "nested": {
-            "tuple_dates": (test_date, test_datetime)
-        }
+        "nested": {"tuple_dates": (test_date, test_datetime)},
     }
 
     result = make_raw_data_export_safe(data)
@@ -144,10 +142,7 @@ def test_make_raw_data_export_safe_tuple_with_path() -> None:
 
     data = {
         "tuple_with_paths": (path1, path2, "regular_string"),
-        "list_of_tuples": [
-            (path1, "item1"),
-            (path2, "item2")
-        ]
+        "list_of_tuples": [(path1, "item1"), (path2, "item2")],
     }
 
     result = make_raw_data_export_safe(data)
@@ -184,7 +179,7 @@ def test_make_raw_data_export_safe_tuple_mixed_types() -> None:
 
     data = {
         "mixed_tuple": (test_date, test_path, 42, "string", 3.14),
-        "nested_tuples": ((test_date, test_path), (1, 2, 3))
+        "nested_tuples": ((test_date, test_path), (1, 2, 3)),
     }
 
     result = make_raw_data_export_safe(data)
@@ -216,10 +211,7 @@ def test_make_raw_data_export_safe_empty_tuple() -> None:
     Asserts:
         - Empty tuples are converted to empty lists
     """
-    data = {
-        "empty_tuple": (),
-        "list_with_empty_tuple": [(), 1, 2]
-    }
+    data = {"empty_tuple": (), "list_with_empty_tuple": [(), 1, 2]}
 
     result = make_raw_data_export_safe(data)
 
@@ -242,9 +234,7 @@ def test_make_raw_data_export_safe_frozenset_with_datetime() -> None:
 
     data = {
         "frozenset_with_dates": frozenset([test_date, test_datetime]),
-        "nested": {
-            "frozenset_dates": frozenset([test_date])
-        }
+        "nested": {"frozenset_dates": frozenset([test_date])},
     }
 
     result = make_raw_data_export_safe(data)

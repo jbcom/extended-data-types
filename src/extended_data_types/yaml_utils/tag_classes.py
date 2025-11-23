@@ -69,5 +69,3 @@ class LiteralScalarString(str):
             str: String representation of the object.
         """
         return f"{type(self).__name__}({super().__repr__()})"
-
-
