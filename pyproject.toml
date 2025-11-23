@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "extended-data-types"
 dynamic = ["version"]
 description = "Extended functionality for data types"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = { text = "MIT" }
 readme = "README.md"
 keywords = ["python3"]

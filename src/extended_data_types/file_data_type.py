@@ -143,15 +143,15 @@ def match_file_extensions(
     Returns:
         bool: True if the file's extension is allowed and not denied, otherwise False.
     """
-    allowed_extensions = [ext.removeprefix(".") for ext in (allowed_extensions or [])]
-    denied_extensions = [ext.removeprefix(".") for ext in (denied_extensions or [])]
+    allowed_extensions = [ext.removeprefix(".").lower() for ext in (allowed_extensions or [])]
+    denied_extensions = [ext.removeprefix(".").lower() for ext in (denied_extensions or [])]
 
     p = Path(p)
     suffix = (
         p.name.removeprefix(".")
         if p.name.startswith(".")
         else p.suffix.removeprefix(".")
-    )
+    ).lower()
 
     return not (
         (allowed_extensions and suffix not in allowed_extensions)

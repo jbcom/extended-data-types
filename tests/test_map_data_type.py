@@ -229,6 +229,27 @@ def test_deduplicate_map(duplicated_map: dict) -> None:
     }
 
 
+def test_deduplicate_map_with_unhashable_elements() -> None:
+    """Tests deduplication of map values containing unhashable elements.
+
+    Asserts:
+        The result of deduplicate_map correctly handles lists containing dicts and nested lists.
+    """
+    test_map = {
+        "key1": [{"a": 1}, {"a": 1}, {"b": 2}],
+        "key2": [["x", "y"], ["x", "y"], ["z"]],
+        "key3": [{"a": 1}, "string", {"a": 1}, "string"],
+    }
+    result = deduplicate_map(test_map)
+    
+    # Note: dict equality works even though dicts are unhashable
+    assert result == {
+        "key1": [{"a": 1}, {"b": 2}],
+        "key2": [["x", "y"], ["z"]],
+        "key3": [{"a": 1}, "string"],
+    }
+
+
 def test_all_values_from_map(test_map: dict) -> None:
     """Tests retrieving all values from a map.
 

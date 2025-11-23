@@ -61,16 +61,13 @@ def filter_list(
     if items is None:
         items = []
 
-    if allowlist is None:
-        allowlist = []
+    allowed_values = set(allowlist or [])
+    denied_values = set(denylist or [])
 
-    if denylist is None:
-        denylist = []
-
-    filtered = []
+    filtered: list[str] = []
 
     for elem in items:
-        if (len(allowlist) > 0 and elem not in allowlist) or elem in denylist:
+        if (allowed_values and elem not in allowed_values) or elem in denied_values:
             continue
 
         filtered.append(elem)
