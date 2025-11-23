@@ -191,6 +191,10 @@ module = "tests.*"
 ignore_errors = true
 
 [[tool.mypy.overrides]]
+module = "extended_data_types.yaml_utils.tag_classes"
+disable_error_code = ["misc", "name-defined", "type-arg"]
+
+[[tool.mypy.overrides]]
 module = "wrapt.*"
 ignore_missing_imports = true
 
