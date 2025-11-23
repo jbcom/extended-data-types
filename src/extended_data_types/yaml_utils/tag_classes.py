@@ -5,12 +5,20 @@ It includes a wrapper class for YAML tagged objects and a class to represent YAM
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import wrapt
 
 
-class YamlTagged(wrapt.ObjectProxy):
+if TYPE_CHECKING:
+    from typing_extensions import TypeAlias
+
+    _ObjectProxyBase: TypeAlias = "wrapt.ObjectProxy[Any]"
+else:
+    _ObjectProxyBase = wrapt.ObjectProxy
+
+
+class YamlTagged(_ObjectProxyBase):
     """Wrapper class for YAML tagged objects."""
 
     def __init__(self, tag: str, wrapped: Any) -> None:
