@@ -8,7 +8,7 @@ lists, maps, and more.
 from __future__ import annotations
 
 from .base64_utils import base64_decode, base64_encode
-from .export_utils import wrap_raw_data_for_export
+from .export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
 from .file_data_type import (
     FilePath,
     clone_repository_to_temp,
@@ -137,6 +137,7 @@ __all__ = [
     "is_url",
     "is_yaml_data",
     "lower_first_char",
+    "make_raw_data_export_safe",
     "match_file_extensions",
     "reconstruct_special_type",
     "reconstruct_special_types",
