@@ -10,7 +10,7 @@ from typing import Any
 import wrapt
 
 
-class YamlTagged(wrapt.ObjectProxy):  # type: ignore[misc, name-defined]
+class YamlTagged(wrapt.ObjectProxy):  # type: ignore[type-arg]
     """Wrapper class for YAML tagged objects."""
 
     def __init__(self, tag: str, wrapped: Any) -> None:
