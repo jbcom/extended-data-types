@@ -116,8 +116,8 @@ Create a new patch release (v5.1.3) through the normal automated workflow:
 
 Accept that v5.1.2 is a GitHub-only release:
 
-1. ✅ Update CHANGELOG to note PyPI publication status
-2. ✅ Create this tracking document
+1. Update CHANGELOG to note PyPI publication status (completed)
+2. Create this tracking document (completed)
 3. Direct users to install from GitHub if they need v5.1.2 specifically:
    ```bash
    pip install git+https://github.com/jbcom/extended-data-types.git@v5.1.2
@@ -150,12 +150,15 @@ Until v5.1.2 is published to PyPI, users have these options:
    pip install https://github.com/jbcom/extended-data-types/releases/download/v5.1.2/extended_data_types-5.1.2-py3-none-any.whl
    ```
 
-## Documentation Updates Needed
+## Documentation Updates
 
-- [x] Update CHANGELOG.md with v5.1.2 entry
-- [x] Create this tracking document
-- [ ] Update README.md installation instructions if needed
-- [ ] Add note to release notes about PyPI status
+**Completed:**
+- Update CHANGELOG.md with v5.1.2 entry
+- Create this tracking document
+
+**Not Required:**
+- Update README.md installation instructions (no version-specific instructions exist)
+- Add note to release notes about PyPI status (already noted in CHANGELOG)
 
 ## References
 
