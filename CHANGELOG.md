@@ -1,6 +1,26 @@
 # CHANGELOG
 
 
+## v5.1.2 (2025-11-23)
+
+### Bug Fixes
+
+- Add missing ruamel.yaml>=0.18.0 dependency
+  ([`36d88d5`](https://github.com/jbcom/extended-data-types/commit/36d88d5ae260434e2c7feb71fe2a24829244296f))
+
+This release fixes a critical dependency issue where `ruamel.yaml` was being used in `export_utils.py` but was not declared as a project dependency, causing `ModuleNotFoundError` in downstream packages.
+
+### Changes
+
+- Added `ruamel.yaml>=0.18.0` to project dependencies in `pyproject.toml`
+- Updated Python version to 3.12 in development configuration
+- Fixed ModuleNotFoundError in export_utils when using YAML export functionality
+
+This resolves compatibility issues with lifecyclelogging and other downstream packages that depend on extended-data-types.
+
+**Note**: This version was released on GitHub but not published to PyPI due to the release being created outside the automated workflow. The latest version available on PyPI remains 5.1.0.
+
+
 ## v5.1.0 (2025-11-23)
 
 ### Features
