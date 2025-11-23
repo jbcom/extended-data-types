@@ -229,7 +229,7 @@ def test_strtoint(strtoint_data: tuple[str, int | None]) -> None:
 
 
 def test_strtopath(
-    valid_path_data: tuple[str | bytes | Path | None, Path | None]
+    valid_path_data: tuple[str | bytes | Path | None, Path | None],
 ) -> None:
     """Tests the strtopath function for converting valid inputs into Path objects.
 
@@ -244,7 +244,7 @@ def test_strtopath(
 
 
 def test_strtopath_invalid(
-    invalid_path_data: tuple[str | bytes, type[Exception], bool]
+    invalid_path_data: tuple[str | bytes, type[Exception], bool],
 ) -> None:
     """Tests the strtopath function for handling invalid inputs that should raise exceptions.
 
@@ -293,7 +293,7 @@ def test_strtodate(strtodate_data: tuple[str, datetime.date | None]) -> None:
 
 
 def test_strtodatetime(
-    strtodatetime_data: tuple[str, datetime.datetime | None]
+    strtodatetime_data: tuple[str, datetime.datetime | None],
 ) -> None:
     """Tests converting a string to a datetime value.
 
