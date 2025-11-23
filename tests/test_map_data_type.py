@@ -241,7 +241,7 @@ def test_deduplicate_map_with_unhashable_elements() -> None:
         "key3": [{"a": 1}, "string", {"a": 1}, "string"],
     }
     result = deduplicate_map(test_map)
-    
+
     # Note: dict equality works even though dicts are unhashable
     assert result == {
         "key1": [{"a": 1}, {"b": 2}],
@@ -413,7 +413,7 @@ def test_get_default_dict_invalid_levels() -> None:
         - A ValueError is raised when levels < 1.
     """
     with pytest.raises(
-        ValueError, match="The number of levels must be greater than or equal to 1."
+        ValueError, match=r"The number of levels must be greater than or equal to 1\."
     ):
         get_default_dict(levels=0)
 

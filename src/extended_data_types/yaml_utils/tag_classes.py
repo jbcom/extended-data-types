@@ -10,7 +10,7 @@ from typing import Any
 import wrapt
 
 
-class YamlTagged(wrapt.ObjectProxy):  # type: ignore[misc]
+class YamlTagged(wrapt.ObjectProxy):  # type: ignore[misc, name-defined]
     """Wrapper class for YAML tagged objects."""
 
     def __init__(self, tag: str, wrapped: Any) -> None:
@@ -46,6 +46,24 @@ class YamlPairs(list[Any]):
 
     def __repr__(self) -> str:
         """Represent the YamlPairs object as a string.
+
+        Returns:
+            str: String representation of the object.
+        """
+        return f"{type(self).__name__}({super().__repr__()})"
+
+
+class LiteralScalarString(str):
+    """String subclass that will be represented as a literal block scalar in YAML.
+
+    This class is used to preserve multiline strings and command strings
+    in YAML output using the literal block style (|).
+    """
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        """Represent the LiteralScalarString object as a string.
 
         Returns:
             str: String representation of the object.

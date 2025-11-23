@@ -11,7 +11,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from yaml import MappingNode, Node, SafeDumper, ScalarNode
 
-from .tag_classes import YamlPairs, YamlTagged
+from .tag_classes import LiteralScalarString, YamlPairs, YamlTagged
 
 
 def yaml_represent_tagged(dumper: SafeDumper, data: YamlTagged) -> Node:
@@ -63,3 +63,18 @@ def yaml_str_representer(dumper: SafeDumper, data: str) -> ScalarNode:
     if any(char in data for char in ":{}[],&*#?|-><!%@`"):
         return dumper.represent_scalar("tag:yaml.org,2002:str", data, style='"')
     return dumper.represent_scalar("tag:yaml.org,2002:str", data)
+
+
+def yaml_literal_str_representer(
+    dumper: SafeDumper, data: LiteralScalarString
+) -> ScalarNode:
+    """Represent a LiteralScalarString as a literal block scalar in YAML.
+
+    Args:
+        dumper (SafeDumper): The YAML dumper.
+        data (LiteralScalarString): The literal string to represent.
+
+    Returns:
+        ScalarNode: The represented YAML node with literal style.
+    """
+    return dumper.represent_scalar("tag:yaml.org,2002:str", str(data), style="|")

@@ -1,47 +1,44 @@
 """This module provides utilities for exporting raw data in various formats.
 
-It includes functions to make raw data export-safe and to wrap raw data for export
-with optional encoding formats such as YAML, JSON, or TOML.
+It includes functions to make raw data export-safe and to wrap raw data
+for export with encoding formats.
 """
 
 from __future__ import annotations
 
 import datetime
 import pathlib
-from collections.abc import Mapping
-from typing import Any
 
-from ruamel.yaml import scalarstring
+from typing import Any
 
 from .json_utils import encode_json
 from .toml_utils import encode_toml
 from .type_utils import convert_special_types, strtobool
-from .yaml_utils import encode_yaml, is_yaml_data
+from .yaml_utils import LiteralScalarString, encode_yaml, is_yaml_data
 
 
 def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> Any:
-    """Make raw data safe for export by converting complex types to primitives.
-    
-    Recursively processes data structures (dicts, lists, sets, tuples, frozensets) and converts:
-    - datetime.date/datetime.datetime → ISO format strings
-    - pathlib.Path → strings
-    - For YAML export: applies special string formatting for GitHub Actions syntax
-    
+    r"""Make raw data safe for export by converting complex types to primitives.
+
+    Recursively processes data structures (dicts, lists, sets, tuples, frozensets).
+    Converts datetime objects to ISO format strings and Path objects to strings.
+    For YAML export, applies special string formatting for GitHub Actions syntax.
+
     Args:
         raw_data: The data to make export-safe (dict, list, set, tuple, frozenset, or primitive).
-                  Sets, tuples, and frozensets are converted to lists.
+            Sets, tuples, and frozensets are converted to lists.
         export_to_yaml: If True, apply YAML-specific formatting (e.g., literal strings for multiline)
-        
+
     Returns:
         Export-safe version of the data with all complex types converted
-        
+
     Examples:
         >>> from datetime import datetime
         >>> from pathlib import Path
         >>> data = {"date": datetime(2025, 1, 1), "path": Path("/tmp")}
         >>> make_raw_data_export_safe(data)
         {'date': '2025-01-01T00:00:00', 'path': '/tmp'}
-        
+
         >>> multiline = {"script": "echo 'line1'\\necho 'line2'"}
         >>> result = make_raw_data_export_safe(multiline, export_to_yaml=True)
         >>> type(result["script"]).__name__
@@ -59,7 +56,7 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
         ]
 
     exported_data = raw_data
-    
+
     # Convert datetime objects to ISO format strings
     if isinstance(exported_data, (datetime.date, datetime.datetime)):
         exported_data = exported_data.isoformat()
@@ -76,28 +73,28 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
     # Note: This is a simple heuristic that handles the most common case.
     # For complete literal output, consider wrapping in quotes at the YAML level.
     exported_data = exported_data.replace("${{ ", "${{").replace(" }}", "}}")
-    
+
     # Use literal string format for multiline or command strings
     if (
         len(exported_data.splitlines()) > 1
         or "||" in exported_data
         or "&&" in exported_data
     ):
-        return scalarstring.LiteralScalarString(exported_data)
+        return LiteralScalarString(exported_data)
 
     return exported_data
 
 
 def wrap_raw_data_for_export(
-    raw_data: Mapping[str, Any] | Any,
+    raw_data: dict[str, Any] | Any,
     allow_encoding: bool | str = True,
     **format_opts: Any,
 ) -> str:
     """Wraps raw data for export, optionally encoding it.
 
     Args:
-        raw_data (Mapping[str, Any] | Any): The raw data to wrap.
-        allow_encoding (bool | str): The encoding format or flag (default is 'yaml').
+        raw_data (dict[str, Any] | Any): The raw data to wrap.
+        allow_encoding (bool | str): The encoding format or flag.
         format_opts (Any): Additional options for formatting the output.
 
     Returns:
