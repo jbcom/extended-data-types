@@ -9,8 +9,11 @@ from typing import TYPE_CHECKING, Any
 
 import wrapt
 
+
 if TYPE_CHECKING:
-    _ObjectProxyBase = wrapt.ObjectProxy[Any]
+    from typing import TypeAlias
+
+    _ObjectProxyBase: TypeAlias = wrapt.ObjectProxy[Any]
 else:
     _ObjectProxyBase = wrapt.ObjectProxy
 
