@@ -179,6 +179,7 @@ jobs:
         uses: hynek/build-and-inspect-python-package@v2
         with:
           attest-build-provenance-github: "true"
+          upload-name-suffix: "-signed"
 
   publish:
     name: Publish to PyPI
