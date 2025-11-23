@@ -1,6 +1,53 @@
 # CHANGELOG
 
 
+## v5.1.0 (2025-11-23)
+
+### Features
+
+- Add make_raw_data_export_safe utility function
+  ([`13b7f25`](https://github.com/jbcom/extended-data-types/commit/13b7f2573bda622c0e0420996d767c4d10f42723))
+
+## What's Added
+
+New function in that recursively converts complex types to export-safe primitives:
+
+- datetime.date/datetime.datetime → ISO format strings - pathlib.Path → strings - YAML mode: applies
+  GitHub Actions syntax escaping + literal strings for multiline
+
+## Use Cases
+
+1. **Datetime handling**: Convert date/datetime objects before JSON/YAML export 2. **Path
+  normalization**: Ensure Path objects become strings 3. **YAML formatting**: Apply literal string
+  format for multiline/command strings 4. **GitHub Actions**: Escape ${{ }} syntax automatically
+
+## Example
+
+```python from extended_data_types import make_raw_data_export_safe from datetime import datetime
+  from pathlib import Path
+
+data = { 'created': datetime(2025, 1, 1), 'log_path': Path('/var/log/app.log'), 'script': 'echo
+  line1\necho line2' }
+
+safe = make_raw_data_export_safe(data, export_to_yaml=True) # Result: # { # 'created':
+  '2025-01-01T00:00:00', # 'log_path': '/var/log/app.log', # 'script': LiteralScalarString('echo
+  line1\necho line2') # } ```
+
+## Why This Matters
+
+This function was implemented in terraform_modules/utils.py but belongs in extended-data-types as a
+  core utility. Now available to all users.
+
+Fixes: Circular import issues in terraform_modules
+
+Closes: N/A
+
+- Support tuples in make_raw_data_export_safe
+  ([`e8e8906`](https://github.com/jbcom/extended-data-types/commit/e8e890648008f48d761f6637d9c218360adb1c6c))
+
+Co-authored-by: jon <jon@jonbogaty.com>
+
+
 ## v5.0.3 (2025-01-28)
 
 ### Bug Fixes

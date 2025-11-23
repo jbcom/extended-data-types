@@ -3,7 +3,7 @@ import os
 project = "Extended Data Types"
 author = "Jon Bogaty"
 copyright = f"2025, {author}"
-version = "5.0.3"
+version = "5.1.0"
 
 extensions = [
     "autodoc2",
