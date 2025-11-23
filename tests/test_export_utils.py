@@ -13,9 +13,13 @@ Functions:
 
 from __future__ import annotations
 
+import datetime
+import json
+import pathlib
+
 import pytest
 
-from extended_data_types.export_utils import wrap_raw_data_for_export
+from extended_data_types.export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
 from extended_data_types.yaml_utils import decode_yaml
 
 
@@ -85,3 +89,138 @@ def test_wrap_raw_data_for_export_yaml_complex(complex_yaml_fixture: str) -> Non
     )
     assert 'AWSTemplateFormatVersion: "2010-09-09"' in result
     assert 'Type: "AWS::S3::Bucket"' in result
+
+
+def test_make_raw_data_export_safe_tuple_with_datetime() -> None:
+    """Tests that tuples containing datetime objects are properly converted.
+    
+    Asserts:
+        - Tuples are converted to lists
+        - datetime objects within tuples are converted to ISO format strings
+        - The result can be serialized to JSON
+    """
+    test_date = datetime.date(2025, 1, 15)
+    test_datetime = datetime.datetime(2025, 1, 15, 12, 30, 45)
+    
+    data = {
+        "tuple_with_dates": (test_date, test_datetime, "string"),
+        "nested": {
+            "tuple_dates": (test_date, test_datetime)
+        }
+    }
+    
+    result = make_raw_data_export_safe(data)
+    
+    # Check that tuples were converted to lists
+    assert isinstance(result["tuple_with_dates"], list)
+    assert isinstance(result["nested"]["tuple_dates"], list)
+    
+    # Check that datetime objects were converted to strings
+    assert result["tuple_with_dates"][0] == "2025-01-15"
+    assert result["tuple_with_dates"][1] == "2025-01-15T12:30:45"
+    assert result["tuple_with_dates"][2] == "string"
+    
+    assert result["nested"]["tuple_dates"][0] == "2025-01-15"
+    assert result["nested"]["tuple_dates"][1] == "2025-01-15T12:30:45"
+    
+    # Verify JSON serialization works
+    json_str = json.dumps(result)
+    assert json_str is not None
+
+
+def test_make_raw_data_export_safe_tuple_with_path() -> None:
+    """Tests that tuples containing Path objects are properly converted.
+    
+    Asserts:
+        - Tuples are converted to lists
+        - Path objects within tuples are converted to strings
+        - The result can be serialized to JSON
+    """
+    path1 = pathlib.Path("/tmp/file1.txt")
+    path2 = pathlib.Path("/home/user/file2.txt")
+    
+    data = {
+        "tuple_with_paths": (path1, path2, "regular_string"),
+        "list_of_tuples": [
+            (path1, "item1"),
+            (path2, "item2")
+        ]
+    }
+    
+    result = make_raw_data_export_safe(data)
+    
+    # Check that tuples were converted to lists
+    assert isinstance(result["tuple_with_paths"], list)
+    assert isinstance(result["list_of_tuples"][0], list)
+    assert isinstance(result["list_of_tuples"][1], list)
+    
+    # Check that Path objects were converted to strings
+    assert result["tuple_with_paths"][0] == "/tmp/file1.txt"
+    assert result["tuple_with_paths"][1] == "/home/user/file2.txt"
+    assert result["tuple_with_paths"][2] == "regular_string"
+    
+    assert result["list_of_tuples"][0][0] == "/tmp/file1.txt"
+    assert result["list_of_tuples"][0][1] == "item1"
+    assert result["list_of_tuples"][1][0] == "/home/user/file2.txt"
+    assert result["list_of_tuples"][1][1] == "item2"
+    
+    # Verify JSON serialization works
+    json_str = json.dumps(result)
+    assert json_str is not None
+
+
+def test_make_raw_data_export_safe_tuple_mixed_types() -> None:
+    """Tests that tuples with mixed complex types are properly converted.
+    
+    Asserts:
+        - Tuples with datetime, Path, and regular types are all converted properly
+        - Nested tuples are handled correctly
+    """
+    test_date = datetime.date(2025, 1, 15)
+    test_path = pathlib.Path("/tmp/test.txt")
+    
+    data = {
+        "mixed_tuple": (test_date, test_path, 42, "string", 3.14),
+        "nested_tuples": ((test_date, test_path), (1, 2, 3))
+    }
+    
+    result = make_raw_data_export_safe(data)
+    
+    # Check outer tuple conversion
+    assert isinstance(result["mixed_tuple"], list)
+    assert result["mixed_tuple"][0] == "2025-01-15"
+    assert result["mixed_tuple"][1] == "/tmp/test.txt"
+    assert result["mixed_tuple"][2] == 42
+    assert result["mixed_tuple"][3] == "string"
+    assert result["mixed_tuple"][4] == 3.14
+    
+    # Check nested tuple conversion
+    assert isinstance(result["nested_tuples"], list)
+    assert isinstance(result["nested_tuples"][0], list)
+    assert isinstance(result["nested_tuples"][1], list)
+    assert result["nested_tuples"][0][0] == "2025-01-15"
+    assert result["nested_tuples"][0][1] == "/tmp/test.txt"
+    assert result["nested_tuples"][1] == [1, 2, 3]
+    
+    # Verify JSON serialization works
+    json_str = json.dumps(result)
+    assert json_str is not None
+
+
+def test_make_raw_data_export_safe_empty_tuple() -> None:
+    """Tests that empty tuples are properly converted to empty lists.
+    
+    Asserts:
+        - Empty tuples are converted to empty lists
+    """
+    data = {
+        "empty_tuple": (),
+        "list_with_empty_tuple": [(), 1, 2]
+    }
+    
+    result = make_raw_data_export_safe(data)
+    
+    assert isinstance(result["empty_tuple"], list)
+    assert len(result["empty_tuple"]) == 0
+    assert isinstance(result["list_with_empty_tuple"][0], list)
+    assert len(result["list_with_empty_tuple"][0]) == 0

@@ -23,13 +23,13 @@ from .yaml_utils import encode_yaml, is_yaml_data
 def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> Any:
     """Make raw data safe for export by converting complex types to primitives.
     
-    Recursively processes data structures (dicts, lists, sets) and converts:
+    Recursively processes data structures (dicts, lists, sets, tuples) and converts:
     - datetime.date/datetime.datetime → ISO format strings
     - pathlib.Path → strings
     - For YAML export: applies special string formatting for GitHub Actions syntax
     
     Args:
-        raw_data: The data to make export-safe (dict, list, set, or primitive). Sets are converted to lists.
+        raw_data: The data to make export-safe (dict, list, set, tuple, or primitive). Sets and tuples are converted to lists.
         export_to_yaml: If True, apply YAML-specific formatting (e.g., literal strings for multiline)
         
     Returns:
@@ -52,7 +52,7 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
             k: make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
             for k, v in raw_data.items()
         }
-    elif isinstance(raw_data, (set, list)):
+    elif isinstance(raw_data, (set, list, tuple)):
         return [
             make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
             for v in raw_data
