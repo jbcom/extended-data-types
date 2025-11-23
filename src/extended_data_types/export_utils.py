@@ -29,7 +29,7 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
     - For YAML export: applies special string formatting for GitHub Actions syntax
     
     Args:
-        raw_data: The data to make export-safe (dict, list, set, or primitive)
+        raw_data: The data to make export-safe (dict, list, set, or primitive). Sets are converted to lists.
         export_to_yaml: If True, apply YAML-specific formatting (e.g., literal strings for multiline)
         
     Returns:
