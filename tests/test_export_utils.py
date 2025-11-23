@@ -224,3 +224,66 @@ def test_make_raw_data_export_safe_empty_tuple() -> None:
     assert len(result["empty_tuple"]) == 0
     assert isinstance(result["list_with_empty_tuple"][0], list)
     assert len(result["list_with_empty_tuple"][0]) == 0
+
+
+def test_make_raw_data_export_safe_frozenset_with_datetime() -> None:
+    """Tests that frozensets containing datetime objects are properly converted.
+    
+    Asserts:
+        - Frozensets are converted to lists
+        - datetime objects within frozensets are converted to ISO format strings
+        - The result can be serialized to JSON
+    """
+    test_date = datetime.date(2025, 1, 15)
+    test_datetime = datetime.datetime(2025, 1, 15, 12, 30, 45)
+    
+    data = {
+        "frozenset_with_dates": frozenset([test_date, test_datetime]),
+        "nested": {
+            "frozenset_dates": frozenset([test_date])
+        }
+    }
+    
+    result = make_raw_data_export_safe(data)
+    
+    # Check that frozensets were converted to lists
+    assert isinstance(result["frozenset_with_dates"], list)
+    assert isinstance(result["nested"]["frozenset_dates"], list)
+    
+    # Check that datetime objects were converted to strings
+    assert "2025-01-15" in result["frozenset_with_dates"]
+    assert "2025-01-15T12:30:45" in result["frozenset_with_dates"]
+    assert result["nested"]["frozenset_dates"][0] == "2025-01-15"
+    
+    # Verify JSON serialization works
+    json_str = json.dumps(result)
+    assert json_str is not None
+
+
+def test_make_raw_data_export_safe_frozenset_with_path() -> None:
+    """Tests that frozensets containing Path objects are properly converted.
+    
+    Asserts:
+        - Frozensets are converted to lists
+        - Path objects within frozensets are converted to strings
+        - The result can be serialized to JSON
+    """
+    path1 = pathlib.Path("/tmp/file1.txt")
+    path2 = pathlib.Path("/home/user/file2.txt")
+    
+    data = {
+        "frozenset_with_paths": frozenset([path1, path2]),
+    }
+    
+    result = make_raw_data_export_safe(data)
+    
+    # Check that frozenset was converted to list
+    assert isinstance(result["frozenset_with_paths"], list)
+    
+    # Check that Path objects were converted to strings
+    assert "/tmp/file1.txt" in result["frozenset_with_paths"]
+    assert "/home/user/file2.txt" in result["frozenset_with_paths"]
+    
+    # Verify JSON serialization works
+    json_str = json.dumps(result)
+    assert json_str is not None

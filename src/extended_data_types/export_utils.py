@@ -9,7 +9,6 @@ from __future__ import annotations
 import datetime
 import pathlib
 from collections.abc import Mapping
-from copy import copy
 from typing import Any
 
 from ruamel.yaml import scalarstring
@@ -23,13 +22,14 @@ from .yaml_utils import encode_yaml, is_yaml_data
 def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> Any:
     """Make raw data safe for export by converting complex types to primitives.
     
-    Recursively processes data structures (dicts, lists, sets, tuples) and converts:
+    Recursively processes data structures (dicts, lists, sets, tuples, frozensets) and converts:
     - datetime.date/datetime.datetime → ISO format strings
     - pathlib.Path → strings
     - For YAML export: applies special string formatting for GitHub Actions syntax
     
     Args:
-        raw_data: The data to make export-safe (dict, list, set, tuple, or primitive). Sets and tuples are converted to lists.
+        raw_data: The data to make export-safe (dict, list, set, tuple, frozenset, or primitive).
+                  Sets, tuples, and frozensets are converted to lists.
         export_to_yaml: If True, apply YAML-specific formatting (e.g., literal strings for multiline)
         
     Returns:
@@ -52,7 +52,7 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
             k: make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
             for k, v in raw_data.items()
         }
-    elif isinstance(raw_data, (set, list, tuple)):
+    elif isinstance(raw_data, (set, list, tuple, frozenset)):
         return [
             make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
             for v in raw_data
@@ -71,7 +71,10 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
     if not export_to_yaml or not isinstance(exported_data, str):
         return exported_data
 
-    # Escape GitHub Actions syntax
+    # Escape GitHub Actions syntax by removing spaces inside expressions
+    # This prevents accidental evaluation: "${{ secrets.TOKEN }}" → "${{secrets.TOKEN}}"
+    # Note: This is a simple heuristic that handles the most common case.
+    # For complete literal output, consider wrapping in quotes at the YAML level.
     exported_data = exported_data.replace("${{ ", "${{").replace(" }}", "}}")
     
     # Use literal string format for multiline or command strings
