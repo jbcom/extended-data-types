@@ -11,9 +11,9 @@ import wrapt
 
 
 if TYPE_CHECKING:
-    from typing import TypeAlias
+    from typing_extensions import TypeAlias
 
-    _ObjectProxyBase: TypeAlias = wrapt.ObjectProxy[Any]
+    _ObjectProxyBase: TypeAlias = "wrapt.ObjectProxy[Any]"
 else:
     _ObjectProxyBase = wrapt.ObjectProxy
 
