@@ -206,3 +206,5 @@ version_variables = [
     "src/extended_data_types/__init__.py:__version__",
     "docs/conf.py:version",
 ]
+build_command = "python -m build"
+upload_to_vcs_release = true
