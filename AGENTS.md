@@ -17,7 +17,7 @@ This document provides comprehensive guidelines for contributing to Extended Dat
 
 - **Source**: Lives in `src/extended_data_types/` with subpackages for serialization, transformations, compat, and CLI commands.
 - **Tests**: Live in `tests/` mirroring the package layout (e.g., `tests/serialization/...`, `tests/transformations/...`).
-- **Virtualenv**: Expected at `.venv/`; use its binaries for tooling (`.venv/bin/python`, `.venv/bin/pytest`).
+- **Virtualenv**: Expected at `.venv/`; use its binaries for tooling (`.venv/bin/python3.14`, `.venv/bin/pytest`).
 - **Documentation**: RST files in `docs/` directory, built with Sphinx.
 
 ## Build, Test, and Development Commands
@@ -32,7 +32,22 @@ This document provides comprehensive guidelines for contributing to Extended Dat
 ### Testing
 
 ```bash
-# Run all tests
+# Run all tests with tox (PREFERRED - tests across all Python versions)
+tox
+
+# Run for specific Python version
+tox -e py310
+tox -e py311
+tox -e py312
+tox -e py313
+
+# Type checking with tox
+tox -e pyright
+
+# Linting with tox
+tox -e pre-commit
+
+# Run tests directly with pytest (for quick iteration)
 .venv/bin/pytest -q
 
 # Run specific test suites
@@ -215,7 +230,7 @@ Single `ci.yml` workflow handles both CI and releases, eliminating `workflow_run
 ### Environment Setup
 
 - **Branch**: Current work should be specified in handoff notes
-- **Python**: Use `.venv/bin/python` and `.venv/bin/pytest` from virtualenv
+- **Python**: Use `.venv/bin/python3.14` and `.venv/bin/pytest` from virtualenv
 - **Dependencies**: Honor existing virtualenv; do not upgrade tooling without discussion
 
 ### Backward Compatibility
