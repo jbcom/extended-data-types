@@ -15,10 +15,14 @@ from pathlib import Path
 from typing import Any, Literal
 
 import attrs
-import hcl2
+import json
+import yaml
+import tomlkit
 
-from benedict import benedict
 from pydantic import BaseModel, Field
+
+from .types import convert_to_serializable, reconstruct_from_serialized
+from .languages.hcl2.serializer import HCL2Serializer
 
 
 FormatType = Literal["json", "yaml", "toml", "hcl2", "raw"]
@@ -59,7 +63,7 @@ class SerializationHandler:
         format: FormatType = "json",
         **options: Any,
     ) -> str:
-        """Serialize data, delegating to benedict when possible.
+        """Serialize data, delegating to simple safe encoders.
 
         Args:
             data: Data to serialize
@@ -77,22 +81,38 @@ class SerializationHandler:
             >>> result = handler.serialize({"key": "value"}, "hcl2")
         """
         try:
-            # Use benedict for supported formats
-            if format in ["json", "yaml", "toml"]:
-                b = benedict(data)
-                return b.to_string(format)
+            serializable = convert_to_serializable(data)
 
-            # Handle HCL2 ourselves
+            if format == "json":
+                return json.dumps(
+                    serializable,
+                    indent=options.get("indent", options.get("indent_size")),
+                    sort_keys=options.get("sort_keys", False),
+                    default=str,
+                )
+
+            if format == "yaml":
+                return yaml.safe_dump(
+                    serializable,
+                    indent=options.get("indent", options.get("indent_size", 2)),
+                    sort_keys=options.get("sort_keys", False),
+                    default_flow_style=options.get("default_flow_style"),
+                )
+
+            if format == "toml":
+                return tomlkit.dumps(serializable)
+
             if format == "hcl2":
-                return self._to_hcl2(data, **options)
+                return self._to_hcl2(serializable, **options)
 
-            # Handle raw format
             if format == "raw":
-                return self._to_raw(data, **options)
+                return self._to_raw(serializable, **options)
 
             raise ValueError(f"Unsupported format: {format}")
 
         except Exception as e:
+            if isinstance(e, ValueError):
+                raise
             raise SerializationError(f"Failed to serialize to {format}: {e}") from e
 
     def deserialize(
@@ -101,7 +121,7 @@ class SerializationHandler:
         format: FormatType = "json",
         **options: Any,
     ) -> Any:
-        """Deserialize data, delegating to benedict when possible.
+        """Deserialize data, delegating to simple safe decoders.
 
         Args:
             data: Data to deserialize
@@ -119,22 +139,28 @@ class SerializationHandler:
             >>> result = handler.deserialize('key = "value"', "hcl2")
         """
         try:
-            # Use benedict for supported formats
-            if format in ["json", "yaml", "toml"]:
-                b = benedict.from_string(str(data), format)
-                return dict(b)
+            text = Path(data).read_text() if isinstance(data, Path) else str(data)
 
-            # Handle HCL2 ourselves
+            if format == "json":
+                return reconstruct_from_serialized(json.loads(text))
+
+            if format == "yaml":
+                return reconstruct_from_serialized(yaml.safe_load(text))
+
+            if format == "toml":
+                return reconstruct_from_serialized(tomlkit.parse(text))
+
             if format == "hcl2":
-                return self._from_hcl2(data, **options)
+                return reconstruct_from_serialized(self._from_hcl2(text, **options))
 
-            # Handle raw format
             if format == "raw":
-                return self._from_raw(data, **options)
+                return self._from_raw(text, **options)
 
             raise ValueError(f"Unsupported format: {format}")
 
         except Exception as e:
+            if isinstance(e, ValueError):
+                raise
             raise SerializationError(f"Failed to deserialize from {format}: {e}") from e
 
     def _to_hcl2(self, data: Any, **options: Any) -> str:
@@ -147,8 +173,11 @@ class SerializationHandler:
         Returns:
             HCL2 formatted string
         """
-        compact = options.get("hcl2_compact", self.options.hcl2_compact)
-        return hcl2.dumps(data, compact=compact)
+        serializer = HCL2Serializer(
+            indent_size=options.get("indent_size", 2),
+            sort_keys=options.get("sort_keys", False),
+        )
+        return serializer.encode(data)
 
     def _from_hcl2(self, data: str | bytes | Path, **options: Any) -> Any:
         """Parse HCL2 format data.
@@ -160,10 +189,10 @@ class SerializationHandler:
         Returns:
             Parsed data structure
         """
+        serializer = HCL2Serializer()
         if isinstance(data, Path):
-            with open(data) as f:
-                data = f.read()
-        return hcl2.loads(str(data))
+            data = data.read_text()
+        return serializer.decode(str(data))
 
     def _to_raw(self, data: Any, **options: Any) -> str:
         """Convert data to raw string format.

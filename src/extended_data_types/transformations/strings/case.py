@@ -6,7 +6,7 @@ import re
 
 from typing import Literal
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 CaseStyle = Literal["upper", "lower", "title", "camel", "pascal", "snake", "kebab"]

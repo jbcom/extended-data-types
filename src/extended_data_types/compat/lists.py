@@ -6,7 +6,7 @@ the modern ListHandler internally.
 
 from typing import Any, TypeVar
 
-from ..structures.lists import ListHandler
+from extended_data_types.structures.lists import ListHandler
 
 
 T = TypeVar("T")

@@ -4,13 +4,95 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from functools import reduce
-from typing import Any, TypeVar
+from itertools import cycle, islice, tee
+from typing import Any, TypeVar, overload
+import copy
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 T = TypeVar("T")
 U = TypeVar("U")
+
+
+def chain_iterators(*iterables: Iterable[T]) -> Iterator[T]:
+    """Legacy helper to chain iterables."""
+    for iterable in iterables:
+        yield from iterable
+
+
+def consume_iterator(iterator: Iterator[T], n: int | None = None) -> None:
+    """Legacy helper to exhaust an iterator or a limited number of items."""
+    if n is not None and n < 0:
+        raise ValueError("n must be non-negative")
+    if n is None:
+        for _ in iterator:
+            pass
+        return
+    for _ in range(n):
+        try:
+            next(iterator)
+        except StopIteration:
+            break
+
+
+def cycle_iterator(iterable: Iterable[T], n: int | None = None) -> Iterator[T]:
+    """Legacy helper to cycle over iterable, optionally a fixed number of cycles."""
+    if n is not None and n < 0:
+        raise ValueError("n must be non-negative")
+    def _gen() -> Iterator[T]:
+        if n is None:
+            yield from cycle(iterable)
+            return
+        for _ in range(n):
+            for item in iterable:
+                yield item
+    return _gen()
+
+
+@overload
+def peek_iterator(iterator: Iterator[T]) -> T | None: ...
+
+
+@overload
+def peek_iterator(iterator: Iterator[T], n: int) -> list[T] | None: ...
+
+
+def peek_iterator(iterator: Iterator[T], n: int | None = None) -> T | list[T] | None:
+    """Peek items without consuming the original iterator."""
+    if n is not None and n < 0:
+        raise ValueError("n must be non-negative")
+    count = 1 if n is None else n
+    duplicate = copy.copy(iterator)
+    peeked = list(islice(duplicate, count))
+    if not peeked:
+        return None
+    return peeked[0] if n is None else peeked
+
+
+def skip_iterator(iterator: Iterator[T], count: int) -> Iterator[T]:
+    """Skip first N elements of an iterator."""
+    if count < 0:
+        raise ValueError("count must be non-negative")
+    for _ in range(count):
+        try:
+            next(iterator)
+        except StopIteration:
+            return iter(())
+    return iterator
+
+
+def take_iterator(iterator: Iterator[T], count: int) -> list[T]:
+    """Take first N elements from an iterator."""
+    if count < 0:
+        raise ValueError("count must be non-negative")
+    result: list[T] = []
+    for _ in range(count):
+        try:
+            result.append(next(iterator))
+        except StopIteration:
+            break
+    return result
 
 
 def batch_iterate(items: Sequence[T], batch_size: int) -> Iterator[list[T]]:

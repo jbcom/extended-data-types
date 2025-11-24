@@ -7,7 +7,7 @@ from textwrap import dedent
 import pytest
 
 from extended_data_types.serialization.languages.hcl2.parser import HCL2Parser
-from extended_data_types.serialization.languages.hcl2.types import BlockType
+from extended_data_types.serialization.languages.hcl2.types import BlockType, Expression
 
 
 def test_parse_basic_block():

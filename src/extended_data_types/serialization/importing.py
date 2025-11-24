@@ -14,10 +14,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..core.exceptions import SerializationError
-from ..core.types import convert_special_types
-from .detection import detect_format
-from .registry import deserialize
+from extended_data_types.core.exceptions import SerializationError
+from extended_data_types.core.types import convert_special_types
+from extended_data_types.serialization.detection import detect_format
+from extended_data_types.serialization.registry import deserialize
 
 
 def unwrap_imported_data(
@@ -55,13 +55,19 @@ def unwrap_imported_data(
     detected_format = format.lower() if format else detect_format(data)
     if not detected_format:
         raise SerializationError("Could not detect data format")
+    if detected_format not in ["yaml", "json", "toml", "hcl2", "raw"]:
+        raise ValueError("Unsupported encoding format")
 
     try:
         # Deserialize data
-        result = deserialize(data, detected_format, **kwargs)
-
-        # Convert any special types in the result
-        return convert_special_types(result)
+            result = deserialize(data, detected_format, **kwargs)
+            if isinstance(result, dict):
+                keys = list(result.keys())
+                for k in keys:
+                    if k is None:
+                        result["null"] = result.pop(k)
+                        break
+            return result
 
     except Exception as e:
         raise SerializationError(

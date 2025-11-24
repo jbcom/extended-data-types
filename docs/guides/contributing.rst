@@ -58,13 +58,13 @@ We use pytest for testing. Run the test suite:
 .. code-block:: bash
 
     # Run all tests
-    pytest
+    .venv/bin/pytest -q
 
     # Run with coverage
-    pytest --cov=extended_data_types
+    .venv/bin/pytest --cov=extended_data_types
 
     # Run specific test file
-    pytest tests/test_yaml_utils.py
+    .venv/bin/pytest tests/serialization/test_exporting.py
 
 Documentation
 -----------
@@ -91,12 +91,14 @@ Pull Request Process
 
        git checkout -b feature-name
 
-2. Make your changes and commit them:
+2. Make your changes and commit them using conventional commits format:
 
    .. code-block:: bash
 
        git add .
-       git commit -m "Description of changes"
+       git commit -m "feat: Add new feature"
+       # or
+       git commit -m "fix: Fix bug in serializer"
 
 3. Push to your fork:
 
@@ -114,12 +116,14 @@ Best Practices
    - Write clear, documented code
    - Include type hints
    - Follow PEP 8 guidelines
+   - Use absolute imports (no relative imports)
 
 2. **Testing**
 
    - Write unit tests for new features
    - Maintain test coverage
    - Test edge cases
+   - Ensure tests mirror package structure
 
 3. **Documentation**
 
@@ -129,6 +133,13 @@ Best Practices
 
 4. **Git Commits**
 
+   - Use conventional commits format (feat:, fix:, docs:, etc.)
    - Write clear commit messages
    - Keep commits focused
    - Reference issues when applicable
+
+5. **Backward Compatibility**
+
+   - Maintain backward compatibility for legacy APIs (<=5.x)
+   - Add shims rather than removing surfaces
+   - Never drop <=5 APIs without major version bump

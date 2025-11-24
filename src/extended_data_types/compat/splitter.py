@@ -7,7 +7,7 @@ the modern CollectionSplitter internally.
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from ..structures.splitter import CollectionSplitter
+from extended_data_types.structures.splitter import CollectionSplitter
 
 
 # Global splitter instance for compatibility functions

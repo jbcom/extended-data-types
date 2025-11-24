@@ -15,9 +15,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..core.exceptions import SerializationError
-from ..core.types import unwrap_object
-from .detection import (
+from extended_data_types.core.exceptions import SerializationError
+from extended_data_types.core.types import unwrap_object
+from extended_data_types.serialization.detection import (
     guess_format,
     is_potential_hcl2,
     is_potential_ini,
@@ -27,14 +27,16 @@ from .detection import (
     is_potential_xml,
     is_potential_yaml,
 )
-from .formats import JsonSerializer, TomlSerializer, YamlSerializer
-from .registry import (
+from extended_data_types.serialization.formats import JsonSerializer, TomlSerializer, YamlSerializer
+from extended_data_types.serialization.registry import (
+    deserialize as registry_deserialize,
     get_serializer,
     list_serializers,
     register_format,
     register_serializer,
+    serialize as registry_serialize,
 )
-from .types import convert_to_serializable, reconstruct_from_serialized
+from extended_data_types.serialization.types import convert_to_serializable, reconstruct_from_serialized
 
 
 def serialize(obj: Any, format_name: str | None = None) -> str:
@@ -51,8 +53,8 @@ def serialize(obj: Any, format_name: str | None = None) -> str:
         SerializationError: If format is unsupported or serialization fails
     """
     serializable = convert_to_serializable(obj)
-    serializer = get_serializer(format_name)
-    return serializer.dumps(serializable)
+    fmt = format_name or guess_format(str(obj))
+    return registry_serialize(serializable, fmt)
 
 
 def deserialize(content: str, format_name: str | None = None) -> Any:
@@ -71,8 +73,8 @@ def deserialize(content: str, format_name: str | None = None) -> Any:
     if not format_name:
         format_name = guess_format(content)
 
-    serializer = get_serializer(format_name)
-    raw = serializer.loads(content)
+    fmt = format_name or guess_format(content)
+    raw = registry_deserialize(content, fmt)
     return reconstruct_from_serialized(raw)
 
 

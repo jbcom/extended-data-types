@@ -9,10 +9,10 @@ from __future__ import annotations
 import json
 
 from collections.abc import Mapping
-from typing import Any
+from typing import Any, Protocol
 
-from ..core.exceptions import ConversionError
-from ..core.types import (
+from extended_data_types.core.exceptions import ConversionError
+from extended_data_types.core.types import (
     strtobool,
     strtodate,
     strtodatetime,
@@ -20,8 +20,24 @@ from ..core.types import (
     strtoint,
     strtopath,
     strtotime,
+    unwrap_object,
 )
-from .detection import is_potential_json
+from extended_data_types.serialization.detection import is_potential_json
+
+
+def encode_json(obj: Any, **kwargs: Any) -> str:
+    return json.dumps(obj, **kwargs)
+
+
+def decode_json(data: str) -> Any:
+    return json.loads(data)
+
+
+class SerializerProtocol(Protocol):
+    """Minimal serializer protocol."""
+
+    def encode(self, data: Any, **kwargs: Any) -> str: ...
+    def decode(self, data: str, **kwargs: Any) -> Any: ...
 
 
 def convert_to_serializable(obj: Any) -> Any:

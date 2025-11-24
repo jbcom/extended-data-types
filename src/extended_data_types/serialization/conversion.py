@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..core.types import TypeSystem
+from extended_data_types.core.types import TypeSystem
 
 
 # New Core Layer

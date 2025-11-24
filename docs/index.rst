@@ -25,10 +25,17 @@ Documentation
    :maxdepth: 2
    :caption: Contents:
 
-   guides/getting_started
+   getting_started
+   installation
+   overview
    guides/contributing
-   api/index
-   changelog
+   guides/development
+   guides/advanced_usage
+   guides/testing
+   guides/performance
+   guides/security
+   guides/deployment
+   guides/yaml_utils
 
 Quick Start
 ----------

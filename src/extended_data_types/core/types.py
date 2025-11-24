@@ -217,6 +217,16 @@ def convert_special_types(data: Any) -> Any:
     return converter.unstructure(data)
 
 
+def reconstruct_special_type(value: Any, target_type: type[T] = None) -> T:
+    """Alias to convert_special_type for compatibility."""
+    return convert_special_type(value, target_type)
+
+
+def reconstruct_special_types(data: Any) -> Any:
+    """Alias to convert_special_types for compatibility."""
+    return convert_special_types(data)
+
+
 class TypedData(DataContainer):
     """Container for typed data with validation.
 
@@ -263,3 +273,62 @@ __all__ = [
     "JsonValue",
     "JsonDict",
 ]
+
+
+# --- Legacy compatibility helpers ---
+def typeof(obj: Any) -> str:
+    """Return a simple string type name."""
+    return type(obj).__name__.lower()
+
+
+def unwrap_object(obj: Any) -> Any:
+    """Return underlying object if wrapped."""
+    return getattr(obj, "__wrapped__", obj)
+
+
+def strtobool(value: str, raise_on_error: bool = False) -> bool:
+    truthy = {"1", "true", "yes", "y", "on"}
+    falsy = {"0", "false", "no", "n", "off"}
+    val = str(value).strip().lower()
+    if val in truthy:
+        return True
+    if val in falsy:
+        return False
+    if raise_on_error:
+        raise ValueError(f"Invalid boolean string: {value}")
+    return False
+
+
+def strtodate(value: str) -> datetime.date:
+    return datetime.date.fromisoformat(value)
+
+
+def strtodatetime(value: str) -> datetime.datetime:
+    return datetime.datetime.fromisoformat(value)
+
+
+def strtotime(value: str) -> datetime.time:
+    return datetime.time.fromisoformat(value)
+
+
+def strtopath(value: str) -> Path:
+    return Path(value)
+
+
+def strtofloat(value: str) -> float:
+    return float(value)
+
+
+def strtoint(value: str) -> int:
+    return int(value)
+
+
+def coerce_to_type(value: Any, target_type: type[T]) -> T:
+    """Lightweight coercion using pydantic TypeAdapter for leniency."""
+    adapter: TypeAdapter[T] = TypeAdapter(target_type)
+    return adapter.validate_python(value)
+
+
+def get_primitive_type_for_instance_type(instance_type: type) -> type:
+    """Return primitive type (placeholder)."""
+    return instance_type

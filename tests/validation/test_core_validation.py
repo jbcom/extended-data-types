@@ -30,7 +30,8 @@ def test_is_nothing():
 
     # Lists/sets with empty values
     assert is_nothing([None, "", {}])
-    assert is_nothing({None, "", []})
+    # Use tuple to keep set hashable while representing an empty list-like
+    assert is_nothing({None, "", ()})
 
     # Non-empty values
     assert not is_nothing("text")

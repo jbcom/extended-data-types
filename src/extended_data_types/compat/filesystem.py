@@ -10,7 +10,7 @@ from typing import TypeAlias
 
 from git import Repo
 
-from ..filesystem.operations import FileHandler
+from extended_data_types.filesystem.operations import FileHandler
 
 
 FilePath: TypeAlias = str | os.PathLike[str]

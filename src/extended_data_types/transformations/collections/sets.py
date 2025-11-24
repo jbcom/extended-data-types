@@ -5,13 +5,13 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TypeVar
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 T = TypeVar("T")
 
 
-def union(*sequences: Sequence[T]) -> list[T]:
+def union(*sequences: Sequence[T]) -> set[T]:
     """Combine sequences, removing duplicates.
 
     Args:
@@ -24,10 +24,10 @@ def union(*sequences: Sequence[T]) -> list[T]:
         >>> union([1, 2], [2, 3], [3, 4])
         [1, 2, 3, 4]
     """
-    return list(set().union(*map(set, sequences)))
+    return set().union(*map(set, sequences))
 
 
-def intersection(*sequences: Sequence[T]) -> list[T]:
+def intersection(*sequences: Sequence[T]) -> set[T]:
     """Get common elements from sequences.
 
     Args:
@@ -41,11 +41,11 @@ def intersection(*sequences: Sequence[T]) -> list[T]:
         [3]
     """
     if not sequences:
-        return []
-    return list(set(sequences[0]).intersection(*map(set, sequences[1:])))
+        return set()
+    return set(sequences[0]).intersection(*map(set, sequences[1:]))
 
 
-def difference(sequence: Sequence[T], *others: Sequence[T]) -> list[T]:
+def difference(sequence: Sequence[T], *others: Sequence[T]) -> set[T]:
     """Get elements in first sequence but not in others.
 
     Args:
@@ -59,10 +59,10 @@ def difference(sequence: Sequence[T], *others: Sequence[T]) -> list[T]:
         >>> difference([1, 2, 3], [2], [3])
         [1]
     """
-    return list(set(sequence).difference(*map(set, others)))
+    return set(sequence).difference(*map(set, others))
 
 
-def symmetric_difference(sequence1: Sequence[T], sequence2: Sequence[T]) -> list[T]:
+def symmetric_difference(sequence1: Sequence[T], sequence2: Sequence[T]) -> set[T]:
     """Get elements in either sequence but not both.
 
     Args:
@@ -76,10 +76,10 @@ def symmetric_difference(sequence1: Sequence[T], sequence2: Sequence[T]) -> list
         >>> symmetric_difference([1, 2, 3], [2, 3, 4])
         [1, 4]
     """
-    return list(set(sequence1).symmetric_difference(sequence2))
+    return set(sequence1).symmetric_difference(sequence2)
 
 
-def is_subset(sequence1: Sequence[T], sequence2: Sequence[T]) -> bool:
+def is_subset(sequence1: Sequence[T], *others: Sequence[T], proper: bool = False) -> bool:
     """Check if first sequence is subset of second.
 
     Args:
@@ -93,10 +93,12 @@ def is_subset(sequence1: Sequence[T], sequence2: Sequence[T]) -> bool:
         >>> is_subset([1, 2], [1, 2, 3])
         True
     """
-    return set(sequence1).issubset(sequence2)
+    a = set(sequence1)
+    targets = [set(sequence) for sequence in others] or [set()]
+    return all((a < b) if proper else a.issubset(b) for b in targets)
 
 
-def is_superset(sequence1: Sequence[T], sequence2: Sequence[T]) -> bool:
+def is_superset(sequence1: Sequence[T], *others: Sequence[T], proper: bool = False) -> bool:
     """Check if first sequence is superset of second.
 
     Args:
@@ -110,7 +112,34 @@ def is_superset(sequence1: Sequence[T], sequence2: Sequence[T]) -> bool:
         >>> is_superset([1, 2, 3], [1, 2])
         True
     """
-    return set(sequence1).issuperset(sequence2)
+    a = set(sequence1)
+    targets = [set(sequence) for sequence in others] or [set()]
+    return all((a > b) if proper else a.issuperset(b) for b in targets)
+
+
+def find_difference(a: Sequence[T], *others: Sequence[T]) -> set[T]:
+    """Legacy helper to find difference."""
+    return difference(a, *others)
+
+
+def find_intersection(*sequences: Sequence[T]) -> set[T]:
+    """Legacy helper to find intersection."""
+    if not sequences:
+        return set()
+    return intersection(*sequences)
+
+
+def find_symmetric_difference(a: Sequence[T], *others: Sequence[T]) -> set[T]:
+    """Legacy helper to find symmetric difference."""
+    result = set(a)
+    for seq in others:
+        result = result.symmetric_difference(seq)
+    return result
+
+
+def find_union(*sequences: Sequence[T]) -> set[T]:
+    """Legacy helper to find union of sequences."""
+    return union(*sequences)
 
 
 # Register transforms

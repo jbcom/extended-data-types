@@ -38,3 +38,7 @@ class ConversionError(ValueError):
             else str(self.expected_type)
         )
         super().__init__(f"Invalid {type_str} value: {self.value!r}")
+
+
+class InspectionError(Exception):
+    """Raised when inspection utilities encounter invalid state."""

@@ -1,31 +1,19 @@
-"""Format-specific serializer registration.
-
-This module registers both benedict's built-in serializers and our custom serializers
-with the serialization system.
-"""
+"""Format-specific serializer registration."""
 
 from __future__ import annotations
 
-from benedict.serializers import (
-    IniSerializer,
-    JsonSerializer,
-    QuerySerializer,
-    TomlSerializer,
-    XmlSerializer,
-    YamlSerializer,
-)
+from extended_data_types.serialization.registry import register_serializer
+from extended_data_types.serialization.formats.json import JsonSerializer
+from extended_data_types.serialization.formats.yaml import YamlSerializer
+from extended_data_types.serialization.formats.toml import TomlSerializer
+from extended_data_types.serialization.formats.xml import XmlSerializer
+from extended_data_types.serialization.formats.ini import IniSerializer
+from extended_data_types.serialization.formats.query import QuerySerializer
 
-from ..registry import register_serializer
-from .hcl2 import Hcl2Serializer
-
-
-# Register benedict's built-in serializers
+# Register all serializers
 register_serializer("json", JsonSerializer())
 register_serializer("yaml", YamlSerializer())
 register_serializer("toml", TomlSerializer())
 register_serializer("xml", XmlSerializer())
 register_serializer("ini", IniSerializer())
 register_serializer("query", QuerySerializer())
-
-# Register our custom serializers
-register_serializer("hcl2", Hcl2Serializer())

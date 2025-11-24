@@ -7,7 +7,7 @@ import random
 from collections.abc import Callable, Sequence
 from typing import Any, TypeVar
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 T = TypeVar("T")
@@ -128,6 +128,83 @@ def sort_by(
         key_func = key
 
     return sorted(items, key=key_func, reverse=reverse)
+
+
+_NO_FILL = object()
+
+
+def chunk_sequence(seq: Sequence[T], size: int, fill: Any | object = _NO_FILL) -> list[list[T]]:
+    """Legacy helper to chunk sequences."""
+    if size <= 0:
+        raise ValueError("size must be positive")
+    chunks = [list(seq[i : i + size]) for i in range(0, len(seq), size)]
+    if fill is not _NO_FILL and chunks and len(chunks[-1]) < size:
+        chunks[-1].extend([fill] * (size - len(chunks[-1])))
+    return chunks
+
+
+def interleave_sequences(*sequences: Sequence[T]) -> list[T]:
+    """Legacy helper to interleave sequences."""
+    result: list[T] = []
+    max_len = max((len(seq) for seq in sequences), default=0)
+    for i in range(max_len):
+        for seq in sequences:
+            if i < len(seq):
+                result.append(seq[i])
+    return result
+
+
+def partition_sequence(seq: Sequence[T], predicate: Callable[[T], bool]) -> tuple[list[T], list[T]]:
+    """Legacy helper to partition a sequence based on predicate."""
+    true_part, false_part = [], []
+    for item in seq:
+        (true_part if predicate(item) else false_part).append(item)
+    return true_part, false_part
+
+
+def remove_duplicates(seq: Sequence[T], key: Callable[[T], Any] | None = None) -> list[T]:
+    """Legacy helper to remove duplicates preserving order."""
+    seen = set()
+    result: list[T] = []
+    for item in seq:
+        marker = key(item) if key else item
+        if marker in seen:
+            continue
+        seen.add(marker)
+        result.append(item)
+    return result
+
+
+def rotate_sequence(seq: Sequence[T], positions: int = 1) -> list[T]:
+    """Rotate sequence by positions."""
+    if not seq:
+        return []
+    length = len(seq)
+    if positions < 0:
+        mod = (-positions) % length
+        offset = mod if mod > (length / 2) else (length - mod)
+    else:
+        offset = positions % length
+    if offset == 0:
+        return list(seq)
+    return list(seq[-offset:] + seq[:-offset])
+
+
+def sliding_window(seq: Sequence[T], size: int, step: int = 1) -> list[tuple[T, ...]]:
+    """Legacy helper to produce sliding windows."""
+    if size <= 0:
+        raise ValueError("size must be positive")
+    windows: list[tuple[T, ...]] = []
+    for i in range(0, len(seq), step):
+        window = tuple(seq[i : i + size])
+        if not window:
+            break
+        if len(window) < size:
+            if step > 1:
+                windows.append(window)
+            break
+        windows.append(window)
+    return windows
 
 
 def unique(items: Sequence[T], key: Callable[[T], Any] | None = None) -> list[T]:

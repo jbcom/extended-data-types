@@ -76,12 +76,21 @@ class ListHandler:
             [1, 2]
         """
         items = items or []
-        allowlist = allowlist or []
         denylist = denylist or []
 
         filtered = []
         for item in items:
-            if (not allowlist or item in allowlist) and item not in denylist:
+            # If allowlist is None, allow all items
+            # If allowlist is empty [], allow nothing
+            # If allowlist has items, only allow items in it
+            if allowlist is None:
+                allow_item = True
+            elif allowlist:
+                allow_item = item in allowlist
+            else:  # allowlist is empty []
+                allow_item = False
+            
+            if allow_item and item not in denylist:
                 filtered.append(item)
 
         return filtered

@@ -6,7 +6,7 @@ from collections.abc import Generator
 from datetime import date, datetime, time, timedelta
 from typing import Literal, TypeVar
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 DT = TypeVar("DT", date, datetime)

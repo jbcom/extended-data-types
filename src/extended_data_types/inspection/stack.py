@@ -38,6 +38,10 @@ class MethodInfo(BaseModel):
     signature: inspect.Signature | None = None
     is_public: bool = True
 
+    model_config = {
+        "arbitrary_types_allowed": True,
+    }
+
 
 @attrs.define
 class StackInspector:

@@ -15,9 +15,10 @@ Typical usage:
 from __future__ import annotations
 
 from collections import defaultdict
+from pathlib import Path
 from typing import Any, TypeVar
 
-from ..core.types import typeof
+from extended_data_types.core.types import typeof
 
 
 K = TypeVar("K")  # Key type for dictionaries
@@ -48,7 +49,8 @@ def split_list_by_type(
     """
     result: defaultdict[type, list[Any]] = defaultdict(list)
     for item in items:
-        result[typeof(item, primitive_only=primitive_only)].append(item)
+        key_type = _type_key(item, primitive_only)
+        result[key_type].append(item)
     return result
 
 
@@ -76,5 +78,20 @@ def split_dict_by_type(
     """
     result: defaultdict[type, dict[K, V]] = defaultdict(dict)
     for key, value in items.items():
-        result[typeof(value, primitive_only=primitive_only)][key] = value
+        key_type = _type_key(value, primitive_only)
+        result[key_type][key] = value
     return result
+
+
+def _type_key(value: Any, primitive_only: bool) -> type:
+    if primitive_only:
+        if isinstance(value, bool):
+            return int
+        if isinstance(value, Path):
+            return object
+        if isinstance(value, (int, float, str, bytes, list, dict, tuple, set, Path)):
+            return type(value)
+        return object
+    if isinstance(value, Path):
+        return Path
+    return type(value)

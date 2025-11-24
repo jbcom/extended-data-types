@@ -22,8 +22,8 @@ import yaml
 
 from hcl2 import loads as hcl2_loads
 
-from ..core.inspection import is_json_serializable
-from ..core.types import JsonDict
+from extended_data_types.core.inspection import is_json_serializable
+from extended_data_types.core.types import JsonDict
 
 
 # Format-specific indicators
@@ -89,7 +89,7 @@ def detect_format(data: str) -> str | None:
     try:
         hcl2_loads(data)
         return "hcl2"
-    except ValueError:
+    except Exception:
         pass
 
     # Try YAML last (most permissive)
@@ -180,7 +180,16 @@ def is_potential_yaml(data: str) -> bool:
     Returns:
         True if string shows YAML indicators
     """
-    return any(ind in data for ind in YAML_INDICATORS)
+    stripped = data.strip()
+    if stripped.startswith("{") and stripped.endswith("}"):
+        return False
+    if stripped.startswith("-"):
+        return True
+    if stripped.startswith(("&", "*")):
+        return True
+    if ":" in stripped:
+        return True
+    return False
 
 
 def is_potential_toml(data: str) -> bool:
@@ -192,9 +201,14 @@ def is_potential_toml(data: str) -> bool:
     Returns:
         True if string shows TOML indicators
     """
-    return any(ind in data for ind in TOML_INDICATORS) and not data.strip().startswith(
-        "{"
-    )
+    stripped = data.strip()
+    if stripped.startswith("{"):
+        return False
+    if '"""' in stripped:
+        return True
+    if " = " in stripped:
+        return True
+    return False
 
 
 def is_potential_xml(data: str) -> bool:
@@ -221,9 +235,14 @@ def is_potential_ini(data: str) -> bool:
     Returns:
         True if string shows INI indicators
     """
-    return all(ind in data for ind in INI_INDICATORS) and not any(
-        c in data for c in "{[<"
-    )
+    stripped = data.strip()
+    if stripped.startswith("["):
+        return "=" in stripped
+    if "&" not in stripped and "=" in stripped:
+        return True
+    if "\n" in stripped and "=" in stripped:
+        return True
+    return False
 
 
 def is_potential_querystring(data: str) -> bool:
@@ -235,12 +254,12 @@ def is_potential_querystring(data: str) -> bool:
     Returns:
         True if string shows query string indicators
     """
-    return (
-        "=" in data
-        and "&" in data
-        and not any(c in data for c in "{}[]<>")
-        and " " not in data.strip()
-    )
+    stripped = data.strip()
+    if " " in stripped or stripped.startswith("[") or any(
+        c in stripped for c in "{}[]<>"
+    ):
+        return False
+    return "=" in stripped
 
 
 def is_potential_hcl2(data: str) -> bool:

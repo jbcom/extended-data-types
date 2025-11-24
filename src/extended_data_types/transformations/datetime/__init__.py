@@ -6,6 +6,7 @@ from .arithmetic import (
     shift_timezone,
     subtract_time,
     time_between,
+    ceil_time,
 )
 from .format import (
     format_date,
@@ -18,7 +19,13 @@ from .format import (
     to_iso,
 )
 from .ranges import date_range, datetime_range, is_between, overlap, time_range
-from .validation import compare_dates, is_valid_date, is_valid_time, normalize_date
+from .validation import (
+    compare_dates,
+    is_valid_date,
+    is_valid_datetime,
+    is_valid_time,
+    normalize_date,
+)
 
 
 __all__ = [
@@ -37,6 +44,7 @@ __all__ = [
     "time_between",
     "shift_timezone",
     "round_time",
+    "ceil_time",
     # Range operations
     "date_range",
     "time_range",
@@ -45,6 +53,7 @@ __all__ = [
     "overlap",
     # Validation operations
     "is_valid_date",
+    "is_valid_datetime",
     "is_valid_time",
     "compare_dates",
     "normalize_date",

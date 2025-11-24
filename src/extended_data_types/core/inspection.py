@@ -7,6 +7,7 @@ including type checking, attribute inspection, and structural analysis.
 from __future__ import annotations
 
 import inspect
+import sys
 
 from collections.abc import Mapping, Sequence
 from typing import Any, TypeVar, cast, get_args, get_origin
@@ -216,3 +217,118 @@ def to_json_dict(obj: Any) -> JsonDict:
 
     except Exception as e:
         raise InspectionError(f"Failed to convert {typeof(obj)} to JSON: {e}") from e
+
+
+# --- Backwards-compatible helpers expected by tests ---
+
+
+def filter_methods(methods: list[str]) -> list[str]:
+    """Filter out private/dunder methods."""
+    return [m for m in methods if not m.startswith("_") and not m.endswith("__")]
+
+
+def get_caller() -> str:
+    """Return caller function name."""
+    stack = inspect.stack()
+    return stack[2].function  # 0=current,1=get_caller,2=caller
+
+
+def get_unique_signature(obj: Any, delimiter: str = "/") -> str:
+    """Return a module/qualname signature for an object."""
+    module = getattr(obj, "__module__", obj.__class__.__module__)
+    name = getattr(obj, "__name__", obj.__class__.__name__)
+    return f"{module}{delimiter}{name}"
+
+
+def get_available_methods(obj: Any) -> dict[str, str]:
+    """Return public methods with docstrings, skipping NOPARSE."""
+    methods: dict[str, str] = {}
+    for name, member in inspect.getmembers(obj):
+        if not inspect.isfunction(member) and not inspect.ismethod(member):
+            continue
+        if name.startswith("_") or "NOPARSE" in (member.__doc__ or ""):
+            continue
+        doc = (member.__doc__ or "").strip()
+        methods[name] = doc
+    return methods
+
+
+def get_inputs_from_docstring(docstring: str | None) -> dict[str, dict[str, str]]:
+    """Parse env input definitions from docstrings."""
+    if not docstring:
+        return {}
+    inputs: dict[str, dict[str, str]] = {}
+    for line in docstring.splitlines():
+        line = line.strip()
+        if not line.lower().startswith("env=name:"):
+            continue
+        parts = [part.strip() for part in line.split(",")]
+        entry: dict[str, str] = {}
+        key = None
+        for part in parts:
+            if part.lower().startswith("env=name:"):
+                key = part.split(":", 1)[1].strip().lower()
+            elif ":" in part:
+                k, v = part.split(":", 1)
+                entry[k.strip().lower()] = v.strip().lower()
+        if key:
+            inputs[key] = entry
+    return inputs
+
+
+# Compatibility alias
+def parse_input_definitions(docstring: str) -> dict[str, dict[str, str]]:
+    return get_inputs_from_docstring(docstring)
+
+
+def update_docstring(obj: Any, new_inputs: dict[str, dict[str, str]]) -> str:
+    """Update docstring with new env input metadata (compat helper)."""
+    if isinstance(obj, str):
+        base_doc = obj
+        target = None
+    else:
+        base_doc = obj.__doc__ or ""
+        target = obj
+
+    base_lines = [line for line in base_doc.strip().splitlines() if line.strip()]
+    existing_envs = [
+        line
+        for line in base_lines
+        if line.strip().lower().startswith("env=name:")
+    ]
+    text_lines = [
+        line for line in base_lines if not line.strip().lower().startswith("env=name:")
+    ]
+
+    merged_lines = list(text_lines)
+    indent = ""
+    if existing_envs:
+        # Capture leading whitespace from first env line to reuse
+        prefix_len = len(existing_envs[0]) - len(existing_envs[0].lstrip())
+        indent = existing_envs[0][:prefix_len]
+
+    for key, meta in new_inputs.items():
+        normalized = key.lower()
+        already = any(normalized in line.lower() for line in existing_envs)
+        if not already:
+            existing_envs.append(
+                f"{indent}env=name: {key}, required: {meta.get('required','false')}, sensitive: {meta.get('sensitive','false')}"
+            )
+
+    merged_lines.extend(existing_envs)
+    merged = "\n".join(merged_lines)
+
+    if target is not None:
+        try:
+            target.__doc__ = merged
+        except Exception:
+            pass
+    return merged
+
+
+def is_python_version_at_least(minor: int, major: int | None = None) -> bool:
+    """Check interpreter version."""
+    if major is None:
+        major = 3
+    current = sys.version_info
+    return (current.major, current.minor) >= (major, minor)

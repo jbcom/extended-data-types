@@ -6,7 +6,7 @@ the modern Matcher internally.
 
 from typing import Any
 
-from ..matching.patterns import Matcher
+from extended_data_types.matching.patterns import Matcher
 
 
 # Global matcher instance for compatibility functions

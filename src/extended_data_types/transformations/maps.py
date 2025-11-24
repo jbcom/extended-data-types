@@ -14,7 +14,7 @@ import inflection
 
 from sortedcontainers import SortedDict
 
-from ..types import convert_special_types
+from extended_data_types.types import convert_special_types
 
 
 def first_non_empty_value_from_map(m: Mapping[str, Any], *keys: str) -> Any:

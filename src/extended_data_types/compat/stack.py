@@ -6,7 +6,7 @@ the modern StackInspector internally.
 
 from typing import Any
 
-from ..inspection.stack import StackInspector
+from extended_data_types.inspection.stack import StackInspector
 
 
 # Global inspector instance for compatibility functions
@@ -15,7 +15,8 @@ _inspector = StackInspector()
 
 def get_caller_name(depth: int = 2) -> str:
     """Maintains compatibility with bob.stack_utils.get_caller_name."""
-    return _inspector.get_caller_name(depth)
+    # Skip the compat wrapper frame as well
+    return _inspector.get_caller_name(depth + 1)
 
 
 def get_available_methods(

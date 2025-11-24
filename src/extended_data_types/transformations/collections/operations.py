@@ -13,7 +13,7 @@ from collections import defaultdict
 from collections.abc import Callable, Sequence
 from typing import Any, TypeVar
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 T = TypeVar("T")

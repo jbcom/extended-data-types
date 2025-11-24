@@ -8,7 +8,7 @@ from collections.abc import Iterator
 from pathlib import Path
 from typing import Union
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 PathLike = Union[str, Path]

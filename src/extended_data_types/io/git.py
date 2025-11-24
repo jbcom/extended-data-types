@@ -6,7 +6,9 @@ import tempfile
 
 from pathlib import Path
 
-from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError, Repo
+import git
+
+from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
 
 from .types import FilePath
 
@@ -26,7 +28,9 @@ def get_parent_repository(
     directory = Path(str(file_path)) if file_path else Path.cwd()
 
     try:
-        return Repo(str(directory), search_parent_directories=search_parent_directories)
+        return git.Repo(  # type: ignore[call-arg]
+            str(directory), search_parent_directories=search_parent_directories
+        )
     except (InvalidGitRepositoryError, NoSuchPathError):
         return None
 
@@ -70,7 +74,7 @@ def clone_repository_to_temp(
 
     try:
         temp_dir = Path(tempfile.mkdtemp())
-        repo = Repo.clone_from(repo_url, str(temp_dir), branch=branch)
+        repo = git.Repo.clone_from(repo_url, str(temp_dir), branch=branch)
         return temp_dir, repo
     except GitCommandError as e:
         raise OSError("Git command error occurred") from e

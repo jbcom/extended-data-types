@@ -30,16 +30,21 @@ def is_nothing(v: Any) -> bool:
         >>> is_nothing("text")
         False
     """
-    if v in [None, "", {}, []]:
-        return True
+    empties = (None, "", {}, [])
 
-    if str(v) == "" or str(v).isspace():
-        return True
-
-    if isinstance(v, (list, set)):
-        v = [vv for vv in v if vv not in [None, "", {}, []]]
-        if len(v) == 0:
+    try:
+        if v in empties:
             return True
+    except TypeError:
+        # Unhashable types can't be compared in membership
+        pass
+
+    if isinstance(v, str) and (v == "" or v.isspace()):
+        return True
+
+    if isinstance(v, (list, tuple, set)):
+        filtered = [vv for vv in v if not is_nothing(vv)]
+        return len(filtered) == 0
 
     return False
 

@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .generator import HCL2Generator
 from .parser import HCL2Parser
-from .types import HCLFile
+from .types import Block, BlockType, HCLFile, MetaArguments
 
 
 class HCL2:
@@ -85,6 +85,34 @@ class HCL2:
             >>> content = hcl.generate(config)
         """
         return self.generator.generate(hcl_file)
+
+    # Convenience helpers for the serializer wrapper
+    def serializer_to_file(self, data: dict) -> HCLFile:
+        file = HCLFile()
+        if "terraform" in data:
+            tf = data["terraform"]
+            file.terraform_version = tf.get("required_version")
+            file.required_providers = tf.get("required_providers", {})
+        for block_type, block_data in data.items():
+            if block_type == "terraform":
+                continue
+            try:
+                bt: BlockType | str = BlockType.from_str(block_type)
+            except ValueError:
+                bt = block_type
+            if isinstance(block_data, dict):
+                for first, maybe_second in block_data.items():
+                    if isinstance(maybe_second, dict):
+                        for second, attrs in maybe_second.items():
+                            block = Block(type=bt, labels=[first, second], attributes=attrs, meta_args=MetaArguments())
+                            file.blocks.append(block)
+                    else:
+                        block = Block(type=bt, labels=[first], attributes={"value": maybe_second}, meta_args=MetaArguments())
+                        file.blocks.append(block)
+        return file
+
+    def file_to_serializer(self, hcl_file: HCLFile) -> dict:
+        return self.generator.to_dict(hcl_file)
 
     def parse_file(self, path: str | Path) -> HCLFile:
         """Parse HCL2 content from a file.

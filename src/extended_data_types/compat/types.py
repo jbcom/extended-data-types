@@ -3,7 +3,7 @@
 from collections.abc import Mapping
 from typing import Any, TypeVar
 
-from ..core.types import TypeSystem
+from extended_data_types.core.types import TypeSystem, convert_special_types as core_convert_special_types
 
 
 T = TypeVar("T")
@@ -19,11 +19,10 @@ def convert_special_type(value: Any, target_type: type[T] = None) -> T:
 
 def convert_special_types(data: Any) -> Any:
     """Maintain bob.type_utils.convert_special_types compatibility."""
-    return (
-        _type_system.convert_mapping(data)
-        if isinstance(data, Mapping)
-        else convert_special_type(data)
-    )
+    try:
+        return core_convert_special_types(data)
+    except Exception:
+        return data
 
 
 def reconstruct_special_type(converted_obj: str, fail_silently: bool = False) -> Any:

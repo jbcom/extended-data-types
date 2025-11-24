@@ -6,7 +6,7 @@ the modern Validator internally.
 
 from typing import Any, TypeVar
 
-from ..validation.validators import Validator
+from extended_data_types.validation.validators import Validator
 
 
 T = TypeVar("T")

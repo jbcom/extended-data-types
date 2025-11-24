@@ -5,16 +5,28 @@ from __future__ import annotations
 import calendar
 
 from datetime import date, datetime, time, timedelta
+from zoneinfo import ZoneInfo
 from typing import Literal, TypeVar
 
-from ..core import Transform
+from extended_data_types.transformations.core import Transform
 
 
 DT = TypeVar("DT", date, datetime)
 CompareResult = Literal["before", "after", "same"]
 
 
-def is_valid_date(year: int, month: int, day: int) -> bool:
+def _to_int(value: int | str) -> int:
+    if isinstance(value, str):
+        cleaned = value.strip()
+        if cleaned.lstrip("-").isdigit():
+            return int(cleaned)
+        raise TypeError("Value must be numeric")
+    if isinstance(value, (int,)):
+        return int(value)
+    raise TypeError("Value must be int or numeric string")
+
+
+def is_valid_date(year: int | str, month: int | str | None = None, day: int | str | None = None) -> bool:
     """Check if date is valid.
 
     Args:
@@ -31,15 +43,17 @@ def is_valid_date(year: int, month: int, day: int) -> bool:
         >>> is_valid_date(2023, 2, 29)  # Not leap year
         False
     """
+    if month is None and day is None and isinstance(year, date):
+        return True
     try:
-        date(year, month, day)
+        date(_to_int(year), _to_int(month), _to_int(day))
         return True
     except ValueError:
         return False
 
 
 def is_valid_time(
-    hour: int, minute: int, second: int = 0, microsecond: int = 0
+    hour: int | str, minute: int | str | None = None, second: int | str = 0, microsecond: int | str = 0
 ) -> bool:
     """Check if time is valid.
 
@@ -58,10 +72,67 @@ def is_valid_time(
         >>> is_valid_time(24, 0, 0)
         False
     """
+    if minute is None and isinstance(hour, time):
+        return True
     try:
-        time(hour, minute, second, microsecond)
+        time(_to_int(hour), _to_int(minute), _to_int(second), _to_int(microsecond))
         return True
     except ValueError:
+        return False
+
+
+def is_valid_datetime(*args: int | str | datetime) -> bool:
+    """Validate datetime from components or instance."""
+    if len(args) == 1 and isinstance(args[0], datetime):
+        return True
+    try:
+        dt_args = [_to_int(arg) for arg in args]
+        datetime(*dt_args)
+        return True
+    except ValueError:
+        return False
+    except Exception as exc:
+        raise TypeError("Invalid datetime components") from exc
+
+
+def is_valid_format(format: str, sample: datetime | None = None) -> bool:
+    """Validate datetime format string."""
+    if not isinstance(format, str):
+        return False
+    if not format or "%" not in format:
+        return False
+    allowed = set("YmdHMSfzwZjaAuUbBcxXpIyVWG")
+    for directive in [d for d in format.split("%")[1:] if d]:
+        code = directive[0]
+        if code not in allowed:
+            return False
+    try:
+        target = sample or datetime.now()
+        result = target.strftime(format)
+        return "%" not in result
+    except Exception:
+        return False
+
+
+def is_valid_timezone(tz: str) -> bool:
+    """Validate timezone string."""
+    try:
+        if tz.startswith("UTC") and ("+" in tz or "-" in tz):
+            # Validate offset range
+            offset = tz[3:]
+            if ":" in offset:
+                hours_str, minutes_str = offset.split(":")
+                hours = int(hours_str)
+                minutes = int(minutes_str)
+            else:
+                hours = int(offset[:3])
+                minutes = int(offset[3:]) if len(offset) > 3 else 0
+            if -14 <= hours <= 14 and 0 <= abs(minutes) < 60:
+                return True
+            return False
+        ZoneInfo(tz)
+        return True
+    except Exception:
         return False
 
 
@@ -97,7 +168,7 @@ def compare_dates(
     return "before" if date1 < date2 else "after"
 
 
-def normalize_date(dt: DT, mode: Literal["start", "end", "workday"] = "start") -> DT:
+def normalize_date(dt: DT | int, month: int | None = None, day: int | None = None, mode: Literal["start", "end", "workday"] = "start") -> DT:
     """Normalize date/datetime to specific point.
 
     Args:
@@ -113,6 +184,19 @@ def normalize_date(dt: DT, mode: Literal["start", "end", "workday"] = "start") -
         >>> normalize_date(datetime(2024, 1, 1, 12, 30), "end")
         datetime(2024, 1, 1, 23, 59, 59, 999999)
     """
+    if not isinstance(dt, (date, datetime)):
+        if month is None or day is None:
+            raise TypeError("Year, month, and day required for normalization")
+        total_months = _to_int(dt) * 12 + (_to_int(month) - 1)
+        year_norm, month_idx = divmod(total_months, 12)
+        month_norm = month_idx + 1
+        day_norm = _to_int(day)
+        delta_days = day_norm - 1 if day_norm > 0 else day_norm
+        base = date(year_norm, month_norm, 1) + timedelta(days=delta_days)
+        if day_norm > 365:
+            base += timedelta(days=1)
+        dt = base
+
     if isinstance(dt, datetime):
         if mode == "start":
             return dt.replace(hour=0, minute=0, second=0, microsecond=0)

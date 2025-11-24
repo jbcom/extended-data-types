@@ -10,11 +10,17 @@ Typical usage:
 
 from typing import Any
 
-from ..serialization.handlers import SerializationError, SerializationHandler
+import json
+import yaml
+import tomlkit
+
+from extended_data_types.serialization.handlers import SerializationError, SerializationHandler
+from extended_data_types.serialization.formats.hcl2 import Hcl2Serializer
 
 
 # Global handler instance for compatibility functions
 _handler = SerializationHandler()
+_hcl2 = Hcl2Serializer()
 
 
 def wrap_raw_data_for_export(
@@ -85,9 +91,17 @@ def unwrap_raw_data_from_import(
         if format_lower not in ["yaml", "json", "toml", "hcl2", "raw"]:
             raise ValueError(f"Unsupported encoding format: {encoding}")
 
-        return _handler.deserialize(wrapped_data, format_lower)
+        if format_lower == "yaml":
+            return yaml.safe_load(wrapped_data)
+        if format_lower == "json":
+            return json.loads(wrapped_data)
+        if format_lower == "toml":
+            return tomlkit.parse(wrapped_data)
+        if format_lower == "hcl2":
+            return _hcl2.decode(wrapped_data)
+        return wrapped_data
 
-    except SerializationError as e:
+    except Exception as e:
         raise ValueError(str(e)) from e
 
 

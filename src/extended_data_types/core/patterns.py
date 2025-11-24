@@ -78,6 +78,15 @@ DATE_ISO_PATTERN: Final = re.compile(
 )
 """Pattern matching ISO format dates and datetimes."""
 
+# Backwards-compatible aliases
+DATE_PATTERN: Final = DATE_ISO_PATTERN
+DATETIME_PATTERN: Final = DATE_ISO_PATTERN
+TIME_PATTERN: Final = re.compile(r"^\d{2}:\d{2}(:\d{2})?$")
+PATH_PATTERN: Final = UNIX_PATH_PATTERN
+NUMBER_PATTERN: Final = re.compile(r"^-?\d+(\.\d+)?$")
+TRUTHY_PATTERN: Final = re.compile(r"^(true|1|yes|y)$", re.IGNORECASE)
+FALSY_PATTERN: Final = re.compile(r"^(false|0|no|n)$", re.IGNORECASE)
+
 NUMBER_PATTERN: Final = re.compile(r"^[+-]?(\d*\.)?\d+([eE][+-]?\d+)?$")
 """Pattern matching numeric strings including scientific notation."""
 
