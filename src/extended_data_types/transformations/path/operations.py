@@ -167,10 +167,10 @@ def is_subpath(path: PathLike, parent: PathLike) -> bool:
 
 
 # Register transforms
-join_paths_transform = Transform(join_paths)
-resolve_path_transform = Transform(resolve_path)
-normalize_path_transform = Transform(normalize_path)
-make_relative_transform = Transform(make_relative)
-make_absolute_transform = Transform(make_absolute)
-ensure_parent_transform = Transform(ensure_parent)
-is_subpath_transform = Transform(is_subpath)
+join_paths_transform = Transform(join_paths)  # type: ignore[arg-type]
+resolve_path_transform = Transform(resolve_path)  # type: ignore[arg-type]
+normalize_path_transform = Transform(normalize_path)  # type: ignore[arg-type]
+make_relative_transform = Transform(make_relative)  # type: ignore[arg-type]
+make_absolute_transform = Transform(make_absolute)  # type: ignore[arg-type]
+ensure_parent_transform = Transform(ensure_parent)  # type: ignore[arg-type]
+is_subpath_transform = Transform(is_subpath)  # type: ignore[arg-type]

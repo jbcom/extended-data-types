@@ -151,8 +151,8 @@ def find_boundaries(
 
 
 # Register transforms
-match_pattern_transform = Transform(match_pattern)
-replace_pattern_transform = Transform(replace_pattern)
-extract_pattern_transform = Transform(extract_pattern)
-split_pattern_transform = Transform(split_pattern)
-find_boundaries_transform = Transform(find_boundaries)
+match_pattern_transform = Transform(match_pattern)  # type: ignore[arg-type]
+replace_pattern_transform = Transform(replace_pattern)  # type: ignore[arg-type]
+extract_pattern_transform = Transform(extract_pattern)  # type: ignore[arg-type]
+split_pattern_transform = Transform(split_pattern)  # type: ignore[arg-type]
+find_boundaries_transform = Transform(find_boundaries)  # type: ignore[arg-type]

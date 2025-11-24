@@ -192,11 +192,11 @@ def replace_stem(path: PathLike, stem: str) -> Path:
 
 
 # Register transforms
-get_stem_transform = Transform(get_stem)
-get_suffix_transform = Transform(get_suffix)
-get_parent_transform = Transform(get_parent)
-split_path_transform = Transform(split_path)
-split_extension_transform = Transform(split_extension)
-get_parts_transform = Transform(get_parts)
-replace_name_transform = Transform(replace_name)
-replace_stem_transform = Transform(replace_stem)
+get_stem_transform = Transform(get_stem)  # type: ignore[arg-type]
+get_suffix_transform = Transform(get_suffix)  # type: ignore[arg-type]
+get_parent_transform = Transform(get_parent)  # type: ignore[arg-type]
+split_path_transform = Transform(split_path)  # type: ignore[arg-type]
+split_extension_transform = Transform(split_extension)  # type: ignore[arg-type]
+get_parts_transform = Transform(get_parts)  # type: ignore[arg-type]
+replace_name_transform = Transform(replace_name)  # type: ignore[arg-type]
+replace_stem_transform = Transform(replace_stem)  # type: ignore[arg-type]

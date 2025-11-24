@@ -298,9 +298,9 @@ def transform_values(
 
 
 # Register transforms
-pick_transform = Transform(pick)
-omit_transform = Transform(omit)
-merge_maps_transform = Transform(merge_maps)
-rename_keys_transform = Transform(rename_keys)
-transform_keys_transform = Transform(transform_keys)
-transform_values_transform = Transform(transform_values)
+pick_transform = Transform(pick)  # type: ignore[arg-type]
+omit_transform = Transform(omit)  # type: ignore[arg-type]
+merge_maps_transform = Transform(merge_maps)  # type: ignore[arg-type]
+rename_keys_transform = Transform(rename_keys)  # type: ignore[arg-type]
+transform_keys_transform = Transform(transform_keys)  # type: ignore[arg-type]
+transform_values_transform = Transform(transform_values)  # type: ignore[arg-type]

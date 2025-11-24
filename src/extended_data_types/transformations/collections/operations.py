@@ -138,7 +138,7 @@ def sort_by(
 
 
 # Register transforms
-chunk_transform = Transform(chunk)
-flatten_transform = Transform(flatten)
-group_by_transform = Transform(group_by)
-sort_by_transform = Transform(sort_by)
+chunk_transform = Transform(chunk)  # type: ignore[arg-type]
+flatten_transform = Transform(flatten)  # type: ignore[arg-type]
+group_by_transform = Transform(group_by)  # type: ignore[arg-type]
+sort_by_transform = Transform(sort_by)  # type: ignore[arg-type]

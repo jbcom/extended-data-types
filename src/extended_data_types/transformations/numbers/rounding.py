@@ -180,13 +180,13 @@ round_number = round_to
 
 
 # Register transforms
-round_to_transform = Transform(round_to)
-ceil_to_transform = Transform(ceil_to)
-floor_to_transform = Transform(floor_to)
-clamp_transform = Transform(clamp)
-quantize_transform = Transform(quantize)
-ceiling_transform = Transform(ceiling)
-round_to_increment_transform = Transform(round_to_increment)
-round_to_fraction_transform = Transform(round_to_fraction)
-round_significant_transform = Transform(round_significant)
-truncate_transform = Transform(truncate)
+round_to_transform = Transform(round_to)  # type: ignore[arg-type]
+ceil_to_transform = Transform(ceil_to)  # type: ignore[arg-type]
+floor_to_transform = Transform(floor_to)  # type: ignore[arg-type]
+clamp_transform = Transform(clamp)  # type: ignore[arg-type]
+quantize_transform = Transform(quantize)  # type: ignore[arg-type]
+ceiling_transform = Transform(ceiling)  # type: ignore[arg-type]
+round_to_increment_transform = Transform(round_to_increment)  # type: ignore[arg-type]
+round_to_fraction_transform = Transform(round_to_fraction)  # type: ignore[arg-type]
+round_significant_transform = Transform(round_significant)  # type: ignore[arg-type]
+truncate_transform = Transform(truncate)  # type: ignore[arg-type]

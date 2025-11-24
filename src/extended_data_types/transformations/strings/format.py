@@ -128,14 +128,14 @@ def format_slug(text: str) -> str:
 
 
 # Register transforms
-format_template_transform = Transform(format_template)
-truncate_transform = Transform(truncate)
-pad_transform = Transform(pad)
-wrap_transform = Transform(wrap)
-align_transform = Transform(align)
-format_slug_transform = Transform(format_slug)
-format_align_transform = Transform(format_align)
-format_case_transform = Transform(format_case)
+format_template_transform = Transform(format_template)  # type: ignore[arg-type]
+truncate_transform = Transform(truncate)  # type: ignore[arg-type]
+pad_transform = Transform(pad)  # type: ignore[arg-type]
+wrap_transform = Transform(wrap)  # type: ignore[arg-type]
+align_transform = Transform(align)  # type: ignore[arg-type]
+format_slug_transform = Transform(format_slug)  # type: ignore[arg-type]
+format_align_transform = Transform(format_align)  # type: ignore[arg-type]
+format_case_transform = Transform(format_case)  # type: ignore[arg-type]
 
 # Compatibility aliases
 format_truncate = truncate

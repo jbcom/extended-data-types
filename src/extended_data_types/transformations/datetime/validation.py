@@ -301,11 +301,11 @@ def age(birth_date: date, reference_date: date | None = None) -> int:
 
 
 # Register transforms
-is_valid_date_transform = Transform(is_valid_date)
-is_valid_time_transform = Transform(is_valid_time)
-compare_dates_transform = Transform(compare_dates)
-normalize_date_transform = Transform(normalize_date)
-is_weekend_transform = Transform(is_weekend)
-is_leap_year_transform = Transform(is_leap_year)
-days_in_month_transform = Transform(days_in_month)
-age_transform = Transform(age)
+is_valid_date_transform = Transform(is_valid_date)  # type: ignore[arg-type]
+is_valid_time_transform = Transform(is_valid_time)  # type: ignore[arg-type]
+compare_dates_transform = Transform(compare_dates)  # type: ignore[arg-type]
+normalize_date_transform = Transform(normalize_date)  # type: ignore[arg-type]
+is_weekend_transform = Transform(is_weekend)  # type: ignore[arg-type]
+is_leap_year_transform = Transform(is_leap_year)  # type: ignore[arg-type]
+days_in_month_transform = Transform(days_in_month)  # type: ignore[arg-type]
+age_transform = Transform(age)  # type: ignore[arg-type]

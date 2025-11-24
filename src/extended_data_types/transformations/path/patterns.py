@@ -164,8 +164,8 @@ def filter_paths(
 
 
 # Register transforms
-match_pattern_transform = Transform(match_pattern)
-find_files_transform = Transform(find_files)
-find_dirs_transform = Transform(find_dirs)
-replace_extension_transform = Transform(replace_extension)
-filter_paths_transform = Transform(filter_paths)
+match_pattern_transform = Transform(match_pattern)  # type: ignore[arg-type]
+find_files_transform = Transform(find_files)  # type: ignore[arg-type]
+find_dirs_transform = Transform(find_dirs)  # type: ignore[arg-type]
+replace_extension_transform = Transform(replace_extension)  # type: ignore[arg-type]
+filter_paths_transform = Transform(filter_paths)  # type: ignore[arg-type]

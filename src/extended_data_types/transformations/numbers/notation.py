@@ -278,12 +278,12 @@ def from_base(text: str, base: Base, strict: bool = True) -> int:
 
 
 # Register transforms
-to_roman_transform = Transform(to_roman)
-from_roman_transform = Transform(from_roman)
-to_binary_transform = Transform(to_binary)
-to_hex_transform = Transform(to_hex)
-to_octal_transform = Transform(to_octal)
-from_base_transform = Transform(from_base)
-from_words_transform = Transform(from_words)
-from_fraction_transform = Transform(from_fraction)
-from_ordinal_transform = Transform(from_ordinal)
+to_roman_transform = Transform(to_roman)  # type: ignore[arg-type]
+from_roman_transform = Transform(from_roman)  # type: ignore[arg-type]
+to_binary_transform = Transform(to_binary)  # type: ignore[arg-type]
+to_hex_transform = Transform(to_hex)  # type: ignore[arg-type]
+to_octal_transform = Transform(to_octal)  # type: ignore[arg-type]
+from_base_transform = Transform(from_base)  # type: ignore[arg-type]
+from_words_transform = Transform(from_words)  # type: ignore[arg-type]
+from_fraction_transform = Transform(from_fraction)  # type: ignore[arg-type]
+from_ordinal_transform = Transform(from_ordinal)  # type: ignore[arg-type]
