@@ -113,6 +113,14 @@ def test_filter_list_allowlist(test_list: list[str], allowlist: list[str]) -> No
     assert result == ["apple", "cherry"]
 
 
+def test_filter_list_empty_allowlist_behaves_like_no_filter(
+    test_list: list[str],
+) -> None:
+    """An explicitly empty allowlist should allow every item."""
+    result = filter_list(test_list, allowlist=[])
+    assert result == test_list
+
+
 def test_filter_list_denylist(test_list: list[str], denylist: list[str]) -> None:
     """Tests filtering a list with a denylist.
 

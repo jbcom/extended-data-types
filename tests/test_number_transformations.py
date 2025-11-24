@@ -61,6 +61,12 @@ def test_number_to_words() -> None:
     assert number_to_words(1000) == "one thousand"
 
 
+def test_number_to_words_invalid_language() -> None:
+    """Unsupported languages should raise a ValueError."""
+    with pytest.raises(ValueError):
+        number_to_words(1, lang="zz")
+
+
 def test_number_to_ordinal() -> None:
     """Test conversion to ordinal words."""
     assert number_to_ordinal(1) == "first"
@@ -69,6 +75,12 @@ def test_number_to_ordinal() -> None:
     assert number_to_ordinal(4) == "fourth"
     assert number_to_ordinal(21) == "twenty-first"
     assert number_to_ordinal(42) == "forty-second"
+
+
+def test_number_to_ordinal_invalid_language() -> None:
+    """Unsupported languages for ordinals should raise a ValueError."""
+    with pytest.raises(ValueError):
+        number_to_ordinal(1, lang="zz")
 
 
 def test_number_to_currency() -> None:
@@ -81,7 +93,32 @@ def test_number_to_currency() -> None:
     assert "one hundred" in result.lower()
 
 
+def test_number_to_currency_invalid_language() -> None:
+    """Unsupported currency languages should raise a ValueError."""
+    with pytest.raises(ValueError):
+        number_to_currency(1.0, lang="zz")
+
+
+def test_number_to_currency_invalid_currency_code() -> None:
+    """Unknown currency codes should raise a ValueError."""
+    with pytest.raises(ValueError):
+        number_to_currency(1.0, currency="zzz")
+
+
+def test_number_to_currency_case_insensitive_currency() -> None:
+    """Currency codes are treated case-insensitively."""
+    lower_result = number_to_currency(1.25, currency="usd")
+    upper_result = number_to_currency(1.25, currency="USD")
+    assert lower_result == upper_result
+
+
 def test_round_trip_roman() -> None:
     """Test round-trip conversion for Roman numerals."""
     for num in [1, 5, 10, 42, 99, 500, 1000, 1984, 3999]:
         assert from_roman(to_roman(num)) == num
+
+
+def test_from_roman_rejects_non_canonical_forms() -> None:
+    """Non-canonical numerals should raise a ValueError."""
+    with pytest.raises(ValueError):
+        from_roman("IM")
