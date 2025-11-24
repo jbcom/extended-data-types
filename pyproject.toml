@@ -151,6 +151,12 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+".github/scripts/*.py" = [
+    "T201",    # Print is needed for CI scripts
+    "D103",    # Docstrings not required for simple CI scripts
+    "EM101",   # String literals in exceptions are fine for CI scripts
+    "PTH123",  # open() is fine for CI scripts
+]
 "tests/*" = [
     "B018",    # In tests, expressions that seem "useless" can often serve as assertions or necessary side effects, making them valuable.
     "BLE",     # Tests often intentionally handle exceptions differently, allowing for exploratory testing of failure cases and behavior under error conditions.
