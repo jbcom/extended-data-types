@@ -68,12 +68,13 @@ def filter_list(
     allowed_set = set(allowlist)
     denied_set = set(denylist)
 
+    enforce_allowlist = allowlist_provided and bool(allowed_set)
+
     filtered = []
 
     for elem in items:
-        if allowlist_provided:
-            if not allowed_set or elem not in allowed_set:
-                continue
+        if enforce_allowlist and elem not in allowed_set:
+            continue
 
         if elem in denied_set:
             continue
