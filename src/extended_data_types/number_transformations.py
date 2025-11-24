@@ -68,20 +68,44 @@ def _validate_currency_code(currency: str, lang_code: str) -> str:
 
 def to_roman(number: int) -> str:
     """Convert integer to Roman numerals.
-    
+
     Args:
         number: Integer between 1 and 3999
-        
+
     Returns:
         Roman numeral string
-        
+
     Example:
         >>> to_roman(42)
         'XLII'
     """
+    if not isinstance(number, int):
+        raise TypeError("Number must be an integer")
     if not 1 <= number <= 3999:
         raise ValueError("Number must be between 1 and 3999")
-    return num2words(number, to='roman').upper()
+
+    roman_pairs = [
+        (1000, "M"),
+        (900, "CM"),
+        (500, "D"),
+        (400, "CD"),
+        (100, "C"),
+        (90, "XC"),
+        (50, "L"),
+        (40, "XL"),
+        (10, "X"),
+        (9, "IX"),
+        (5, "V"),
+        (4, "IV"),
+        (1, "I"),
+    ]
+
+    result = []
+    remaining = number
+    for value, symbol in roman_pairs:
+        count, remaining = divmod(remaining, value)
+        result.append(symbol * count)
+    return "".join(result)
 
 
 def from_roman(numeral: str) -> int:
