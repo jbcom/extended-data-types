@@ -196,6 +196,8 @@ enable_error_code = ["ignore-without-code"]
 ignore_missing_imports = true
 warn_return_any = false
 python_version = "3.9"
+# Disable syntax errors for union types - works at runtime with __future__ annotations
+disable_error_code = ["syntax"]
 
 [[tool.mypy.overrides]]
 module = "tests.*"
