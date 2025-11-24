@@ -46,14 +46,17 @@ def deduplicate_map(m: Mapping[str, Any]) -> dict[str, Any]:
 
     for k, v in m.items():
         if isinstance(v, list):
-            deduplicated_map[k] = []
-
-            for elem in v:
-                if elem in deduplicated_map[k]:
-                    continue
-
-                deduplicated_map[k].append(elem)
-
+            # Try using dict.fromkeys for hashable elements (more efficient)
+            # Fall back to manual deduplication for unhashable elements
+            try:
+                deduplicated_map[k] = list(dict.fromkeys(v))
+            except TypeError:
+                # Handle unhashable elements (e.g., dicts, lists) with manual deduplication
+                deduplicated_list = []
+                for elem in v:
+                    if elem not in deduplicated_list:
+                        deduplicated_list.append(elem)
+                deduplicated_map[k] = deduplicated_list
             continue
 
         if isinstance(v, Mapping):

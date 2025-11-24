@@ -40,7 +40,7 @@ def chunk(
         >>> chunk([1, 2, 3, 4, 5], 2, pad=True)
         [[1, 2], [3, 4], [5, None]]
     """
-    chunks = [items[i : i + size] for i in range(0, len(items), size)]
+    chunks = [list(items[i : i + size]) for i in range(0, len(items), size)]
     if pad and chunks and len(chunks[-1]) < size:
         chunks[-1].extend([fill_value] * (size - len(chunks[-1])))
     return chunks

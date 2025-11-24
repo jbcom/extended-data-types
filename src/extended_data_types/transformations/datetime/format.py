@@ -248,8 +248,6 @@ def parse_time(text: str, format: str | None = None, locale: str = "en_US", time
         return parsed.replace(tzinfo=timezone)
     return parsed
 
-    return datetime.strptime(text, format).time()
-
 
 def parse_datetime(
     text: str,

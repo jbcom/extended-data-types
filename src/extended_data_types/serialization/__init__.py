@@ -40,6 +40,13 @@ from extended_data_types.serialization.types import convert_to_serializable, rec
 from extended_data_types.serialization.exporting import wrap_for_export
 from extended_data_types.serialization.importing import unwrap_imported_data
 
+# Register HCL2 serializer
+try:
+    from extended_data_types.serialization.languages.hcl2 import Hcl2Serializer
+    register_serializer("hcl2", Hcl2Serializer())
+except ImportError:
+    pass  # HCL2 support is optional
+
 
 def serialize(obj: Any, format_name: str | None = None) -> str:
     """Serialize an object to a string.

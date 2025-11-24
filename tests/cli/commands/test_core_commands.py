@@ -245,7 +245,8 @@ def test_convert_with_different_indentation(
 
     assert result.exit_code == 0
     content = output_file.read_text()
-    assert "    name:" in content  # Check 4-space indentation
+    # Check that nested elements use 4-space indentation
+    assert "    c:" in content or "    a:" in content  # Check 4-space indentation for nested items
 
 
 def test_format_with_different_indentation(runner: CliRunner, sample_json: Path):

@@ -47,13 +47,13 @@ def is_partial_match(
     """
     if a is None or b is None:
         return False
-    
-    # Empty strings don't match non-empty strings
-    if (a == "" and b != "") or (a != "" and b == ""):
-        return False
-    
-    # Both empty strings don't match
+
+    # Two empty strings are considered a match
     if a == "" and b == "":
+        return True
+
+    # Empty strings don't match non-empty strings
+    if a == "" or b == "":
         return False
 
     # Convert strings to lowercase for case-insensitive comparison

@@ -66,9 +66,6 @@ def convert(
 
         # Convert and write output
         result = to_serializer.encode(data, indent_size=indent, sort_keys=sort_keys)
-        if to_format == "yaml" and indent:
-            pad = " " * indent
-            result = "\n".join(f"{pad}{line}" if line.strip() else line for line in result.splitlines())
         output_file.write_text(result)
 
         click.echo(

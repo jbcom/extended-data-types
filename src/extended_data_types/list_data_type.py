@@ -67,10 +67,14 @@ def filter_list(
     if denylist is None:
         denylist = []
 
+    # Convert to sets for O(1) lookup performance
+    allowed_set = set(allowlist) if allowlist else set()
+    denied_set = set(denylist)
+
     filtered = []
 
     for elem in items:
-        if (len(allowlist) > 0 and elem not in allowlist) or elem in denylist:
+        if (len(allowlist) > 0 and elem not in allowed_set) or elem in denied_set:
             continue
 
         filtered.append(elem)
