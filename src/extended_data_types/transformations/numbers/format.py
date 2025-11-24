@@ -97,10 +97,7 @@ def format_currency(
     decimals: int | None = None,
     symbol: bool = True,
 ) -> str:
-    """Format amount as currency."""
-    import locale as loc
-
-    import babel.numbers
+    """Format amount as currency without external localization dependencies."""
 
     if decimals is not None:
         precision = decimals
@@ -110,59 +107,36 @@ def format_currency(
     if currency not in valid_currencies:
         raise ValueError(f"Invalid currency: {currency}")
 
-    try:
-        loc.setlocale(loc.LC_ALL, locale)
-        # JPY should have no decimals (round to integer)
-        if currency == "JPY" and decimals is None:
-            amount = round(amount)
-            precision = 0
-        
-        # Handle decimals parameter - this controls display precision, not rounding
-        if decimals is not None:
-            precision = decimals
-        else:
-            # JPY defaults to 0 decimals
-            if currency == "JPY":
-                precision = 0
-        
-        # Format with babel first
-        result = babel.numbers.format_currency(
-            amount, currency, locale=locale, decimal_quantization=False
-        )
-        # Normalize non-breaking spaces to regular spaces
-        result = result.replace("\u00A0", " ")
-        # Normalize yen symbols (￥ to ¥)
-        result = result.replace("￥", "¥")
-        
-        # Handle decimals parameter - manually format number part
-        if decimals is not None:
-            import re
-            # Format the number part with specified decimals
-            formatted_num = format_number(amount, precision=decimals)
-            # Find and replace the number part in the result
-            # Match number pattern (digits, commas, dots)
-            num_pattern = r'[\d,\.]+'
-            num_match = re.search(num_pattern, result)
-            if num_match:
-                old_num = num_match.group(0)
-                # Replace with formatted number (keep thousands separator)
-                result = result.replace(old_num, formatted_num, 1)
-        
-        # Remove decimals if precision is 0 (for JPY or decimals=0)
-        if (currency == "JPY" or (decimals is not None and decimals == 0)) and "." in result:
-            # Remove decimal part
-            result = result.split(".")[0]
-        
-        # Handle symbol parameter
-        if not symbol:
-            # Remove symbol and add currency code
-            symbols = {"USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥"}
-            for sym in symbols.values():
-                result = result.replace(sym, "").strip()
-            result = f"{result} {currency}"
-        return result
-    finally:
-        loc.setlocale(loc.LC_ALL, "")
+    locale_separators = {
+        "de_DE": {"thousands": ".", "decimal": ",", "symbol_after": True, "space": " "},
+        "ja_JP": {"thousands": ",", "decimal": ".", "symbol_after": False, "space": ""},
+    }
+    separators = locale_separators.get(
+        locale, {"thousands": ",", "decimal": ".", "symbol_after": False, "space": ""}
+    )
+
+    symbols = {"USD": "$", "EUR": "€", "GBP": "£", "JPY": "¥", "CNY": "¥"}
+    symbol_char = symbols[currency]
+
+    if currency == "JPY" and decimals is None:
+        precision = 0
+        amount = round(amount)
+
+    formatted_number = format_number(
+        amount,
+        precision=precision,
+        thousands_sep=separators["thousands"],
+        decimal_sep=separators["decimal"],
+    )
+
+    if not symbol:
+        return f"{formatted_number} {currency}"
+
+    if separators.get("symbol_after", False):
+        spacing = separators.get("space", "")
+        return f"{formatted_number}{spacing}{symbol_char}"
+
+    return f"{symbol_char}{formatted_number}"
 
 
 def format_percentage(

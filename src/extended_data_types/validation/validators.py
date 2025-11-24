@@ -14,8 +14,7 @@ from typing import Any, TypeVar
 
 import attrs
 
-from pydantic import BaseModel
-from typeguard import check_type
+from pydantic import BaseModel, TypeAdapter
 
 
 T = TypeVar("T")
@@ -68,13 +67,11 @@ class Validator:
             True
         """
         try:
-            if self.coerce_types:
-                value = expected_type(value)
+            adapter: TypeAdapter[T] = TypeAdapter(expected_type)
+            validated = adapter.validate_python(value)
+            return ValidationResult(is_valid=True, value=validated)
 
-            check_type("value", value, expected_type)
-            return ValidationResult(is_valid=True, value=value)
-
-        except (TypeError, ValueError) as e:
+        except Exception as e:
             return ValidationResult(is_valid=False, errors=[str(e)])
 
     def validate_sequence(

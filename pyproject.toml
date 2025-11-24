@@ -44,7 +44,6 @@ dependencies = [
     "pydantic>=2.6.4",
     "attrs>=23.2.0",
     "cattrs>=24.1.0",
-    "typeguard>=4.1.5",
 ]
 
 [project.urls]
@@ -65,7 +64,6 @@ typing = [
     "mypy>=1.0.0",
     "types-PyYAML>=6.0.12.20240724",
     "sortedcontainers-stubs>=2.4.2",
-    "types-requests>=2.31.0.20240311",
 ]
 
 docs = [

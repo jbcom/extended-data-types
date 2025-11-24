@@ -25,7 +25,6 @@ import cattrs
 
 from benedict import benedict
 from pydantic import BaseModel, ConfigDict, Field, TypeAdapter
-from typeguard import check_type
 
 
 T = TypeVar("T")
@@ -155,9 +154,9 @@ class TypedDict(benedict):
             TypeError: If conversion fails
         """
         try:
-            check_type(value, target_type)
-            return value
-        except TypeError:
+            adapter: TypeAdapter[Any] = TypeAdapter(target_type)
+            return adapter.validate_python(value)
+        except Exception:
             return converter.structure(value, target_type)
 
 
