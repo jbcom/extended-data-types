@@ -158,7 +158,6 @@ jobs:
         id: version
         run: |
           python .github/scripts/set_version.py
-          echo "New version: $(python .github/scripts/set_version.py 2>&1 | grep VERSION)"
       - name: Signed Attestation Build
         id: signed_inspect
         uses: hynek/build-and-inspect-python-package@v2
