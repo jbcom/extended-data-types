@@ -176,7 +176,7 @@ class TypeSystem:
 
 
 # Backward Compatibility Layer
-def convert_special_type(value: Any, target_type: type[T] = None) -> T:
+def convert_special_type(value: Any, target_type: type[T] | None = None) -> T:
     """Original bob API for type conversion.
 
     Args:
@@ -216,7 +216,7 @@ def convert_special_types(data: Any) -> Any:
     return converter.unstructure(data)
 
 
-def reconstruct_special_type(value: Any, target_type: type[T] = None) -> T:
+def reconstruct_special_type(value: Any, target_type: type[T] | None = None) -> T:
     """Alias to convert_special_type for compatibility."""
     return convert_special_type(value, target_type)
 
