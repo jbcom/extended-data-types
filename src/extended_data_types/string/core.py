@@ -34,9 +34,9 @@ from __future__ import annotations
 from typing import Any
 
 # Removed import of non-existent module
-# from extended_data_types.core.conversion import TypeRegistry
+from extended_data_types.core.conversion import TypeRegistry  # type: ignore[attr-defined]
 
-from .types import ExtendedString, Pattern
+from .types import ExtendedString, Pattern  # type: ignore[attr-defined]
 
 
 def to_extended_string(value: Any) -> ExtendedString:

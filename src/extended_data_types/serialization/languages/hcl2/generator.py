@@ -65,7 +65,7 @@ class HCL2Generator:
 
     def _format_value(self, value: Any, level: int = 0) -> str:
         if isinstance(value, Expression):
-            return value.raw
+            return value.raw  # type: ignore[attr-defined]
         if isinstance(value, Reference):
             return str(value)
         if isinstance(value, Function):

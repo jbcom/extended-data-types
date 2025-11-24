@@ -5,7 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from extended_data_types.serialization.types import SerializerProtocol
+from extended_data_types.serialization.types import SerializerProtocol  # type: ignore[attr-defined]
 
 
 class SerializationRegistry:
@@ -36,12 +36,12 @@ class SerializationRegistry:
 
     def serialize(self, data: Any, name: str, **kwargs: Any) -> str:
         serializer = self.get(name)
-        encode: Callable[..., str] = getattr(serializer, "encode", None) or serializer.dumps
+        encode: Callable[..., str] = getattr(serializer, "encode", None) or serializer.dumps  # type: ignore[attr-defined]
         return encode(data, **kwargs)
 
     def deserialize(self, data: str, name: str, **kwargs: Any) -> Any:
         serializer = self.get(name)
-        decode: Callable[..., Any] = getattr(serializer, "decode", None) or serializer.loads
+        decode: Callable[..., Any] = getattr(serializer, "decode", None) or serializer.loads  # type: ignore[attr-defined]
         return decode(data, **kwargs)
 
 
