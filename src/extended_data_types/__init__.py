@@ -126,7 +126,7 @@ from .serialization import (
 )
 
 
-__version__ = "5.0.3"
+__version__ = "6.0.0"
 
 __all__ = [
     # Version

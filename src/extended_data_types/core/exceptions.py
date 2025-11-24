@@ -1,5 +1,6 @@
 """Custom exceptions for extended data types."""
 
+from pathlib import Path
 from typing import Any
 
 

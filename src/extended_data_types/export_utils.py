@@ -6,8 +6,12 @@ with optional encoding formats such as YAML, JSON, or TOML.
 
 from __future__ import annotations
 
+import datetime
+import pathlib
 from collections.abc import Mapping
 from typing import Any
+
+from ruamel.yaml import scalarstring
 
 from .json_utils import encode_json
 from .toml_utils import encode_toml
@@ -70,6 +74,70 @@ def wrap_raw_data_for_export(
     return str(raw_data)
 
 
-def make_raw_data_export_safe(raw_data: Mapping[str, Any] | Any, **format_opts: Any) -> str:
-    """Legacy helper that delegates to wrap_raw_data_for_export."""
-    return wrap_raw_data_for_export(raw_data, **format_opts)
+def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> Any:
+    """Make raw data safe for export by converting complex types to primitives.
+
+    Recursively processes data structures (dicts, lists, sets, tuples, frozensets) and converts:
+    - datetime.date/datetime.datetime → ISO format strings
+    - pathlib.Path → strings
+    - For YAML export: applies special string formatting for GitHub Actions syntax
+
+    Args:
+        raw_data: The data to make export-safe (dict, list, set, tuple, frozenset, or primitive).
+                  Sets, tuples, and frozensets are converted to lists.
+        export_to_yaml: If True, apply YAML-specific formatting (e.g., literal strings for multiline)
+
+    Returns:
+        Export-safe version of the data with all complex types converted
+
+    Examples:
+        >>> from datetime import datetime
+        >>> from pathlib import Path
+        >>> data = {"date": datetime(2025, 1, 1), "path": Path("/tmp")}
+        >>> make_raw_data_export_safe(data)
+        {'date': '2025-01-01T00:00:00', 'path': '/tmp'}
+
+        >>> multiline = {"script": "echo 'line1'\\necho 'line2'"}
+        >>> result = make_raw_data_export_safe(multiline, export_to_yaml=True)
+        >>> type(result["script"]).__name__
+        'LiteralScalarString'
+    """
+    if isinstance(raw_data, dict):
+        return {
+            k: make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
+            for k, v in raw_data.items()
+        }
+    elif isinstance(raw_data, (set, list, tuple, frozenset)):
+        return [
+            make_raw_data_export_safe(v, export_to_yaml=export_to_yaml)
+            for v in raw_data
+        ]
+
+    exported_data = raw_data
+
+    # Convert datetime objects to ISO format strings
+    if isinstance(exported_data, (datetime.date, datetime.datetime)):
+        exported_data = exported_data.isoformat()
+    # Convert Path objects to strings
+    elif isinstance(exported_data, pathlib.Path):
+        exported_data = str(exported_data)
+
+    # Apply YAML-specific formatting if needed
+    if not export_to_yaml or not isinstance(exported_data, str):
+        return exported_data
+
+    # Escape GitHub Actions syntax by removing spaces inside expressions
+    # This prevents accidental evaluation: "${{ secrets.TOKEN }}" → "${{secrets.TOKEN}}"
+    # Note: This is a simple heuristic that handles the most common case.
+    # For complete literal output, consider wrapping in quotes at the YAML level.
+    exported_data = exported_data.replace("${{ ", "${{").replace(" }}", "}}")
+
+    # Use literal string format for multiline or command strings
+    if (
+        len(exported_data.splitlines()) > 1
+        or "||" in exported_data
+        or "&&" in exported_data
+    ):
+        return scalarstring.LiteralScalarString(exported_data)
+
+    return exported_data
