@@ -9,6 +9,7 @@ from num2words import num2words
 
 from . import words as words_module
 
+
 _ROMAN_VALUES: Final[dict[str, int]] = {
     "M": 1000,
     "CM": 900,
@@ -25,14 +26,17 @@ _ROMAN_VALUES: Final[dict[str, int]] = {
     "I": 1,
 }
 
+_MAX_ROMAN_VALUE: Final[int] = 3999
+
 
 def to_roman(number: int, *, upper: bool = True) -> str:
     """Convert an integer between 1 and 3999 to Roman numerals."""
-
     if not isinstance(number, int):
-        raise TypeError("Roman numerals require an integer input")
-    if not 1 <= number <= 3999:
-        raise ValueError("Number must be between 1 and 3999")
+        msg = "Roman numerals require an integer input"
+        raise TypeError(msg)
+    if not 1 <= number <= _MAX_ROMAN_VALUE:
+        msg = f"Number must be between 1 and {_MAX_ROMAN_VALUE}"
+        raise ValueError(msg)
 
     roman_pairs = [
         (1000, "M"),
@@ -62,36 +66,42 @@ def to_roman(number: int, *, upper: bool = True) -> str:
 
 def from_roman(numeral: str) -> int:
     """Convert a Roman numeral string to an integer."""
-
     normalized = numeral.upper().strip()
     if not normalized:
-        raise ValueError("Roman numeral must be a non-empty string")
+        msg = "Roman numeral must be a non-empty string"
+        raise ValueError(msg)
 
     result = 0
     index = 0
     while index < len(normalized):
-        if index + 1 < len(normalized) and normalized[index : index + 2] in _ROMAN_VALUES:
+        if (
+            index + 1 < len(normalized)
+            and normalized[index : index + 2] in _ROMAN_VALUES
+        ):
             result += _ROMAN_VALUES[normalized[index : index + 2]]
             index += 2
         elif normalized[index] in _ROMAN_VALUES:
             result += _ROMAN_VALUES[normalized[index]]
             index += 1
         else:
-            raise ValueError(f"Invalid Roman numeral: {numeral}")
+            msg = f"Invalid Roman numeral: {numeral}"
+            raise ValueError(msg)
 
-    if not 1 <= result <= 3999 or to_roman(result) != normalized:
-        raise ValueError(f"Invalid or non-canonical Roman numeral: {numeral}")
+    if not 1 <= result <= _MAX_ROMAN_VALUE or to_roman(result) != normalized:
+        msg = f"Invalid or non-canonical Roman numeral: {numeral}"
+        raise ValueError(msg)
 
     return result
 
 
 def to_ordinal(number: int, *, words: bool = False) -> str:
     """Convert an integer to an ordinal representation."""
-
     if not isinstance(number, int):
-        raise TypeError("Ordinal conversion requires an integer")
+        msg = "Ordinal conversion requires an integer"
+        raise TypeError(msg)
     if number <= 0:
-        raise ValueError("Ordinal must be positive")
+        msg = "Ordinal must be positive"
+        raise ValueError(msg)
 
     if words:
         return words_module.ordinal_to_words(number)
@@ -100,42 +110,48 @@ def to_ordinal(number: int, *, words: bool = False) -> str:
 
 def from_ordinal(text: str) -> int:
     """Convert an ordinal string (numeric or word form) to an integer."""
-
     cleaned = text.strip()
     if not cleaned:
-        raise ValueError("Ordinal value must be a non-empty string")
+        msg = "Ordinal value must be a non-empty string"
+        raise ValueError(msg)
 
     suffixes = ("st", "nd", "rd", "th")
     lowered = cleaned.lower()
     for suffix in suffixes:
-        if lowered.endswith(suffix) and lowered[:- len(suffix)].lstrip("+-").isdigit():
-            value = int(lowered[:- len(suffix)])
+        if lowered.endswith(suffix) and lowered[: -len(suffix)].lstrip("+-").isdigit():
+            value = int(lowered[: -len(suffix)])
             if to_ordinal(value).lower() != lowered:
-                raise ValueError("Invalid ordinal suffix")
+                msg = "Invalid ordinal suffix"
+                raise ValueError(msg)
             return value
 
     return words_module.words_to_ordinal(cleaned)
 
 
-def to_words(number: int | float, *, capitalize: bool = False, conjunction: str = " and ") -> str:
+def to_words(
+    number: int | float, *, capitalize: bool = False, conjunction: str = " and "
+) -> str:
     """Expose :func:`number_to_words` via the notation namespace."""
-
-    return words_module.number_to_words(number, capitalize=capitalize, conjunction=conjunction)
+    return words_module.number_to_words(
+        number, capitalize=capitalize, conjunction=conjunction
+    )
 
 
 def from_words(text: str) -> float:
     """Expose :func:`words_to_number` via the notation namespace."""
-
     return words_module.words_to_number(text)
 
 
-def to_fraction(number: float, *, mixed: bool = False, precision: int | None = None) -> str:
+def to_fraction(
+    number: float, *, mixed: bool = False, precision: int | None = None
+) -> str:
     """Convert a float to a fractional string representation."""
-
     if not isinstance(number, (int, float)):
-        raise TypeError("Fraction conversion expects a real number")
+        msg = "Fraction conversion expects a real number"
+        raise TypeError(msg)
     if number != number or number in {float("inf"), -float("inf")}:
-        raise ValueError("Cannot convert non-finite numbers")
+        msg = "Cannot convert non-finite numbers"
+        raise ValueError(msg)
 
     if precision is not None:
         multiplier = 10**precision
@@ -148,7 +164,9 @@ def to_fraction(number: float, *, mixed: bool = False, precision: int | None = N
 
     if mixed and fraction.numerator >= fraction.denominator:
         whole = fraction.numerator // fraction.denominator
-        remainder = Fraction(fraction.numerator % fraction.denominator, fraction.denominator)
+        remainder = Fraction(
+            fraction.numerator % fraction.denominator, fraction.denominator
+        )
         if remainder.numerator == 0:
             return f"{sign}{whole}"
         return f"{sign}{whole} {remainder.numerator}/{remainder.denominator}"
@@ -158,7 +176,6 @@ def to_fraction(number: float, *, mixed: bool = False, precision: int | None = N
 
 def from_fraction(value: str) -> float:
     """Convert a fractional string (including mixed numbers) back to float."""
-
     fraction = words_module._parse_fraction_string(value)
     return float(fraction)
 
