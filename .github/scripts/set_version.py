@@ -106,6 +106,9 @@ def main():
     
     init_file.write_text("".join(lines))
 
+    # Update docs/conf.py version
+    update_docs_version(new_version)
+
     # Output for GitHub Actions
     print(f"VERSION={new_version}")
     print(f"Updated version in {init_file}")
