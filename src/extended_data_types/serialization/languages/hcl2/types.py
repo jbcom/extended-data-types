@@ -5,7 +5,9 @@ from __future__ import annotations
 from collections.abc import Iterator
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, TypeVar, Generic
+
+T = TypeVar('T')
 
 
 class BlockType(Enum):
@@ -82,14 +84,15 @@ class MetaArguments:
 
 
 @dataclass
-class Block:
+class Block(Generic[T]):
     """HCL2 block representation."""
 
     type: BlockType | str
     labels: list[str] = field(default_factory=list)
     attributes: dict[str, Any] = field(default_factory=dict)
-    blocks: list[Block] = field(default_factory=list)
+    blocks: list[Block[T]] = field(default_factory=list)
     meta_args: MetaArguments = field(default_factory=MetaArguments)
+    data: T | None = None
 
 
 @dataclass

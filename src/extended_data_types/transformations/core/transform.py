@@ -45,9 +45,9 @@ class Transform(Generic[T, U]):
 
     def __call__(self, value: T) -> U:
         """Apply the transformation."""
-        if self.validate and not self.validate(value):
+        if self.validate and not self.validate(value):  # type: ignore[misc]
             raise ValueError(f"Invalid input for transform {self.name}")
-        return self.func(value)
+        return self.func(value)  # type: ignore[misc]
 
     def pipe(self, other: Transform[U, Any]) -> Transform[T, Any]:
         """Chain this transform with another."""
