@@ -46,6 +46,9 @@ dependencies = [
     "cattrs>=24.1.0",
 ]
 
+[project.scripts]
+edt = "extended_data_types.cli.main:cli"
+
 [project.urls]
 Documentation = "https://github.com/jbcom/extended-data-types#readme"
 Issues = "https://github.com/jbcom/extended-data-types/issues"
