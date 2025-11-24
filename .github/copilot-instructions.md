@@ -1,4 +1,4 @@
-# GitHub Copilot Instructions for directed-inputs-class
+# GitHub Copilot Instructions for extended-data-types
 
 ## CI/CD Workflow - Read This First! 🚨
 

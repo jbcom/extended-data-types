@@ -1,4 +1,4 @@
-# AI Agent Guidelines for directed-inputs-class
+# AI Agent Guidelines for extended-data-types
 
 This document provides critical context for AI coding assistants (Cursor, Codex, Copilot, Gemini, etc.) working on this repository.
 

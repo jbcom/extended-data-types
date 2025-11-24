@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: T201, D103, EM101, PTH123
 """Auto-version script: Updates version based on GitHub run number.
 
 Uses CalVer format: YYYY.MM.BUILD_NUMBER
@@ -12,7 +13,6 @@ This ensures:
 """
 import os
 import sys
-
 from datetime import datetime, timezone
 from pathlib import Path
 
