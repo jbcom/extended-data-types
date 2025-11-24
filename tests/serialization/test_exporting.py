@@ -41,7 +41,7 @@ class TestWrapForExport:
         assert "list:" in result
         assert "dict:" in result
         assert "nested: value" in result
-        assert "2024-01-01" in result
+        assert "2024-01-01T00:00:00" in result
         assert "/test/path" in result
 
     def test_json_export(self, complex_data):
@@ -56,7 +56,7 @@ class TestWrapForExport:
         assert '"list": [1, 2, 3]' in result
         assert '"dict": {' in result
         assert '"nested": "value"' in result
-        assert '"2024-01-01"' in result
+        assert '"2024-01-01T00:00:00"' in result
         assert '"/test/path"' in result
 
     def test_toml_export(self, complex_data):

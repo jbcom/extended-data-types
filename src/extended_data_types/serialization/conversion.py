@@ -3,6 +3,7 @@
 from typing import Any
 
 from extended_data_types.core.types import TypeSystem
+from extended_data_types.serialization.registry import get_serializer
 
 
 # New Core Layer
@@ -12,11 +13,15 @@ class SerializationSystem:
     def __init__(self):
         self.type_system = TypeSystem()
 
-    def serialize(self, data: Any, format: str = "json") -> str:
+    def serialize(self, data: Any, format: str = "json", **options: Any) -> str:
         """Modern serialization method."""
         converted = self.type_system.convert_value(data, dict)
         # Use marshmallow for schema validation
-        return self._get_serializer(format).dumps(converted)
+        serializer = self._get_serializer(format)
+        return serializer.dumps(converted, **options)
+
+    def _get_serializer(self, fmt: str):
+        return get_serializer(fmt)
 
 
 # Backward Compatibility Layer

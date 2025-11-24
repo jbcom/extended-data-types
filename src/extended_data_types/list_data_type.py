@@ -44,10 +44,10 @@ def flatten_list(matrix: list[Any]) -> list[Any]:
 
 
 def filter_list(
-    items: list[str] | None,
-    allowlist: list[str] | None = None,
-    denylist: list[str] | None = None,
-) -> list[str]:
+        items: list[str] | None,
+        allowlist: list[str] | None = None,
+        denylist: list[str] | None = None,
+    ) -> list[str]:
     """Filters a list based on allowlist and denylist.
 
     Args:
@@ -61,20 +61,21 @@ def filter_list(
     if items is None:
         items = []
 
-    if allowlist is None:
-        allowlist = []
+    allowlist_provided = allowlist is not None
+    allowlist = allowlist or []
+    denylist = denylist or []
 
-    if denylist is None:
-        denylist = []
-
-    # Convert to sets for O(1) lookup performance
-    allowed_set = set(allowlist) if allowlist else set()
+    allowed_set = set(allowlist)
     denied_set = set(denylist)
 
     filtered = []
 
     for elem in items:
-        if (len(allowlist) > 0 and elem not in allowed_set) or elem in denied_set:
+        if allowlist_provided:
+            if not allowed_set or elem not in allowed_set:
+                continue
+
+        if elem in denied_set:
             continue
 
         filtered.append(elem)

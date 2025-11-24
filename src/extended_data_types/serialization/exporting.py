@@ -95,7 +95,7 @@ def wrap_for_export(
 
 def _clean_for_export(obj: Any) -> Any:
     if isinstance(obj, datetime):
-        return obj.date().isoformat()
+        return obj.isoformat()
     if isinstance(obj, (date, time)):
         return obj.isoformat()
     if isinstance(obj, Path):
@@ -106,7 +106,11 @@ def _clean_for_export(obj: Any) -> Any:
         except Exception:
             return str(obj)
     if isinstance(obj, set):
-        return [_clean_for_export(v) for v in sorted(obj)]
+        try:
+            iterable = sorted(obj)
+        except TypeError:
+            iterable = list(obj)
+        return [_clean_for_export(v) for v in iterable]
     if isinstance(obj, list):
         return [_clean_for_export(v) for v in obj]
     if isinstance(obj, dict):
