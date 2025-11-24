@@ -26,8 +26,12 @@ def find_init_file():
     # Find all __init__.py files in src/
     for init_file in src.rglob("__init__.py"):
         content = init_file.read_text()
-        if "__version__" in content:
-            return init_file
+        # Check if file has an actual __version__ assignment line
+        # Match the same logic used in replacement to avoid false positives
+        for line in content.splitlines():
+            stripped = line.strip()
+            if stripped.startswith("__version__ ") or stripped == "__version__":
+                return init_file
 
     raise FileNotFoundError("No __init__.py with __version__ found in src/")
 
