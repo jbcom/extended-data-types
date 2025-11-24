@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from extended_data_types.string_transformations import (
     humanize,
     ordinalize,

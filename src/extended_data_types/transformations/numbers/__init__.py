@@ -19,6 +19,7 @@ from .words import (
     words_to_ordinal,
 )
 
+
 __all__ = [
     "from_fraction",
     "from_ordinal",

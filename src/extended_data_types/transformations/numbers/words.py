@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from fractions import Fraction
-from typing import Iterable
 
 from num2words import num2words
+
 
 _UNIT_MAP: dict[str, int] = {
     "zero": 0,
@@ -84,7 +85,9 @@ _ORDINAL_SCALE_MAP: dict[str, str] = {
 
 _DIGIT_WORDS: dict[str, int] = {
     word: value
-    for value, word in enumerate(["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"])
+    for value, word in enumerate(
+        ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+    )
 }
 
 
@@ -115,7 +118,8 @@ class _NumberParser:
                 total += current * _SCALE_MAP[token]
                 current = 0
             else:
-                raise ValueError(f"Unrecognized number word: {token}")
+                msg = f"Unrecognized number word: {token}"
+                raise ValueError(msg)
 
         return total + current
 
@@ -124,7 +128,8 @@ class _NumberParser:
 
     def number(self) -> float:
         if not self.tokens:
-            raise ValueError("Number words must be a non-empty string")
+            msg = "Number words must be a non-empty string"
+            raise ValueError(msg)
 
         if "point" not in self.tokens:
             return float(self.integer())
@@ -133,12 +138,14 @@ class _NumberParser:
         whole = self._convert_integer_tokens(self.tokens[:point_index])
         decimal_tokens = self.tokens[point_index + 1 :]
         if not decimal_tokens:
-            raise ValueError("Decimal point must be followed by digits")
+            msg = "Decimal point must be followed by digits"
+            raise ValueError(msg)
 
         decimal_digits: list[str] = []
         for token in decimal_tokens:
             if token not in _DIGIT_WORDS:
-                raise ValueError(f"Invalid decimal digit: {token}")
+                msg = f"Invalid decimal digit: {token}"
+                raise ValueError(msg)
             decimal_digits.append(str(_DIGIT_WORDS[token]))
 
         return float(f"{whole}.{''.join(decimal_digits)}")
@@ -148,15 +155,20 @@ def _tokenize(text: str) -> list[str]:
     normalized = text.replace("-", " ").lower().strip()
     tokens = normalized.split()
     if not tokens:
-        raise ValueError("Input text must be a non-empty string")
+        msg = "Input text must be a non-empty string"
+        raise ValueError(msg)
     return tokens
 
 
-def number_to_words(number: int | float, *, capitalize: bool = False, conjunction: str = " and ") -> str:
+def number_to_words(
+    number: int | float, *, capitalize: bool = False, conjunction: str = " and "
+) -> str:
     """Convert numbers to English words."""
-
-    if isinstance(number, float) and (number != number or number in {float("inf"), -float("inf")}):
-        raise ValueError("Cannot convert non-finite numbers")
+    if isinstance(number, float) and (
+        number != number or number in {float("inf"), -float("inf")}
+    ):
+        msg = "Cannot convert non-finite numbers"
+        raise ValueError(msg)
 
     sign = "minus " if number < 0 else ""
     words = num2words(abs(number), lang="en")
@@ -171,13 +183,13 @@ def number_to_words(number: int | float, *, capitalize: bool = False, conjunctio
 
 def words_to_number(text: str) -> float:
     """Convert English number words to a numeric value."""
-
     tokens = _tokenize(text)
     negative = tokens[0] == "minus"
     if negative:
         tokens = tokens[1:]
         if not tokens:
-            raise ValueError("Number words must contain digits after 'minus'")
+            msg = "Number words must contain digits after 'minus'"
+            raise ValueError(msg)
 
     parser = _NumberParser(tokens)
     value = parser.number()
@@ -186,11 +198,12 @@ def words_to_number(text: str) -> float:
 
 def ordinal_to_words(number: int, *, capitalize: bool = False) -> str:
     """Convert positive integers to ordinal words."""
-
     if not isinstance(number, int):
-        raise TypeError("Ordinal conversion requires an integer")
+        msg = "Ordinal conversion requires an integer"
+        raise TypeError(msg)
     if number <= 0:
-        raise ValueError("Ordinal must be a positive integer")
+        msg = "Ordinal must be a positive integer"
+        raise ValueError(msg)
 
     words = num2words(number, to="ordinal", lang="en")
     if capitalize:
@@ -222,22 +235,22 @@ def _replace_ordinals_with_cardinals(tokens: list[str]) -> list[str]:
 
 def words_to_ordinal(text: str) -> int:
     """Convert ordinal words to their integer value."""
-
     tokens = _tokenize(text)
     negative = tokens[0] == "minus"
     if negative:
-        raise ValueError("Ordinals cannot be negative")
+        msg = "Ordinals cannot be negative"
+        raise ValueError(msg)
 
     converted_tokens = _replace_ordinals_with_cardinals(tokens)
     value = int(_NumberParser(converted_tokens).number())
     if value <= 0:
-        raise ValueError("Ordinal must represent a positive integer")
+        msg = "Ordinal must represent a positive integer"
+        raise ValueError(msg)
     return value
 
 
 def fraction_to_words(fraction: str, *, capitalize: bool = False) -> str:
     """Convert fraction strings (e.g., ``"3/4"``) to words."""
-
     frac = _parse_fraction_string(fraction)
     sign = "minus " if frac < 0 else ""
     frac = abs(frac)
@@ -254,7 +267,9 @@ def fraction_to_words(fraction: str, *, capitalize: bool = False) -> str:
         use_article = (
             remainder.numerator == 1 and remainder.denominator == 2 and whole > 0
         )
-        numerator_words = "a" if use_article else num2words(remainder.numerator, lang="en")
+        numerator_words = (
+            "a" if use_article else num2words(remainder.numerator, lang="en")
+        )
         plural = remainder.numerator != 1
         denom_word = _denominator_word(remainder.denominator, plural)
         parts.append(f"{numerator_words} {denom_word}")
@@ -271,14 +286,14 @@ def fraction_to_words(fraction: str, *, capitalize: bool = False) -> str:
 
 def words_to_fraction(text: str) -> str:
     """Convert fraction words (e.g., ``"three quarters"``) to a fraction string."""
-
     tokens = _tokenize(text)
     negative = False
     if tokens[0] == "minus":
         negative = True
         tokens = tokens[1:]
         if not tokens:
-            raise ValueError("Fraction words must contain a value after 'minus'")
+            msg = "Fraction words must contain a value after 'minus'"
+            raise ValueError(msg)
 
     whole = 0
     if "and" in tokens:
@@ -286,13 +301,15 @@ def words_to_fraction(text: str) -> str:
         whole_tokens = tokens[:and_index]
         fraction_tokens = tokens[and_index + 1 :]
         if not fraction_tokens:
-            raise ValueError("Fraction words must include a fractional part")
+            msg = "Fraction words must include a fractional part"
+            raise ValueError(msg)
         whole = int(_NumberParser(whole_tokens).number()) if whole_tokens else 0
     else:
         fraction_tokens = tokens
 
     if not fraction_tokens:
-        raise ValueError("Fraction words must include a fractional part")
+        msg = "Fraction words must include a fractional part"
+        raise ValueError(msg)
 
     numerator_tokens = fraction_tokens[:-1]
     denom_word = fraction_tokens[-1]
@@ -306,7 +323,8 @@ def words_to_fraction(text: str) -> str:
 
     denominator = _denominator_from_word(denom_word)
     if denominator <= 0:
-        raise ValueError("Denominator must be positive")
+        msg = "Denominator must be positive"
+        raise ValueError(msg)
 
     frac = Fraction(numerator, denominator)
     if whole:
@@ -339,23 +357,26 @@ def _denominator_word(denominator: int, plural: bool) -> str:
 
 def _denominator_from_word(word: str) -> int:
     normalized = word.rstrip("s")
-    if normalized == "halve" or normalized == "half":
+    if normalized in ("halve", "half"):
         return 2
     if normalized == "quarter":
         return 4
     try:
         return words_to_ordinal(normalized)
     except ValueError as exc:
-        raise ValueError(f"Unrecognized denominator word: {word}") from exc
+        msg = f"Unrecognized denominator word: {word}"
+        raise ValueError(msg) from exc
 
 
 def _parse_fraction_string(value: str) -> Fraction:
     if not isinstance(value, str):
-        raise ValueError("Fraction value must be a string")
+        msg = "Fraction value must be a string"
+        raise TypeError(msg)
 
     cleaned = value.strip()
     if not cleaned:
-        raise ValueError("Fraction value must be a non-empty string")
+        msg = "Fraction value must be a non-empty string"
+        raise ValueError(msg)
 
     sign = -1 if cleaned.startswith("-") else 1
     cleaned = cleaned.lstrip("+-").strip()
@@ -372,13 +393,15 @@ def _parse_fraction_string(value: str) -> Fraction:
         frac_str = cleaned.replace(" ", "")
 
     if "/" not in frac_str:
-        raise ValueError("Fraction must contain a '/' separator")
+        msg = "Fraction must contain a '/' separator"
+        raise ValueError(msg)
 
     numerator_str, denominator_str = (part.strip() for part in frac_str.split("/", 1))
     numerator = int(numerator_str)
     denominator = int(denominator_str)
     if denominator == 0:
-        raise ValueError("Denominator cannot be zero")
+        msg = "Denominator cannot be zero"
+        raise ValueError(msg)
 
     fraction = Fraction(numerator, denominator)
     if whole:

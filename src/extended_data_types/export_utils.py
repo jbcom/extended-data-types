@@ -74,7 +74,7 @@ def wrap_raw_data_for_export(
 
 
 def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> Any:
-    """Make raw data safe for export by converting complex types to primitives.
+    r"""Make raw data safe for export by converting complex types to primitives.
 
     Recursively processes data structures (dicts, lists, sets, tuples, frozensets) and converts:
     - datetime.date/datetime.datetime → ISO format strings

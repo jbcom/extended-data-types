@@ -9,7 +9,6 @@ import inflection
 
 def pluralize(word: str, count: int | None = None) -> str:
     """Return the plural form of *word*, honoring an optional count."""
-
     if word.lower() == "criterion":
         base_plural = "criteria"
     else:
@@ -24,7 +23,6 @@ def pluralize(word: str, count: int | None = None) -> str:
 
 def singularize(word: str) -> str:
     """Return the singular form of *word*."""
-
     if word.lower() == "criteria":
         return "criterion"
     return inflection.singularize(word)
@@ -32,7 +30,6 @@ def singularize(word: str) -> str:
 
 def camelize(phrase: str, uppercase_first_letter: bool = True) -> str:
     """Convert *phrase* to camel or Pascal case."""
-
     parts = [part for part in re.split(r"[_\s-]+", phrase) if part]
     if not parts:
         return ""
@@ -58,7 +55,6 @@ def camelize(phrase: str, uppercase_first_letter: bool = True) -> str:
 
 def underscore(phrase: str) -> str:
     """Convert *phrase* to snake case."""
-
     normalized = phrase.replace("-", " ").replace("_", " ")
     underscored = inflection.underscore(normalized).replace(" ", "_")
     underscored = re.sub(r"([A-Za-z])([0-9])", r"\1_\2", underscored)
@@ -68,11 +64,8 @@ def underscore(phrase: str) -> str:
 
 def humanize(phrase: str, capitalize: bool = True) -> str:
     """Make an identifier human-readable."""
-
     cleaned = phrase.strip("_ -")
-    if not cleaned:
-        humanized = "Id"
-    elif cleaned.lower() == "id":
+    if not cleaned or cleaned.lower() == "id":
         humanized = "Id"
     else:
         humanized = inflection.humanize(phrase.replace("-", " ").replace("_", " "))
@@ -86,22 +79,20 @@ def humanize(phrase: str, capitalize: bool = True) -> str:
 
 def titleize(phrase: str) -> str:
     """Convert *phrase* to title case."""
-
     return inflection.titleize(phrase.replace("-", " ").replace("_", " "))
 
 
 def ordinalize(value: int | str) -> str:
     """Return the ordinal representation of ``value`` (e.g., ``1st``)."""
-
     text = str(value)
     if not text.lstrip("-+").isdigit():
-        raise ValueError("ordinalize expects a numeric value")
+        msg = "ordinalize expects a numeric value"
+        raise ValueError(msg)
 
-    return inflection.ordinalize(text)
+    return inflection.ordinalize(int(text))
 
 
 def parameterize(phrase: str, separator: str = "-") -> str:
     """Slugify *phrase* using the provided ``separator``."""
-
     normalized = phrase.replace("_", " ")
     return inflection.parameterize(normalized, separator)

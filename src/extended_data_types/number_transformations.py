@@ -10,6 +10,7 @@ from typing import Final
 
 from num2words import CONVERTER_CLASSES, num2words
 
+
 _ROMAN_VALUES: Final[dict[str, int]] = {
     "M": 1000,
     "CM": 900,
@@ -29,10 +30,10 @@ _ROMAN_VALUES: Final[dict[str, int]] = {
 
 def _normalize_language_code(lang: str) -> str:
     """Return the concrete num2words language key or raise ValueError."""
-
     normalized = lang.strip()
     if not normalized:
-        raise ValueError("Language code must be a non-empty string.")
+        msg = "Language code must be a non-empty string."
+        raise ValueError(msg)
 
     if normalized in CONVERTER_CLASSES:
         return normalized
@@ -41,29 +42,31 @@ def _normalize_language_code(lang: str) -> str:
     if fallback in CONVERTER_CLASSES:
         return fallback
 
-    raise ValueError(f"Language '{lang}' is not supported by num2words.")
+    msg = f"Language '{lang}' is not supported by num2words."
+    raise ValueError(msg)
 
 
 def _validate_currency_code(currency: str, lang_code: str) -> str:
     """Validate the provided currency for the resolved language code."""
-
     normalized = currency.strip().upper()
     if not normalized:
-        raise ValueError("Currency code must be a non-empty string.")
+        msg = "Currency code must be a non-empty string."
+        raise ValueError(msg)
 
     converter = CONVERTER_CLASSES[lang_code]
     currency_forms = getattr(converter, "CURRENCY_FORMS", {}) or {}
     if not currency_forms:
-        raise ValueError(
-            f"Language '{lang_code}' does not define currency conversions."
-        )
+        msg = f"Language '{lang_code}' does not define currency conversions."
+        raise ValueError(msg)
 
     if normalized not in currency_forms:
-        raise ValueError(
-            f"Currency '{currency}' is not supported for language '{lang_code}'."
-        )
+        msg = f"Currency '{currency}' is not supported for language '{lang_code}'."
+        raise ValueError(msg)
 
     return normalized
+
+
+_MAX_ROMAN_VALUE: Final[int] = 3999
 
 
 def to_roman(number: int) -> str:
@@ -80,9 +83,11 @@ def to_roman(number: int) -> str:
         'XLII'
     """
     if not isinstance(number, int):
-        raise TypeError("Number must be an integer")
-    if not 1 <= number <= 3999:
-        raise ValueError("Number must be between 1 and 3999")
+        msg = "Number must be an integer"
+        raise TypeError(msg)
+    if not 1 <= number <= _MAX_ROMAN_VALUE:
+        msg = f"Number must be between 1 and {_MAX_ROMAN_VALUE}"
+        raise ValueError(msg)
 
     roman_pairs = [
         (1000, "M"),
@@ -110,20 +115,21 @@ def to_roman(number: int) -> str:
 
 def from_roman(numeral: str) -> int:
     """Convert Roman numerals to integer.
-    
+
     Args:
         numeral: Roman numeral string
-        
+
     Returns:
         Integer value
-        
+
     Example:
         >>> from_roman('XLII')
         42
     """
     normalized = numeral.upper().strip()
     if not normalized:
-        raise ValueError("Roman numeral must be a non-empty string.")
+        msg = "Roman numeral must be a non-empty string."
+        raise ValueError(msg)
 
     result = 0
     i = 0
@@ -136,30 +142,32 @@ def from_roman(numeral: str) -> int:
             result += _ROMAN_VALUES[normalized[i]]
             i += 1
         else:
-            raise ValueError(f"Invalid Roman numeral: {numeral}")
-    
-    if not 1 <= result <= 3999 or to_roman(result) != normalized:
-        raise ValueError(f"Invalid or non-canonical Roman numeral: {numeral}")
-    
+            msg = f"Invalid Roman numeral: {numeral}"
+            raise ValueError(msg)
+
+    if not 1 <= result <= _MAX_ROMAN_VALUE or to_roman(result) != normalized:
+        msg = f"Invalid or non-canonical Roman numeral: {numeral}"
+        raise ValueError(msg)
+
     return result
 
 
 def number_to_words(number: int | float, lang: str = "en") -> str:
     """Convert integers or floats to their word representation.
-    
+
     Supports both integers and floats. Floats are converted using "point" notation.
-    
+
     Args:
         number: Integer or float to convert
         lang: Language code (default: 'en'). Supported languages include 'en', 'es',
               'fr', 'de', and many others (see num2words documentation)
-        
+
     Returns:
         Number as words
-        
+
     Raises:
         ValueError: If the specified language is empty or not supported by num2words
-        
+
     Examples:
         >>> number_to_words(42)
         'forty-two'
@@ -170,25 +178,23 @@ def number_to_words(number: int | float, lang: str = "en") -> str:
     try:
         return num2words(number, lang=lang_code)
     except NotImplementedError as exc:  # pragma: no cover
-        raise ValueError(
-            f"Language '{lang}' is not supported by num2words."
-        ) from exc
+        raise ValueError(f"Language '{lang}' is not supported by num2words.") from exc
 
 
 def number_to_ordinal(number: int, lang: str = "en") -> str:
     """Convert number to ordinal words.
-    
+
     Args:
         number: Integer to convert
         lang: Language code (default: 'en'). Supported languages include 'en', 'es',
               'fr', 'de', and many others (see num2words documentation)
-        
+
     Returns:
         Ordinal as words
-        
+
     Raises:
         ValueError: If the specified language is empty or not supported by num2words
-        
+
     Example:
         >>> number_to_ordinal(42)
         'forty-second'
@@ -197,14 +203,12 @@ def number_to_ordinal(number: int, lang: str = "en") -> str:
     try:
         return num2words(number, ordinal=True, lang=lang_code)
     except NotImplementedError as exc:  # pragma: no cover
-        raise ValueError(
-            f"Language '{lang}' is not supported by num2words."
-        ) from exc
+        raise ValueError(f"Language '{lang}' is not supported by num2words.") from exc
 
 
 def number_to_currency(amount: float, currency: str = "USD", lang: str = "en") -> str:
     """Convert number to currency words.
-    
+
     Args:
         amount: Amount to convert
         currency: Currency code (default: 'USD'). Common codes include 'USD', 'EUR',
@@ -212,14 +216,14 @@ def number_to_currency(amount: float, currency: str = "USD", lang: str = "en") -
                   treated case-insensitively.
         lang: Language code (default: 'en'). Supported languages include 'en', 'es',
               'fr', 'de', and many others (see num2words documentation)
-        
+
     Returns:
         Currency as words
-        
+
     Raises:
         ValueError: If the specified language or currency code is empty or not
             supported by num2words for the given language
-        
+
     Example:
         >>> number_to_currency(42.50)
         'forty-two dollars and fifty cents'
