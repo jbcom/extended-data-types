@@ -26,7 +26,7 @@ class SerializationSystem:
 
 # Backward Compatibility Layer
 def wrap_raw_data_for_export(
-    raw_data: Any, allow_encoding: bool | str = True, **format_opts: Any  # type: ignore[syntax]
+    raw_data: Any, allow_encoding: bool | str = True, **format_opts: Any
 ) -> str:
     """Original bob API for data export.
 

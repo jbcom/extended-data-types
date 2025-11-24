@@ -28,8 +28,8 @@ _hcl2 = Hcl2Serializer()
 
 
 def wrap_raw_data_for_export(
-    raw_data: dict[str, Any] | Any,  # type: ignore[syntax]
-    allow_encoding: bool | str = True,  # type: ignore[syntax]
+    raw_data: dict[str, Any] | Any,
+    allow_encoding: bool | str = True,
     **format_opts: Any,
 ) -> str:
     """Maintains compatibility with bob.export_utils.wrap_raw_data_for_export.
