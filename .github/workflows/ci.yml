@@ -133,7 +133,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    name: Release signed build
+    name: Build signed package for release
     runs-on: ubuntu-24.04
     # Only run on main branch after all tests pass
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -144,37 +144,22 @@ jobs:
       contents: write
       attestations: write
     outputs:
-      released: ${{ steps.release.outputs.released }}
-      version: ${{ steps.release.outputs.version }}
-      tag: ${{ steps.release.outputs.tag }}
+      version: ${{ steps.version.outputs.version }}
       signed_artifact_name: ${{ steps.signed_inspect.outputs.artifact-name }}
       package_version: ${{ steps.signed_inspect.outputs.package-version }}
 
     steps:
       - uses: actions/checkout@v5
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          fetch-depth: 0
-      - name: Semantic Version Release
-        id: release
-        uses: python-semantic-release/python-semantic-release@v9.17.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          git_committer_name: "github-actions"
-          git_committer_email: "actions@users.noreply.github.com"
-          build: false
-          vcs_release: true
-          commit: false
-          tag: true
-          push: false
-          changelog: false
-      - name: Publish to GitHub Releases
-        if: steps.release.outputs.released == 'true'
-        uses: python-semantic-release/publish-action@v9.17.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ steps.release.outputs.tag }}
+          python-version: "3.12"
+      - name: Auto-increment version
+        id: version
+        run: |
+          python .github/scripts/set_version.py
+          echo "New version: $(python .github/scripts/set_version.py 2>&1 | grep VERSION)"
       - name: Signed Attestation Build
-        if: steps.release.outputs.released == 'true'
         id: signed_inspect
         uses: hynek/build-and-inspect-python-package@v2
         with:
@@ -184,7 +169,6 @@ jobs:
   publish:
     name: Publish to PyPI
     needs: release
-    if: needs.release.outputs.released == 'true'
     runs-on: ubuntu-24.04
     environment:
       name: pypi
