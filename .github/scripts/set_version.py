@@ -12,6 +12,7 @@ This ensures:
 - Always publishable to PyPI
 """
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -51,17 +52,18 @@ def main():
     content = init_file.read_text()
 
     lines = content.splitlines(keepends=True)
+    # Regex to match exactly "__version__" assignment, not __version_info__ or similar
+    # Matches: __version__ = "..." or __version__="..." (with/without spaces)
+    version_pattern = re.compile(r'^(\s*)__version__\s*=\s*["\'].*["\']')
+    
     for i, line in enumerate(lines):
-        # Match only "__version__ " assignments, not __version_info__ or similar
-        stripped = line.strip()
-        if stripped.startswith("__version__ ") or stripped == "__version__":
-            # Preserve original line ending
-            line_ending = ""
-            if line.endswith("\r\n"):
-                line_ending = "\r\n"
-            elif line.endswith("\n"):
-                line_ending = "\n"
-            lines[i] = f'__version__ = "{new_version}"{line_ending}'
+        match = version_pattern.match(line)
+        if match:
+            # Preserve original indentation
+            indent = match.group(1)
+            # Preserve everything after the closing quote (including newline)
+            remainder = line[match.end():]
+            lines[i] = f'{indent}__version__ = "{new_version}"{remainder}'
             break
     
     init_file.write_text("".join(lines))
