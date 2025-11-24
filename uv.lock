@@ -495,8 +495,6 @@ dependencies = [
     { name = "python-benedict" },
     { name = "python-hcl2" },
     { name = "pyyaml" },
-    { name = "roman", version = "5.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "roman", version = "5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "ruamel-yaml" },
     { name = "sortedcontainers" },
     { name = "tomlkit" },
@@ -554,8 +552,6 @@ requires-dist = [
     { name = "python-benedict", specifier = ">=0.33.0" },
     { name = "python-hcl2", specifier = ">=4.3.4" },
     { name = "pyyaml", specifier = ">=6.0.1" },
-    { name = "roman", marker = "python_full_version < '3.10'", specifier = ">=5.0,<5.2" },
-    { name = "roman", marker = "python_full_version >= '3.10'", specifier = ">=5.2" },
     { name = "ruamel-yaml", specifier = ">=0.18.0" },
     { name = "sortedcontainers", specifier = ">=2.4.0" },
     { name = "sortedcontainers-stubs", marker = "extra == 'typing'", specifier = ">=2.4.2" },
@@ -1598,30 +1594,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/c9/74/b3ff8e6c8446842c3f5c837e9c3dfcfe2018ea6ecef224c710c85ef728f4/requests-2.32.5.tar.gz", hash = "sha256:dbba0bac56e100853db0ea71b82b4dfd5fe2bf6d3754a8893c3af500cec7d7cf", size = 134517, upload-time = "2025-08-18T20:46:02.573Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/1e/db/4254e3eabe8020b458f1a747140d32277ec7a271daf1d235b70dc0b4e6e3/requests-2.32.5-py3-none-any.whl", hash = "sha256:2462f94637a34fd532264295e186976db0f5d453d1cdd31473c85a6a161affb6", size = 64738, upload-time = "2025-08-18T20:46:00.542Z" },
-]
-
-[[package]]
-name = "roman"
-version = "5.1"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.10'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/30/86/8bdb59db4b7ea9a2bd93f8d25298981e09a4c9f4744cf4cbafa7ef6fee7b/roman-5.1.tar.gz", hash = "sha256:3a86572e9bc9183e771769601189e5fa32f1620ffeceebb9eca836affb409986", size = 8066, upload-time = "2025-07-18T05:25:12.753Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f7/d0/27c9840ddaf331ace898c7f4aa1e1304a7acc22b844b5420fabb6d14c3a0/roman-5.1-py3-none-any.whl", hash = "sha256:bf595d8a9bc4a8e8b1dfa23e1d4def0251b03b494786df6b8c3d3f1635ce285a", size = 5825, upload-time = "2025-07-18T05:25:11.496Z" },
-]
-
-[[package]]
-name = "roman"
-version = "5.2"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.10'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/9c/7c/3901b35ed856329bf98e84da8e5e0b4d899ea0027eee222f1be42a24ff3f/roman-5.2.tar.gz", hash = "sha256:275fe9f46290f7d0ffaea1c33251b92b8e463ace23660508ceef522e7587cb6f", size = 8185, upload-time = "2025-11-11T08:03:57.025Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/10/14/ea3cdd7276fcd731a9003fe4abeb6b395a38110ddff6a6a509f4ee00f741/roman-5.2-py3-none-any.whl", hash = "sha256:89d3b47400388806d06ff77ea77c79ab080bc127820dea6bf34e1f1c1b8e676e", size = 6041, upload-time = "2025-11-11T08:03:56.051Z" },
 ]
 
 [[package]]
