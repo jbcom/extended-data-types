@@ -14,6 +14,7 @@ This ensures:
 import os
 import re
 import sys
+
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -26,7 +27,7 @@ def find_init_file():
 
     # Regex pattern to match __version__ assignment
     version_pattern = re.compile(r'^\s*__version__\s*=\s*["\'].*["\']')
-    
+
     # Find all __init__.py files in src/
     for init_file in src.rglob("__init__.py"):
         content = init_file.read_text()
@@ -46,23 +47,23 @@ def update_docs_version(new_version: str) -> None:
         # Docs config is optional - don't fail if it doesn't exist
         print("docs/conf.py not found, skipping docs version update")
         return
-    
+
     content = docs_conf.read_text()
     lines = content.splitlines(keepends=True)
-    
+
     # Match: version = "x.y.z" with optional spaces
     version_pattern = re.compile(r'^(\s*)version\s*=\s*["\'].*["\']')
-    
+
     updated = False
     for i, line in enumerate(lines):
         match = version_pattern.match(line)
         if match:
             indent = match.group(1)
-            remainder = line[match.end():]
+            remainder = line[match.end() :]
             lines[i] = f'{indent}version = "{new_version}"{remainder}'
             updated = True
             break
-    
+
     if updated:
         docs_conf.write_text("".join(lines))
         print(f"Updated version in {docs_conf}")
@@ -88,7 +89,7 @@ def main():
     # Regex to match exactly "__version__" assignment, not __version_info__ or similar
     # Matches: __version__ = "..." or __version__="..." (with/without spaces)
     version_pattern = re.compile(r'^(\s*)__version__\s*=\s*["\'].*["\']')
-    
+
     updated = False
     for i, line in enumerate(lines):
         match = version_pattern.match(line)
@@ -96,14 +97,14 @@ def main():
             # Preserve original indentation
             indent = match.group(1)
             # Preserve everything after the closing quote (including newline)
-            remainder = line[match.end():]
+            remainder = line[match.end() :]
             lines[i] = f'{indent}__version__ = "{new_version}"{remainder}'
             updated = True
             break
-    
+
     if not updated:
         raise ValueError(f"Failed to update __version__ in {init_file}")
-    
+
     init_file.write_text("".join(lines))
 
     # Update docs/conf.py version
