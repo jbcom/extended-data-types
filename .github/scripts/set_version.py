@@ -39,6 +39,37 @@ def find_init_file():
     raise FileNotFoundError("No __init__.py with __version__ found in src/")
 
 
+def update_docs_version(new_version: str) -> None:
+    """Update version in docs/conf.py."""
+    docs_conf = Path("docs/conf.py")
+    if not docs_conf.exists():
+        # Docs config is optional - don't fail if it doesn't exist
+        print("docs/conf.py not found, skipping docs version update")
+        return
+    
+    content = docs_conf.read_text()
+    lines = content.splitlines(keepends=True)
+    
+    # Match: version = "x.y.z" with optional spaces
+    version_pattern = re.compile(r'^(\s*)version\s*=\s*["\'].*["\']')
+    
+    updated = False
+    for i, line in enumerate(lines):
+        match = version_pattern.match(line)
+        if match:
+            indent = match.group(1)
+            remainder = line[match.end():]
+            lines[i] = f'{indent}version = "{new_version}"{remainder}'
+            updated = True
+            break
+    
+    if updated:
+        docs_conf.write_text("".join(lines))
+        print(f"Updated version in {docs_conf}")
+    else:
+        print(f"Warning: Could not find version assignment in {docs_conf}")
+
+
 def main():
     # Get GitHub run number (always incrementing)
     run_number = os.environ.get("GITHUB_RUN_NUMBER", "0")
