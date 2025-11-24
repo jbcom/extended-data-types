@@ -10,4 +10,3 @@ from .base import ExtendedBase
 class ExtendedList(ExtendedBase, list[Any]):
     """Legacy ExtendedList placeholder."""
 
-    pass

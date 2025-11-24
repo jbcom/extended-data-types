@@ -10,10 +10,8 @@ from .base import ExtendedBase
 class ExtendedSet(ExtendedBase, set[Any]):
     """Legacy ExtendedSet placeholder."""
 
-    pass
 
 
 class ExtendedFrozenSet(ExtendedBase, frozenset[Any]):
     """Legacy ExtendedFrozenSet placeholder."""
 
-    pass

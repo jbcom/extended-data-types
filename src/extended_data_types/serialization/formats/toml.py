@@ -12,8 +12,11 @@ from extended_data_types.serialization.formats.base import _sanitize
 class TomlSerializer:
     """TOML serializer."""
 
-    def encode(self, data: Any, *, indent_size: int = 2, sort_keys: bool = False, **kwargs: Any) -> str:
+    def encode(
+        self, data: Any, *, indent_size: int = 2, sort_keys: bool = False, **kwargs: Any
+    ) -> str:
         """Serialize data to TOML."""
+
         def _replace_none(obj: Any) -> Any:
             if obj is None:
                 return ""
@@ -37,4 +40,3 @@ class TomlSerializer:
     def loads(self, data: str, **kwargs: Any) -> Any:
         """Alias for decode."""
         return self.decode(data, **kwargs)
-

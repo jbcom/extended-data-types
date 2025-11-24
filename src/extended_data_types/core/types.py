@@ -264,13 +264,13 @@ JsonDict = dict[str, JsonValue]
 
 # Re-export for convenience
 __all__ = [
-    "TypedDict",
-    "TypedData",
-    "convert_special_type",
-    "convert_special_types",
+    "JsonDict",
     "JsonPrimitive",
     "JsonValue",
-    "JsonDict",
+    "TypedData",
+    "TypedDict",
+    "convert_special_type",
+    "convert_special_types",
 ]
 
 

@@ -34,6 +34,7 @@ def chunk(
         >>> chunk([1, 2, 3], 2, pad=True)
         [[1, 2], [3, None]]
     """
+    # Convert to list to ensure mutable chunks
     chunks = [list(items[i : i + size]) for i in range(0, len(items), size)]
     if pad and chunks and len(chunks[-1]) < size:
         chunks[-1].extend([fill_value] * (size - len(chunks[-1])))
@@ -133,7 +134,9 @@ def sort_by(
 _NO_FILL = object()
 
 
-def chunk_sequence(seq: Sequence[T], size: int, fill: Any | object = _NO_FILL) -> list[list[T]]:
+def chunk_sequence(
+    seq: Sequence[T], size: int, fill: Any | object = _NO_FILL
+) -> list[list[T]]:
     """Legacy helper to chunk sequences."""
     if size <= 0:
         raise ValueError("size must be positive")
@@ -154,7 +157,9 @@ def interleave_sequences(*sequences: Sequence[T]) -> list[T]:
     return result
 
 
-def partition_sequence(seq: Sequence[T], predicate: Callable[[T], bool]) -> tuple[list[T], list[T]]:
+def partition_sequence(
+    seq: Sequence[T], predicate: Callable[[T], bool]
+) -> tuple[list[T], list[T]]:
     """Legacy helper to partition a sequence based on predicate."""
     true_part, false_part = [], []
     for item in seq:
@@ -162,7 +167,9 @@ def partition_sequence(seq: Sequence[T], predicate: Callable[[T], bool]) -> tupl
     return true_part, false_part
 
 
-def remove_duplicates(seq: Sequence[T], key: Callable[[T], Any] | None = None) -> list[T]:
+def remove_duplicates(
+    seq: Sequence[T], key: Callable[[T], Any] | None = None
+) -> list[T]:
     """Legacy helper to remove duplicates preserving order."""
     seen = set()
     result: list[T] = []

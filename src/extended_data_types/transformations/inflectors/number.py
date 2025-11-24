@@ -11,14 +11,11 @@ This module provides comprehensive number inflection operations:
 from __future__ import annotations
 
 import roman
+
 from num2words import num2words
-from typing import Any
-
-from extended_data_types.core.types import convert_special_types
-from extended_data_types.number.types import ExtendedNumber
 
 
-def to_words(number: int | float) -> str:
+def to_words(number: float) -> str:
     """Convert number to words.
 
     Args:

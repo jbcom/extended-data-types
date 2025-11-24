@@ -8,6 +8,7 @@ from typing import Any
 
 import pytest
 
+from extended_data_types.serialization.formats.base import _sanitize
 from extended_data_types.serialization.registry import (
     deserialize,
     get_serializer,
@@ -15,7 +16,6 @@ from extended_data_types.serialization.registry import (
     register_serializer,
     serialize,
 )
-from extended_data_types.serialization.formats.base import _sanitize
 
 
 class MockSerializer:
@@ -28,7 +28,7 @@ class MockSerializer:
         return f"mock:{obj}"
 
 
-@pytest.fixture()
+@pytest.fixture
 def complex_data() -> dict[str, Any]:
     """Fixture providing complex test data."""
     return {

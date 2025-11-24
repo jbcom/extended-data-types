@@ -15,7 +15,6 @@ from __future__ import annotations
 from typing import Any
 
 from extended_data_types.core.exceptions import SerializationError
-from extended_data_types.core.types import convert_special_types
 from extended_data_types.serialization.detection import detect_format
 from extended_data_types.serialization.registry import deserialize
 
@@ -60,14 +59,14 @@ def unwrap_imported_data(
 
     try:
         # Deserialize data
-            result = deserialize(data, detected_format, **kwargs)
-            if isinstance(result, dict):
-                keys = list(result.keys())
-                for k in keys:
-                    if k is None:
-                        result["null"] = result.pop(k)
-                        break
-            return result
+        result = deserialize(data, detected_format, **kwargs)
+        if isinstance(result, dict):
+            keys = list(result.keys())
+            for k in keys:
+                if k is None:
+                    result["null"] = result.pop(k)
+                    break
+        return result
 
     except Exception as e:
         raise SerializationError(

@@ -195,9 +195,7 @@ def from_words(words: str) -> float:
     return float(_parse_words_to_int(lower))
 
 
-def to_fraction(
-    value: float, mixed: bool = False, precision: int | None = None
-) -> str:
+def to_fraction(value: float, mixed: bool = False, precision: int | None = None) -> str:
     """Convert float to fractional string."""
     if not isinstance(value, (int, float)):
         raise ValueError("Fraction conversion expects numeric input")

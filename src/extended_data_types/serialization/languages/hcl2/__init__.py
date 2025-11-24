@@ -18,15 +18,25 @@ Example:
     >>> generated = hcl.generate(blocks)
 """
 
+from extended_data_types.serialization.registry import register_serializer
+
 from .core import HCL2
 from .generator import HCL2Generator
 from .parser import HCL2Parser
 from .serializer import HCL2Serializer
 from .types import Block, BlockType, Expression
-from extended_data_types.serialization.registry import register_serializer
+
 
 # Ensure serializer is available in the global registry
 register_serializer("hcl2", HCL2Serializer())
 
 
-__all__ = ["HCL2", "HCL2Parser", "HCL2Generator", "HCL2Serializer", "Block", "BlockType", "Expression"]
+__all__ = [
+    "HCL2",
+    "Block",
+    "BlockType",
+    "Expression",
+    "HCL2Generator",
+    "HCL2Parser",
+    "HCL2Serializer",
+]

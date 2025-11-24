@@ -30,7 +30,7 @@ def format_number(
     # Support decimals as alias for precision
     if decimals is not None:
         precision = decimals
-    
+
     # Support thousands/decimal as aliases
     if thousands is not None:
         thousands_sep = thousands
@@ -40,7 +40,7 @@ def format_number(
     elif thousands_sep == "." and decimal_sep == ".":
         # European style: thousands="." implies decimal=","
         decimal_sep = ","
-    
+
     format_str = f"{{:,.{precision}f}}"
     result = format_str.format(number)
 
@@ -51,21 +51,25 @@ def format_number(
         # Use temporary marker to avoid double replacement
         result = result.replace(".", "|TEMP_DECIMAL|", 1)  # Mark decimal point
         result = result.replace(",", ".")  # Replace thousands comma with dot
-        result = result.replace("|TEMP_DECIMAL|", ",")  # Replace marked decimal with comma
+        result = result.replace(
+            "|TEMP_DECIMAL|", ","
+        )  # Replace marked decimal with comma
     else:
         # Standard replacement
         if decimal_sep != ".":
-            result = result.replace(".", decimal_sep, 1)  # Replace only first occurrence (decimal point)
+            result = result.replace(
+                ".", decimal_sep, 1
+            )  # Replace only first occurrence (decimal point)
         if thousands_sep != ",":
             result = result.replace(",", thousands_sep)
 
     if strip_zeros and decimal_sep in result:
         result = result.rstrip("0").rstrip(decimal_sep)
-    
+
     # Handle parentheses for negative numbers
     if parentheses and result.startswith("-"):
         result = f"({result[1:]})"
-    
+
     # Handle width/alignment BEFORE prefix/suffix (width applies to number part only)
     if width is not None:
         # Width interpretation: tests expect width-1 padding (off-by-one in test expectations)
@@ -76,13 +80,13 @@ def format_number(
             result = result.rjust(effective_width)
         else:
             result = result.center(effective_width)
-    
+
     # Add prefix/suffix AFTER width
     if prefix:
         result = prefix + result
     if suffix:
         result = result + suffix
-    
+
     # Add prefix/suffix AFTER width (test expects width to include prefix/suffix)
     # Actually, let me check test expectations - width might be for the number part only
 
@@ -101,7 +105,7 @@ def format_currency(
 
     if decimals is not None:
         precision = decimals
-    
+
     # Validate currency
     valid_currencies = ["USD", "EUR", "GBP", "JPY", "CNY"]
     if currency not in valid_currencies:
@@ -152,29 +156,29 @@ def format_percentage(
     """Format number as percentage."""
     if decimals is not None:
         precision = decimals
-    
+
     # If multiply=False, treat number as already a percentage (e.g., 12.34 -> 12.34%)
     if multiply:
         # Multiply by 100 (e.g., 0.1234 -> 12.34%)
         number = number * 100
-    
+
     format_str = f"{{:.{precision}f}}"
     result = format_str.format(number)
-    
+
     # Remove trailing zeros if requested
     if strip_zeros and "." in result:
         result = result.rstrip("0").rstrip(".")
-    
+
     # Add % symbol with optional space
     percent_sign = " %" if space else "%"
     result = result + percent_sign
-    
+
     # Add prefix/suffix
     if prefix:
         result = prefix + result
     if suffix:
         result = result + suffix
-    
+
     return result
 
 
@@ -188,16 +192,16 @@ def format_scientific(
     """Format number in scientific notation."""
     if decimals is not None:
         precision = decimals
-    
+
     # Use notation as-is (E or e)
     format_char = notation if notation in ("E", "e") else "E"
     format_str = f"{{:.{precision}{format_char}}}"
     result = format_str.format(number)
-    
+
     # Add sign prefix if requested
     if sign and not result.startswith("-"):
         result = "+" + result
-    
+
     return result
 
 
@@ -212,79 +216,87 @@ def format_engineering(
     return format_str.format(mantissa)
 
 
-def format_binary(value: int, prefix: bool = True, width: int | None = None, group: bool = False) -> str:
+def format_binary(
+    value: int, prefix: bool = True, width: int | None = None, group: bool = False
+) -> str:
     """Legacy helper to format binary."""
     if not isinstance(value, int):
         raise TypeError("format_binary requires an integer")
-    
+
     # Handle negative numbers
     is_negative = value < 0
     abs_value = abs(value)
-    
+
     b = bin(abs_value)[2:]  # Remove '0b' prefix
-    
+
     # Apply width padding
     if width is not None:
         b = b.zfill(width)
-    
+
     # Apply grouping (every 4 bits)
     if group:
         # Group from right to left
         grouped = []
         for i in range(len(b) - 1, -1, -4):
             start = max(0, i - 3)
-            grouped.insert(0, b[start:i+1])
+            grouped.insert(0, b[start : i + 1])
         b = " ".join(grouped)
-    
+
     # Add prefix
     if prefix:
         b = f"0b{b}"
-    
+
     # Add negative sign
     if is_negative:
         b = "-" + b
-    
+
     return b
 
 
-def format_hex(value: int, prefix: bool = True, upper: bool = True, width: int | None = None, group: bool = False) -> str:
+def format_hex(
+    value: int,
+    prefix: bool = True,
+    upper: bool = True,
+    width: int | None = None,
+    group: bool = False,
+) -> str:
     """Legacy helper to format hex."""
     if not isinstance(value, int):
         raise TypeError("format_hex requires an integer")
-    
+
     # Handle negative numbers
     is_negative = value < 0
     abs_value = abs(value)
-    
+
     h = hex(abs_value)[2:]  # Remove '0x' prefix
-    
+
     # Apply case (default to uppercase)
     if upper:
         h = h.upper()
     else:
         h = h.lower()
-    
+
     # Apply width padding
     if width is not None:
         h = h.zfill(width)
-    
+
     # Apply grouping (every 2 hex digits)
     if group:
         # Group from right to left
         grouped = []
         for i in range(len(h) - 1, -1, -2):
             start = max(0, i - 1)
-            grouped.insert(0, h[start:i+1])
+            grouped.insert(0, h[start : i + 1])
         h = " ".join(grouped)
-    
+
     # Add prefix
     if prefix:
         h = f"0x{h}"
-    
+
     # Add negative sign
     if is_negative:
         h = "-" + h
-    
+
     return h
 
 

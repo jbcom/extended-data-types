@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 import datetime as _dt
+
+from collections.abc import Iterable
 from datetime import timedelta, timezone
-from typing import Iterable
 from zoneinfo import ZoneInfo
 
 
-_current_timezone: timezone | ZoneInfo = _dt.datetime.now().astimezone().tzinfo or timezone.utc
+_current_timezone: timezone | ZoneInfo = (
+    _dt.datetime.now().astimezone().tzinfo or timezone.utc
+)
 
 
 def _coerce_timezone(tz: str | timezone | ZoneInfo) -> timezone | ZoneInfo:
@@ -39,7 +42,9 @@ def _parse_datetime(dt: _dt.datetime | str) -> _dt.datetime:
         raise ValueError(f"Invalid datetime string {dt}") from exc
 
 
-def ensure_timezone(dt: _dt.datetime, tz: str | timezone | ZoneInfo | None = None) -> _dt.datetime:
+def ensure_timezone(
+    dt: _dt.datetime, tz: str | timezone | ZoneInfo | None = None
+) -> _dt.datetime:
     """Attach or convert timezone."""
     target = _coerce_timezone(tz) if tz else timezone.utc
     if dt.tzinfo is None:
@@ -136,7 +141,12 @@ def list_timezones(
         return True
 
     matched = sorted(zone for zone in zones if _match(zone))
-    if offset is None and not dst_only and (not region or region in "UTC") and "UTC" not in matched:
+    if (
+        offset is None
+        and not dst_only
+        and (not region or region in "UTC")
+        and "UTC" not in matched
+    ):
         matched.append("UTC")
     return matched
 

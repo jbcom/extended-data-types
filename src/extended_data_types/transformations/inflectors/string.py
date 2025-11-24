@@ -12,10 +12,6 @@ from __future__ import annotations
 
 import inflection
 import unidecode
-from typing import Any
-
-from extended_data_types.core.types import convert_special_types
-from extended_data_types.string.types import ExtendedString
 
 
 def pluralize(text: str, count: int | None = None) -> str:

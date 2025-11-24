@@ -40,7 +40,7 @@ def round_number(
     )
 
 
-def format_thousands(number: int | float, separator: str = ",") -> str:
+def format_thousands(number: float, separator: str = ",") -> str:
     """Format number with thousand separators.
 
     Args:

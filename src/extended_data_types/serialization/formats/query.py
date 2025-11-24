@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import urllib.parse
+
 from typing import Any
 
 
@@ -17,7 +18,10 @@ class QuerySerializer:
 
     def decode(self, data: str, **_: Any) -> Any:
         """Deserialize query string to Python object."""
-        return {k: v[0] if len(v) == 1 else v for k, v in urllib.parse.parse_qs(data).items()}
+        return {
+            k: v[0] if len(v) == 1 else v
+            for k, v in urllib.parse.parse_qs(data).items()
+        }
 
     def dumps(self, data: Any, **kwargs: Any) -> str:
         """Alias for encode."""
@@ -26,4 +30,3 @@ class QuerySerializer:
     def loads(self, data: str, **kwargs: Any) -> Any:
         """Alias for decode."""
         return self.decode(data, **kwargs)
-

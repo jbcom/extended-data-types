@@ -8,7 +8,7 @@ from pathlib import Path
 
 import git
 
-from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError
+from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError, Repo
 
 from .types import FilePath
 

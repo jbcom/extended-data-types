@@ -72,7 +72,7 @@ nitpick_ignore = [
 
 # Intersphinx configuration
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None),
-    'sortedcontainers': ('https://grantjenks.com/docs/sortedcontainers/', None),
-    'ruamel.yaml': ('https://yaml.readthedocs.io/en/latest/', None),
+    "python": ("https://docs.python.org/3", None),
+    "sortedcontainers": ("https://grantjenks.com/docs/sortedcontainers/", None),
+    "ruamel.yaml": ("https://yaml.readthedocs.io/en/latest/", None),
 }

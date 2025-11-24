@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+
 from typing import Any
 
 from extended_data_types.serialization.formats.base import _sanitize
@@ -12,7 +13,9 @@ from extended_data_types.serialization.formats.base import _sanitize
 class JsonSerializer:
     """JSON serializer with compact list formatting."""
 
-    def encode(self, data: Any, *, indent_size: int = 2, sort_keys: bool = False, **kwargs: Any) -> str:
+    def encode(
+        self, data: Any, *, indent_size: int = 2, sort_keys: bool = False, **kwargs: Any
+    ) -> str:
         """Serialize data to JSON with compact list formatting."""
         sanitized = _sanitize(data)
         indent = kwargs.get("indent", indent_size)
@@ -32,9 +35,9 @@ class JsonSerializer:
             colon = match.group(2)  # ":"
             content = match.group(3)  # the list content
             # Check if content is just numbers/strings/booleans (simple list)
-            if not re.search(r'[\[\{]', content):  # No nested arrays/objects
+            if not re.search(r"[\[\{]", content):  # No nested arrays/objects
                 # Extract values and compact
-                values = re.findall(r'[^,\n\[\]]+', content)
+                values = re.findall(r"[^,\n\[\]]+", content)
                 values = [v.strip() for v in values if v.strip()]
                 compacted = ", ".join(values)
                 return f'"{key_part}"{colon} [{compacted}]'
@@ -45,10 +48,10 @@ class JsonSerializer:
             r'"([\w]+)"(\s*:\s*)\[\s*\n\s*([^\]]+)\s*\n\s*\]',
             compact_simple_list,
             result,
-            flags=re.MULTILINE
+            flags=re.MULTILINE,
         )
         # Fix any double spaces after colon
-        result = re.sub(r':\s+\[', ': [', result)
+        result = re.sub(r":\s+\[", ": [", result)
         return result
 
     def decode(self, data: str, **_: Any) -> Any:
@@ -63,4 +66,3 @@ class JsonSerializer:
     def loads(self, data: str, **kwargs: Any) -> Any:
         """Alias for decode."""
         return self.decode(data, **kwargs)
-

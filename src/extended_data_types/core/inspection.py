@@ -292,9 +292,7 @@ def update_docstring(obj: Any, new_inputs: dict[str, dict[str, str]]) -> str:
 
     base_lines = [line for line in base_doc.strip().splitlines() if line.strip()]
     existing_envs = [
-        line
-        for line in base_lines
-        if line.strip().lower().startswith("env=name:")
+        line for line in base_lines if line.strip().lower().startswith("env=name:")
     ]
     text_lines = [
         line for line in base_lines if not line.strip().lower().startswith("env=name:")

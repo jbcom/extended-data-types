@@ -13,7 +13,7 @@ Typical usage:
 
 from __future__ import annotations
 
-from datetime import datetime, date, time
+from datetime import date, datetime, time
 from pathlib import Path
 from typing import Any, Literal, cast
 
@@ -63,9 +63,7 @@ def wrap_for_export(
     if isinstance(format, bool):
         if not format:
             return str(data)
-        format = cast(
-            ExportFormat, "yaml" if is_yaml_compatible(data) else "json"
-        )
+        format = cast(ExportFormat, "yaml" if is_yaml_compatible(data) else "json")
     elif isinstance(format, str):
         fmt_lower = format.casefold()
         if fmt_lower in ("true", "false"):

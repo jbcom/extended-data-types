@@ -78,7 +78,7 @@ def _parse_integer_words(tokens: list[str]) -> tuple[int, bool]:
             raise ValueError(f"Unrecognized token {token}")
 
     value = total + current
-    return ( -value if negative else value), negative
+    return (-value if negative else value), negative
 
 
 def words_to_number(text: str) -> int | float:
@@ -121,7 +121,10 @@ def words_to_number(text: str) -> int | float:
 
 
 def to_words(
-    number: int | float | Decimal, lang: str = "en", group: bool = True, capitalize: bool = False
+    number: int | float | Decimal,
+    lang: str = "en",
+    group: bool = True,
+    capitalize: bool = False,
 ) -> str:
     """Convert number to words."""
     # Remove group parameter - not supported in current num2words version
@@ -138,14 +141,18 @@ def number_to_words(
     conjunction: str = " and ",
 ) -> str:
     """User-facing helper with a couple of legacy options."""
-    if isinstance(number, float) and (number == float("inf") or number == float("-inf")):
+    if isinstance(number, float) and (
+        number == float("inf") or number == float("-inf")
+    ):
         raise ValueError("Infinite values not supported")
-    
+
     # Handle negative numbers specially - check sign before calling num2words
     # For negative zero, check the string representation
     number_str = str(number)
-    is_negative = number < 0 or (isinstance(number, float) and number == 0.0 and number_str.startswith("-"))
-    
+    is_negative = number < 0 or (
+        isinstance(number, float) and number == 0.0 and number_str.startswith("-")
+    )
+
     if is_negative:
         # Convert to positive for num2words, then add "minus" prefix
         abs_number = abs(number)
@@ -155,7 +162,7 @@ def number_to_words(
             result = "minus " + result
     else:
         result = num2words(number, lang=lang)
-    
+
     if conjunction != " and ":
         # Replace " and " with conjunction, preserving spacing
         if conjunction == "":
@@ -168,9 +175,7 @@ def number_to_words(
     return result
 
 
-def to_ordinal_words(
-    number: int, lang: str = "en", capitalize: bool = False
-) -> str:
+def to_ordinal_words(number: int, lang: str = "en", capitalize: bool = False) -> str:
     """Convert number to ordinal words."""
     if number <= 0:
         raise ValueError("Ordinal requires positive integers")
@@ -251,7 +256,9 @@ def _fraction_denominator_name(denominator: int, plural: bool = False) -> str:
         3: ("third", "thirds"),
         4: ("quarter", "quarters"),
     }
-    singular, plural_name = names.get(denominator, (f"{denominator}th", f"{denominator}ths"))
+    singular, plural_name = names.get(
+        denominator, (f"{denominator}th", f"{denominator}ths")
+    )
     return plural_name if plural else singular
 
 
@@ -265,7 +272,9 @@ def fraction_to_words(value: str, capitalize: bool = False) -> str:
         if " " in cleaned and "/" in cleaned:
             whole_part, frac_part = cleaned.split(None, 1)
             frac = Fraction(frac_part)
-            frac = Fraction(int(whole_part) * frac.denominator + frac.numerator, frac.denominator)
+            frac = Fraction(
+                int(whole_part) * frac.denominator + frac.numerator, frac.denominator
+            )
         else:
             frac = Fraction(cleaned)
     except (ValueError, ZeroDivisionError) as exc:
@@ -303,7 +312,14 @@ def _parse_fraction_tokens(tokens: list[str]) -> tuple[int, int]:
         raise ValueError("Empty fraction words")
     if tokens[0] in ("a", "an"):
         tokens = tokens[1:]
-    denom_map = {"half": 2, "halves": 2, "quarter": 4, "quarters": 4, "third": 3, "thirds": 3}
+    denom_map = {
+        "half": 2,
+        "halves": 2,
+        "quarter": 4,
+        "quarters": 4,
+        "third": 3,
+        "thirds": 3,
+    }
     denom_word = tokens[-1]
     if denom_word not in denom_map:
         raise ValueError("Unrecognized fraction words")

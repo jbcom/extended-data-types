@@ -18,7 +18,7 @@ def format_template(template: str, values: Mapping[str, Any]) -> str:
     """Format curly-brace templates (legacy behaviour)."""
     try:
         return template.format_map(values)
-    except KeyError as exc:
+    except KeyError:
         raise
     except Exception as exc:  # ValueError or formatting errors
         raise ValueError(str(exc)) from exc
@@ -79,7 +79,9 @@ def align(
     return text.center(width, fill_char)
 
 
-def format_align(text: str, width: int, alignment: Alignment = "left", fill: str = " ") -> str:
+def format_align(
+    text: str, width: int, alignment: Alignment = "left", fill: str = " "
+) -> str:
     """Legacy alias for align."""
     return align(text, width, alignment, fill)
 
@@ -106,7 +108,11 @@ def format_case(text: str, case: str) -> str:
     if case == "lower":
         return " ".join(parts).lower()
     if case == "camel":
-        return parts[0].lower() + "".join(p.capitalize() for p in parts[1:]) if parts else ""
+        return (
+            parts[0].lower() + "".join(p.capitalize() for p in parts[1:])
+            if parts
+            else ""
+        )
     if case == "pascal":
         return "".join(p.capitalize() for p in parts)
     if case == "snake":

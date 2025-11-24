@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import calendar
 import math
+
 from datetime import date, datetime, time, timedelta, tzinfo
 from typing import Literal
 from zoneinfo import ZoneInfo
 
 from extended_data_types.transformations.core import Transform
+
 
 TimeRule = Literal["nearest", "up", "down"]
 RoundUnit = Literal["hour", "minute", "15min", "day"]
@@ -35,7 +37,9 @@ def _combine_datetime(dt: datetime, delta: timedelta) -> datetime:
     return dt + delta
 
 
-def _apply_timedelta(dt: date | datetime | time, delta: timedelta) -> date | datetime | time:
+def _apply_timedelta(
+    dt: date | datetime | time, delta: timedelta
+) -> date | datetime | time:
     if isinstance(dt, datetime):
         return dt + delta
     if isinstance(dt, date):
@@ -45,7 +49,9 @@ def _apply_timedelta(dt: date | datetime | time, delta: timedelta) -> date | dat
     return result.timetz() if dt.tzinfo else result.time()
 
 
-def add_time(dt: date | datetime | time, **units: int | float) -> date | datetime | time:
+def add_time(
+    dt: date | datetime | time, **units: float
+) -> date | datetime | time:
     """Add time units to date, datetime, or time."""
     _validate_units(units)
     years = int(units.get("years", 0))
@@ -61,7 +67,9 @@ def add_time(dt: date | datetime | time, **units: int | float) -> date | datetim
             base_date = _shift_months(base_date, years, months)
         delta = timedelta(weeks=weeks, days=days, hours=hours, minutes=minutes)
         if isinstance(dt, datetime):
-            combined = datetime.combine(base_date, dt.timetz() if dt.tzinfo else dt.time())
+            combined = datetime.combine(
+                base_date, dt.timetz() if dt.tzinfo else dt.time()
+            )
             return combined + delta
         return base_date + delta
 
@@ -72,7 +80,9 @@ def add_time(dt: date | datetime | time, **units: int | float) -> date | datetim
     return result.timetz() if dt.tzinfo else result.time()
 
 
-def subtract_time(dt: date | datetime | time, **units: int | float) -> date | datetime | time:
+def subtract_time(
+    dt: date | datetime | time, **units: float
+) -> date | datetime | time:
     """Subtract time units from date, datetime, or time."""
     _validate_units(units)
     return add_time(
@@ -86,14 +96,16 @@ def subtract_time(dt: date | datetime | time, **units: int | float) -> date | da
     )
 
 
-def multiply_time(delta: timedelta, factor: int | float) -> timedelta:
+def multiply_time(delta: timedelta, factor: float) -> timedelta:
     """Multiply timedelta by a factor."""
     if isinstance(factor, float) and factor < 0:
         raise ValueError("Negative fractional multipliers are not supported")
     return delta * factor
 
 
-def divide_time(delta: timedelta, divisor: int | float | timedelta) -> float | timedelta:
+def divide_time(
+    delta: timedelta, divisor: float | timedelta
+) -> float | timedelta:
     """Divide timedelta by a scalar or another timedelta."""
     if divisor == 0:
         raise ValueError("Division by zero")
@@ -104,7 +116,9 @@ def divide_time(delta: timedelta, divisor: int | float | timedelta) -> float | t
     return delta / divisor
 
 
-def time_between(start: date | datetime, end: date | datetime, unit: TimeBetweenUnit = "days") -> float:
+def time_between(
+    start: date | datetime, end: date | datetime, unit: TimeBetweenUnit = "days"
+) -> float:
     """Calculate the difference between two dates/datetimes."""
     delta = end - start
     conversions = {
@@ -145,7 +159,9 @@ def _round_base(dt: datetime, unit_seconds: int, rule: TimeRule) -> datetime:
     return dt + timedelta(seconds=delta_seconds)
 
 
-def round_time(dt: date | datetime | time, unit: RoundUnit = "hour", rule: TimeRule = "nearest") -> date | datetime | time:
+def round_time(
+    dt: date | datetime | time, unit: RoundUnit = "hour", rule: TimeRule = "nearest"
+) -> date | datetime | time:
     """Round to the nearest/ceiling/floor unit."""
     unit_map = {"hour": 3600, "minute": 60, "15min": 900, "day": 86_400}
     if unit not in unit_map:
@@ -155,23 +171,31 @@ def round_time(dt: date | datetime | time, unit: RoundUnit = "hour", rule: TimeR
     if unit == "day":
         rounded = rounded.replace(hour=0, minute=0, second=0, microsecond=0)
     if was_time:
-        return rounded.timetz() if isinstance(dt, time) and dt.tzinfo else rounded.time()
+        return (
+            rounded.timetz() if isinstance(dt, time) and dt.tzinfo else rounded.time()
+        )
     if isinstance(dt, date) and not isinstance(dt, datetime):
         return rounded.date()
     return rounded
 
 
-def floor_time(dt: date | datetime | time, unit: RoundUnit = "hour") -> date | datetime | time:
+def floor_time(
+    dt: date | datetime | time, unit: RoundUnit = "hour"
+) -> date | datetime | time:
     """Floor to the given unit."""
     return round_time(dt, unit, rule="down")
 
 
-def ceil_time(dt: date | datetime | time, unit: RoundUnit = "hour") -> date | datetime | time:
+def ceil_time(
+    dt: date | datetime | time, unit: RoundUnit = "hour"
+) -> date | datetime | time:
     """Ceil to the given unit."""
     return round_time(dt, unit, rule="up")
 
 
-def shift_timezone(dt: datetime, timezone: tzinfo | str, keep_local: bool = False) -> datetime:
+def shift_timezone(
+    dt: datetime, timezone: tzinfo | str, keep_local: bool = False
+) -> datetime:
     """Shift datetime to a different timezone."""
     if isinstance(timezone, str):
         timezone = ZoneInfo(timezone)

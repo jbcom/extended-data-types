@@ -2,11 +2,11 @@
 
 from .arithmetic import (
     add_time,
+    ceil_time,
     round_time,
     shift_timezone,
     subtract_time,
     time_between,
-    ceil_time,
 )
 from .format import (
     format_date,

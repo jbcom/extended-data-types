@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import hcl2
 
 from .types import Block, BlockType, Expression, HCLFile, MetaArguments
@@ -23,7 +25,11 @@ class HCL2Parser:
             tf = tf_raw[0] if isinstance(tf_raw, list) and tf_raw else tf_raw
             file.terraform_version = tf.get("required_version")
             providers = tf.get("required_providers", {})
-            if isinstance(providers, list) and providers and isinstance(providers[0], dict):
+            if (
+                isinstance(providers, list)
+                and providers
+                and isinstance(providers[0], dict)
+            ):
                 providers = providers[0]
             file.required_providers = providers
 
@@ -67,7 +73,9 @@ class HCL2Parser:
                 # Two-level blocks
                 if any(isinstance(v, dict) for v in body.values()):
                     for second_label, attrs in body.items():
-                        block = self._build_block(block_type, [first_label, second_label], attrs)
+                        block = self._build_block(
+                            block_type, [first_label, second_label], attrs
+                        )
                         file.blocks.append(block)
                 else:
                     block = self._build_block(block_type, [first_label], body)
@@ -93,7 +101,11 @@ class HCL2Parser:
                     continue
                 if key == "provider":
                     prov = value if isinstance(value, str) else str(value)
-                    if isinstance(prov, str) and prov.startswith("${") and prov.endswith("}"):
+                    if (
+                        isinstance(prov, str)
+                        and prov.startswith("${")
+                        and prov.endswith("}")
+                    ):
                         prov = prov[2:-1]
                     meta.provider = prov
                     continue
@@ -101,7 +113,11 @@ class HCL2Parser:
                     if isinstance(value, list):
                         cleaned = []
                         for item in value:
-                            if isinstance(item, str) and item.startswith("${") and item.endswith("}"):
+                            if (
+                                isinstance(item, str)
+                                and item.startswith("${")
+                                and item.endswith("}")
+                            ):
                                 cleaned.append(item[2:-1])
                             else:
                                 cleaned.append(item)
@@ -115,7 +131,11 @@ class HCL2Parser:
                     meta.lifecycle = value
                     continue
 
-                if isinstance(value, list) and value and all(isinstance(v, dict) for v in value):
+                if (
+                    isinstance(value, list)
+                    and value
+                    and all(isinstance(v, dict) for v in value)
+                ):
                     for entry in value:
                         nested_blocks.append(self._build_block(key, [], entry))
                     continue

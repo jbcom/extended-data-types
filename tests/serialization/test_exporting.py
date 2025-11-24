@@ -14,7 +14,7 @@ from extended_data_types.serialization.exporting import wrap_for_export
 class TestWrapForExport:
     """Tests for wrap_for_export function."""
 
-    @pytest.fixture()
+    @pytest.fixture
     def complex_data(self) -> dict[str, Any]:
         """Fixture providing complex test data."""
         return {

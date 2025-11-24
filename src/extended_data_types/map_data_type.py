@@ -7,8 +7,8 @@ convert keys from camelCase to snake_case.
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Mapping, MutableMapping
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable, Mapping, MutableMapping
+from typing import Any, TypeVar
 
 import inflection
 

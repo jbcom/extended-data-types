@@ -128,15 +128,15 @@ def flatten_dict(
             items.extend(flatten_dict(value, new_key, separator).items())
         elif isinstance(value, list):
             for idx, item in enumerate(value):
-                items.extend(
-                    flatten_dict({str(idx): item}, new_key, separator).items()
-                )
+                items.extend(flatten_dict({str(idx): item}, new_key, separator).items())
         else:
             items.append((new_key, value))
     return dict(items)
 
 
-def invert_dict(mapping: Mapping[KT, VT], *, multi: bool = True) -> dict[VT, KT | list[KT]]:
+def invert_dict(
+    mapping: Mapping[KT, VT], *, multi: bool = True
+) -> dict[VT, KT | list[KT]]:
     """Legacy helper to invert a mapping."""
     result: dict[VT, KT | list[KT]] = {}
     for key, value in mapping.items():
@@ -160,6 +160,7 @@ def invert_dict(mapping: Mapping[KT, VT], *, multi: bool = True) -> dict[VT, KT 
 
 def merge_dicts(*mappings: Mapping[KT, VT]) -> dict[KT, VT]:
     """Legacy helper to merge dictionaries (later overrides earlier)."""
+
     def _merge(a: Mapping[KT, VT], b: Mapping[KT, VT]) -> dict[KT, VT]:
         merged: dict[KT, VT] = dict(a)
         for key, value in b.items():

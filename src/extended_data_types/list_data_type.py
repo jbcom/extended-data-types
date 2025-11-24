@@ -44,10 +44,10 @@ def flatten_list(matrix: list[Any]) -> list[Any]:
 
 
 def filter_list(
-        items: list[str] | None,
-        allowlist: list[str] | None = None,
-        denylist: list[str] | None = None,
-    ) -> list[str]:
+    items: list[str] | None,
+    allowlist: list[str] | None = None,
+    denylist: list[str] | None = None,
+) -> list[str]:
     """Filters a list based on allowlist and denylist.
 
     Args:

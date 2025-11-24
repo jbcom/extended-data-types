@@ -26,7 +26,7 @@ def pluralize(text: str, count: int | None = None) -> str:
     """
     if count == 1:
         return text
-    
+
     # Handle irregular plurals
     irregular_plurals = {
         "criterion": "criteria",
@@ -34,7 +34,7 @@ def pluralize(text: str, count: int | None = None) -> str:
     }
     if text.lower() in irregular_plurals:
         return irregular_plurals[text.lower()]
-    
+
     return inflection.pluralize(text)
 
 
@@ -66,7 +66,7 @@ def singularize(text: str) -> str:
         elif text[0].isupper():
             return irregular_singulars[text_lower].capitalize()
         return irregular_singulars[text_lower]
-    
+
     result = inflection.singularize(text)
     # Fix inflection library issues
     if result == "criterium" and text_lower == "criteria":
@@ -127,6 +127,7 @@ def transliterate(text: str) -> str:
     """
     return unidecode.unidecode(text)
 
+
 # Legacy helpers expected by tests
 def camelize(text: str, uppercase_first_letter: bool = True) -> str:
     """Convert string to camel case.
@@ -148,12 +149,24 @@ def camelize(text: str, uppercase_first_letter: bool = True) -> str:
     """
     # Handle spaces by converting to underscore first
     text = text.replace(" ", "_")
-    
+
     # Handle acronyms - common acronyms should be uppercase
     # Note: "id" is only an acronym when standalone, not in compound words
-    acronyms = ['html', 'xml', 'http', 'https', 'url', 'uri', 'api', 'pdf', 'css', 'js', 'json']
-    words = text.split('_')
-    
+    acronyms = [
+        "html",
+        "xml",
+        "http",
+        "https",
+        "url",
+        "uri",
+        "api",
+        "pdf",
+        "css",
+        "js",
+        "json",
+    ]
+    words = text.split("_")
+
     # Build camel case manually to preserve acronym casing
     result_parts = []
     for i, word in enumerate(words):
@@ -161,21 +174,20 @@ def camelize(text: str, uppercase_first_letter: bool = True) -> str:
             continue
         word_lower = word.lower()
         # Check if it's an acronym (but not "id" unless it's standalone)
-        is_acronym = word_lower in acronyms or (word_lower == 'id' and len(words) == 1)
+        is_acronym = word_lower in acronyms or (word_lower == "id" and len(words) == 1)
         if is_acronym:
             # Acronyms: uppercase unless it's the first word and uppercase_first_letter=False
             if i == 0 and not uppercase_first_letter:
                 result_parts.append(word_lower)
             else:
                 result_parts.append(word.upper())
+        # Regular words: capitalize first letter
+        elif i == 0 and not uppercase_first_letter:
+            result_parts.append(word.lower())
         else:
-            # Regular words: capitalize first letter
-            if i == 0 and not uppercase_first_letter:
-                result_parts.append(word.lower())
-            else:
-                result_parts.append(word.capitalize())
-    
-    return ''.join(result_parts)
+            result_parts.append(word.capitalize())
+
+    return "".join(result_parts)
 
 
 def underscore(text: str) -> str:
@@ -198,14 +210,15 @@ def underscore(text: str) -> str:
     # Handle spaces and dashes by converting to underscore first
     text = text.replace(" ", "_").replace("-", "_")
     result = inflection.underscore(text)
-    
+
     # Fix number handling - ensure numbers are separated with underscores
     import re
+
     # Add underscore before numbers that follow letters
-    result = re.sub(r'([a-z])(\d)', r'\1_\2', result)
+    result = re.sub(r"([a-z])(\d)", r"\1_\2", result)
     # Add underscore after numbers that precede letters
-    result = re.sub(r'(\d)([a-z])', r'\1_\2', result)
-    
+    result = re.sub(r"(\d)([a-z])", r"\1_\2", result)
+
     return result
 
 
@@ -236,20 +249,22 @@ def humanize(text: str, capitalize: bool = True) -> str:
         if not cleaned:
             return ""
         text = cleaned
-    
+
     # Convert dashes and underscores to spaces before humanizing
     import re
+
     text = text.replace("-", "_")
-    
+
     # Remove trailing numbers before humanizing
-    text = re.sub(r'\d+$', '', text)
-    
+    text = re.sub(r"\d+$", "", text)
+
     result = inflection.humanize(text)
     # Remove trailing spaces
     result = result.rstrip()
     if not capitalize:
         result = result.lower()
     return result
+
 
 # Legacy helpers expected by tests
 def titleize(text: str) -> str:

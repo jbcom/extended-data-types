@@ -10,4 +10,3 @@ from .base import ExtendedBase
 class ExtendedDict(ExtendedBase, dict[Any, Any]):
     """Legacy ExtendedDict placeholder."""
 
-    pass

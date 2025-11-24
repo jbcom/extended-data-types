@@ -1,10 +1,27 @@
-"""Extended Data Types - Enhanced Python collections with advanced functionality
-"""
-
-from typing import TypeAlias
+"""Extended Data Types - Enhanced Python collections with advanced functionality"""
 
 # Legacy utilities (v5 API)
 from .base64_utils import base64_decode, base64_encode
+
+# Compatibility utilities (new compat layer)
+from .compat import (
+    check_compatibility,
+    convert_legacy_format,
+    unflatten_map,
+)
+
+# Core types and aliases (new architecture)
+from .core import (
+    ExtDict,
+    ExtendedBase,
+    ExtendedDict,
+    ExtendedFrozenSet,
+    ExtendedList,
+    ExtendedSet,
+    ExtFrozenSet,
+    ExtList,
+    ExtSet,
+)
 from .export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
 from .file_data_type import (
     FilePath,
@@ -19,6 +36,16 @@ from .file_data_type import (
 )
 from .hcl2_utils import decode_hcl2
 from .import_utils import unwrap_raw_data_from_import
+
+# Inspection utilities (new architecture)
+from .inspection import (
+    SchemaValidator,
+    StructureInfo,
+    TypeInfo,
+    get_schema,
+    get_type_info,
+    inspect_structure,
+)
 from .json_utils import decode_json, encode_json
 from .list_data_type import filter_list, flatten_list
 from .map_data_type import (
@@ -33,6 +60,16 @@ from .map_data_type import (
     zipmap,
 )
 from .matcher_utils import is_non_empty_match, is_partial_match
+
+# Pattern matching (new architecture)
+from .matching import Matcher
+
+# Serialization (new architecture)
+from .serialization import (
+    get_serializer,
+    guess_format,
+    register_format,
+)
 from .splitter_utils import split_dict_by_type, split_list_by_type
 from .stack_utils import (
     filter_methods,
@@ -81,46 +118,6 @@ from .type_utils import (
     typeof,
 )
 from .yaml_utils import decode_yaml, encode_yaml, is_yaml_data
-
-# Compatibility utilities (new compat layer)
-from .compat import (
-    check_compatibility,
-    convert_legacy_format,
-    unflatten_map,
-)
-
-# Core types and aliases (new architecture)
-from .core import (
-    ExtDict,
-    ExtendedBase,
-    ExtendedDict,
-    ExtendedFrozenSet,
-    ExtendedList,
-    ExtendedSet,
-    ExtFrozenSet,
-    ExtList,
-    ExtSet,
-)
-
-# Inspection utilities (new architecture)
-from .inspection import (
-    SchemaValidator,
-    StructureInfo,
-    TypeInfo,
-    get_schema,
-    get_type_info,
-    inspect_structure,
-)
-
-# Pattern matching (new architecture)
-from .matching import Matcher
-
-# Serialization (new architecture)
-from .serialization import (
-    get_serializer,
-    guess_format,
-    register_format,
-)
 
 
 __version__ = "6.0.0"

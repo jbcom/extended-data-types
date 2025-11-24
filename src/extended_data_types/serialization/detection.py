@@ -164,10 +164,10 @@ def is_potential_json(data: str) -> bool:
     """
     data = data.strip()
     return (
-        data.startswith("{")
-        and data.endswith("}")
-        or data.startswith("[")
-        and data.endswith("]")
+        (data.startswith("{")
+        and data.endswith("}"))
+        or (data.startswith("[")
+        and data.endswith("]"))
     )
 
 
@@ -255,8 +255,10 @@ def is_potential_querystring(data: str) -> bool:
         True if string shows query string indicators
     """
     stripped = data.strip()
-    if " " in stripped or stripped.startswith("[") or any(
-        c in stripped for c in "{}[]<>"
+    if (
+        " " in stripped
+        or stripped.startswith("[")
+        or any(c in stripped for c in "{}[]<>")
     ):
         return False
     return "=" in stripped

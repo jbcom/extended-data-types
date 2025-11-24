@@ -18,7 +18,7 @@ class SerializationSystem:
         converted = self.type_system.convert_value(data, dict)
         # Use marshmallow for schema validation
         serializer = self._get_serializer(format)
-        return serializer.dumps(converted, **options)
+        return serializer.encode(converted, **options)
 
     def _get_serializer(self, fmt: str):
         return get_serializer(fmt)

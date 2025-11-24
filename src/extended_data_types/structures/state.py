@@ -129,7 +129,8 @@ class StateChecker:
         if non_empty_kwargs and not non_empty_args:
             return non_empty_kwargs
 
-        return non_empty_args, non_empty_kwargs
+        # Return tuple of both if both have values
+        return (non_empty_args, non_empty_kwargs)
 
     def first_non_empty(self, *values: Any) -> Any:
         """Get the first non-empty value.

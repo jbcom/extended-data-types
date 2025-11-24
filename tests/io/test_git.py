@@ -16,7 +16,7 @@ from extended_data_types.io.git import (
 from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError, Repo
 
 
-@pytest.fixture()
+@pytest.fixture
 def mock_repo():
     """Create a mock Git repository."""
     repo = Mock(spec=Repo)

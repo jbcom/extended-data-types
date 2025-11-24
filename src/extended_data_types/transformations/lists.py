@@ -86,8 +86,8 @@ def filter_list(
             allow_item = item in allowlist
         else:  # allowlist is empty []
             allow_item = False
-        
+
         if allow_item and item not in denylist:
             filtered.append(item)
-    
+
     return filtered

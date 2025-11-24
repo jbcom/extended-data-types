@@ -17,7 +17,6 @@ from collections.abc import Mapping
 from typing import Any
 
 from extended_data_types.serialization.types import encode_json
-from extended_data_types.validation.core import is_nothing
 
 
 def is_partial_match(
@@ -74,14 +73,14 @@ def _normalize_for_match(value: Any) -> Any:
         # Recursively normalize dict values, sort by key
         normalized_dict = {k: _normalize_for_match(v) for k, v in value.items()}
         # Return as tuple with type marker: ('dict', sorted_items)
-        return ('dict', tuple(sorted(normalized_dict.items())))
+        return ("dict", tuple(sorted(normalized_dict.items())))
     elif isinstance(value, list):
         # Recursively normalize list elements, then sort
         normalized = [_normalize_for_match(item) for item in value]
         try:
             # Try to sort, but handle uncomparable types
             # Return as tuple with type marker: ('list', sorted_items)
-            return ('list', tuple(sorted(normalized)))
+            return ("list", tuple(sorted(normalized)))
         except TypeError:
             # If elements are not comparable, return None to signal incomparability
             return None
@@ -89,9 +88,9 @@ def _normalize_for_match(value: Any) -> Any:
         # Convert set to sorted tuple with type marker
         try:
             normalized = [_normalize_for_match(item) for item in value]
-            return ('set', tuple(sorted(normalized)))
+            return ("set", tuple(sorted(normalized)))
         except TypeError:
-            return ('set', tuple(value))
+            return ("set", tuple(value))
     return value
 
 
@@ -126,16 +125,18 @@ def is_non_empty_match(a: Any, b: Any) -> bool:
     # Handle string comparisons case-insensitively
     if isinstance(a, str):
         return a.casefold() == b.casefold()
-    
+
     # Handle mapping types - normalize recursively
     if isinstance(a, Mapping):
         try:
             a_norm = _normalize_for_match(a)
             b_norm = _normalize_for_match(b)
-            return encode_json(a_norm, sort_keys=True) == encode_json(b_norm, sort_keys=True)
+            return encode_json(a_norm, sort_keys=True) == encode_json(
+                b_norm, sort_keys=True
+            )
         except Exception:
             return False
-    
+
     # Handle lists - normalize recursively
     if isinstance(a, list):
         # Check if lists have same length
@@ -169,7 +170,7 @@ def is_non_empty_match(a: Any, b: Any) -> bool:
             return False
         except Exception:
             return False
-    
+
     # Handle sets - normalize recursively
     if isinstance(a, set):
         try:

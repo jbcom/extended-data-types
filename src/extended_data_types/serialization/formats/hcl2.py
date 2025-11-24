@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterable
+from collections.abc import Iterable
+from typing import Any
 
 import hcl2
-
-from extended_data_types.core.exceptions import SerializationError
 
 
 class Hcl2Serializer:
@@ -39,7 +38,8 @@ class Hcl2Serializer:
                 return f'"{val}"'
             if isinstance(val, dict):
                 inner_lines = [
-                    (" " * (indent_size * level)) + f"{k} = {_format_value(v, level + 1)}"
+                    (" " * (indent_size * level))
+                    + f"{k} = {_format_value(v, level + 1)}"
                     for k, v in _iter_items(val, sort_keys)
                 ]
                 closing = " " * (indent_size * (level - 1))
@@ -83,12 +83,11 @@ class Hcl2Serializer:
                         val_str = _format_value(v, 2)
                         lines.append(_indent_first(f"{k} = {val_str}", 1))
                 lines.append("}")
+            # Fallback as attribute map
+            elif isinstance(block_body, dict):
+                lines.append(f"{block_type} = {_format_value(block_body,1)}")
             else:
-                # Fallback as attribute map
-                if isinstance(block_body, dict):
-                    lines.append(f'{block_type} = {_format_value(block_body,1)}')
-                else:
-                    lines.append(f'{block_type} = {_format_value(block_body,1)}')
+                lines.append(f"{block_type} = {_format_value(block_body,1)}")
 
         return "\n".join(lines) + ("\n" if lines else "")
 

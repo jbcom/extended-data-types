@@ -62,7 +62,7 @@ class Function:
             if isinstance(arg, str):
                 if arg.isidentifier() or "." in arg:
                     return arg
-                return f"\"{arg}\""
+                return f'"{arg}"'
             return str(arg)
 
         arg_str = ", ".join(_fmt(a) for a in self.args)
@@ -87,7 +87,7 @@ class Block:
     type: BlockType | str
     labels: list[str] = field(default_factory=list)
     attributes: dict[str, Any] = field(default_factory=dict)
-    blocks: list["Block"] = field(default_factory=list)
+    blocks: list[Block] = field(default_factory=list)
     meta_args: MetaArguments = field(default_factory=MetaArguments)
 
 
@@ -99,7 +99,7 @@ class HCLFile:
     required_providers: dict[str, Any] = field(default_factory=dict)
     blocks: list[Block] = field(default_factory=list)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[Block]:
         return iter(self.blocks)
 
 

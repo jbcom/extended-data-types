@@ -79,7 +79,9 @@ def symmetric_difference(sequence1: Sequence[T], sequence2: Sequence[T]) -> set[
     return set(sequence1).symmetric_difference(sequence2)
 
 
-def is_subset(sequence1: Sequence[T], *others: Sequence[T], proper: bool = False) -> bool:
+def is_subset(
+    sequence1: Sequence[T], *others: Sequence[T], proper: bool = False
+) -> bool:
     """Check if first sequence is subset of second.
 
     Args:
@@ -98,7 +100,9 @@ def is_subset(sequence1: Sequence[T], *others: Sequence[T], proper: bool = False
     return all((a < b) if proper else a.issubset(b) for b in targets)
 
 
-def is_superset(sequence1: Sequence[T], *others: Sequence[T], proper: bool = False) -> bool:
+def is_superset(
+    sequence1: Sequence[T], *others: Sequence[T], proper: bool = False
+) -> bool:
     """Check if first sequence is superset of second.
 
     Args:

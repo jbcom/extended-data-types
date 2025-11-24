@@ -10,7 +10,7 @@ from num2words import num2words
 Currency = Literal["USD", "EUR", "GBP", "JPY"]
 
 
-def to_words(number: int | float, group: bool = True) -> str:
+def to_words(number: float, group: bool = True) -> str:
     """Convert number to words.
 
     Args:

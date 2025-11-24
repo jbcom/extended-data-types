@@ -7,13 +7,14 @@ from .git import (
 )
 from .types import EncodingType, FilePath
 
+
 __all__ = [
-    "get_encoding_for_file_path",
-    "is_config_file",
+    "EncodingType",
+    "FilePath",
     "clone_repository_to_temp",
+    "get_encoding_for_file_path",
     "get_parent_repository",
     "get_repository_name",
     "get_repository_root",
-    "EncodingType",
-    "FilePath",
+    "is_config_file",
 ]

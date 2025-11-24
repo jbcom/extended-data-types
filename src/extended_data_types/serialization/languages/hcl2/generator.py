@@ -34,14 +34,20 @@ class HCL2Generator:
             result["terraform"] = tf
 
         for block in hcl_file.blocks:
-            btype = block.type.value if isinstance(block.type, BlockType) else str(block.type)
+            btype = (
+                block.type.value
+                if isinstance(block.type, BlockType)
+                else str(block.type)
+            )
             result.setdefault(btype, {})
             attrs = dict(block.attributes)
             if block.blocks:
                 nested_list = []
                 for nested in block.blocks:
                     nested_attrs = dict(nested.attributes)
-                    nested_attrs.update({k: v for k, v in nested.meta_args.__dict__.items() if v})
+                    nested_attrs.update(
+                        {k: v for k, v in nested.meta_args.__dict__.items() if v}
+                    )
                     nested_list.append(nested_attrs)
                 attrs.update({btype: nested_list})
             if len(block.labels) >= 2:
@@ -76,47 +82,73 @@ class HCL2Generator:
             if self.sort_keys:
                 items = sorted(items)
             for k, v in items:
-                inner.append(f"{self._indent(level+1)}{k} = {self._format_value(v, level+1)}")
+                inner.append(
+                    f"{self._indent(level+1)}{k} = {self._format_value(v, level+1)}"
+                )
             return "{\n" + "\n".join(inner) + f"\n{self._indent(level)}}}"
         if isinstance(value, str) and "\n" in value:
             # Heredoc
             lines = value.rstrip("\n")
             return f"<<-EOT\n{lines}\nEOT"
-        return f"\"{value}\""
+        return f'"{value}"'
 
     def _generate_block(self, block: Block, level: int) -> str:
-        if block.type == BlockType.RESOURCE and not block.labels and "network_interface_id" in block.attributes:
+        if (
+            block.type == BlockType.RESOURCE
+            and not block.labels
+            and "network_interface_id" in block.attributes
+        ):
             header = "network_interface"
         else:
-            header = block.type.value if isinstance(block.type, BlockType) else str(block.type)
+            header = (
+                block.type.value
+                if isinstance(block.type, BlockType)
+                else str(block.type)
+            )
         if block.labels:
             header += " " + " ".join(f'"{lbl}"' for lbl in block.labels)
         lines = [f"{self._indent(level)}{header} {{"]
 
         # Meta arguments
         if block.meta_args.count is not None:
-            lines.append(f"{self._indent(level+1)}count = {self._format_value(block.meta_args.count, level+1)}")
+            lines.append(
+                f"{self._indent(level+1)}count = {self._format_value(block.meta_args.count, level+1)}"
+            )
         if block.meta_args.for_each is not None:
-            lines.append(f"{self._indent(level+1)}for_each = {self._format_value(block.meta_args.for_each, level+1)}")
+            lines.append(
+                f"{self._indent(level+1)}for_each = {self._format_value(block.meta_args.for_each, level+1)}"
+            )
         if block.meta_args.provider is not None:
-            lines.append(f'{self._indent(level+1)}provider = "{block.meta_args.provider}"')
+            lines.append(
+                f'{self._indent(level+1)}provider = "{block.meta_args.provider}"'
+            )
         if block.meta_args.depends_on:
             deps = [f'"{d}"' for d in block.meta_args.depends_on]
             lines.append(f"{self._indent(level+1)}depends_on = [{', '.join(deps)}]")
         if block.meta_args.lifecycle:
             lines.append(f"{self._indent(level+1)}lifecycle {{")
             for k, v in block.meta_args.lifecycle.items():
-                lines.append(f"{self._indent(level+2)}{k} = {self._format_value(v, level+2)}")
+                lines.append(
+                    f"{self._indent(level+2)}{k} = {self._format_value(v, level+2)}"
+                )
             lines.append(f"{self._indent(level+1)}}}")
 
         # Attributes
-        if (block.meta_args.count or block.meta_args.for_each or block.meta_args.provider or block.meta_args.depends_on or block.meta_args.lifecycle) and block.attributes:
+        if (
+            block.meta_args.count
+            or block.meta_args.for_each
+            or block.meta_args.provider
+            or block.meta_args.depends_on
+            or block.meta_args.lifecycle
+        ) and block.attributes:
             lines.append("")
         items = block.attributes.items()
         if self.sort_keys:
             items = sorted(items)
         for key, value in items:
-            lines.append(f"{self._indent(level+1)}{key} = {self._format_value(value, level+1)}")
+            lines.append(
+                f"{self._indent(level+1)}{key} = {self._format_value(value, level+1)}"
+            )
 
         # Nested blocks
         if block.attributes and block.blocks:
@@ -130,11 +162,17 @@ class HCL2Generator:
     def _generate_terraform(self, hcl_file: HCLFile) -> str:
         lines = ["terraform {"]
         if hcl_file.terraform_version:
-            lines.append(f'{self._indent(1)}required_version = "{hcl_file.terraform_version}"')
+            lines.append(
+                f'{self._indent(1)}required_version = "{hcl_file.terraform_version}"'
+            )
         if hcl_file.required_providers:
             lines.append(f"{self._indent(1)}required_providers {{")
             providers = hcl_file.required_providers
-            if isinstance(providers, list) and providers and isinstance(providers[0], dict):
+            if (
+                isinstance(providers, list)
+                and providers
+                and isinstance(providers[0], dict)
+            ):
                 providers = providers[0]
             items = providers.items()
             if self.sort_keys:

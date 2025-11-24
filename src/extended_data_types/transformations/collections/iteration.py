@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import copy
+
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from functools import reduce
-from itertools import cycle, islice, tee
+from itertools import cycle, islice
 from typing import Any, TypeVar, overload
-import copy
 
 from extended_data_types.transformations.core import Transform
 
@@ -40,6 +41,7 @@ def cycle_iterator(iterable: Iterable[T], n: int | None = None) -> Iterator[T]:
     """Legacy helper to cycle over iterable, optionally a fixed number of cycles."""
     if n is not None and n < 0:
         raise ValueError("n must be non-negative")
+
     def _gen() -> Iterator[T]:
         if n is None:
             yield from cycle(iterable)
@@ -47,6 +49,7 @@ def cycle_iterator(iterable: Iterable[T], n: int | None = None) -> Iterator[T]:
         for _ in range(n):
             for item in iterable:
                 yield item
+
     return _gen()
 
 

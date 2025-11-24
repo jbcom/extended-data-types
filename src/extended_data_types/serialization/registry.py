@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Callable, Dict
+from collections.abc import Callable
+from typing import Any
 
 from extended_data_types.serialization.types import SerializerProtocol
 
@@ -11,7 +12,7 @@ class SerializationRegistry:
     """Registry for named serializers."""
 
     def __init__(self) -> None:
-        self._serializers: Dict[str, SerializerProtocol] = {}
+        self._serializers: dict[str, SerializerProtocol] = {}
 
     def register(self, name: str, serializer: SerializerProtocol) -> None:
         key = name.casefold()
@@ -35,16 +36,12 @@ class SerializationRegistry:
 
     def serialize(self, data: Any, name: str, **kwargs: Any) -> str:
         serializer = self.get(name)
-        encode: Callable[..., str] = getattr(serializer, "encode", None) or getattr(
-            serializer, "dumps"
-        )
+        encode: Callable[..., str] = getattr(serializer, "encode", None) or serializer.dumps
         return encode(data, **kwargs)
 
     def deserialize(self, data: str, name: str, **kwargs: Any) -> Any:
         serializer = self.get(name)
-        decode: Callable[..., Any] = getattr(serializer, "decode", None) or getattr(
-            serializer, "loads"
-        )
+        decode: Callable[..., Any] = getattr(serializer, "decode", None) or serializer.loads
         return decode(data, **kwargs)
 
 
@@ -65,6 +62,7 @@ def get_serializer(name: str) -> SerializerProtocol:
 
 def list_serializers() -> list[str]:
     return registry.list()
+
 
 # Backwards-compatible alias expected by tests
 list_formats = list_serializers

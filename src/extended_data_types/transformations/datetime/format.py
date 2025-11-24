@@ -96,9 +96,7 @@ def format_time(
     fmt = format
     if format == "short":
         fmt = "%I:%M %p"
-    elif format == "medium":
-        fmt = "%I:%M:%S %p"
-    elif format == "12h":
+    elif format == "medium" or format == "12h":
         fmt = "%I:%M:%S %p"
     elif format == "24h":
         fmt = "%H:%M:%S"
@@ -176,7 +174,11 @@ def format_datetime(
     else:
         date_str = format_date(dt, date_format, locale)
     time_str = format_time(dt, time_format, locale)
-    separator = " at " if date_format == "long" else (", " if date_format in {"short", "medium"} else " ")
+    separator = (
+        " at "
+        if date_format == "long"
+        else (", " if date_format in {"short", "medium"} else " ")
+    )
 
     if include_timezone and dt.tzinfo:
         return f"{date_str}{separator}{time_str} {dt.tzinfo}"
@@ -201,7 +203,14 @@ def parse_date(text: str, format: str | None = None, locale: str = "en_US") -> d
         datetime.date(2024, 1, 1)
     """
     if format is None:
-        formats = ["%Y-%m-%d", "%m/%d/%Y", "%b %d, %Y", "%B %d, %Y", "%d-%b-%Y", "%d/%m/%Y"]
+        formats = [
+            "%Y-%m-%d",
+            "%m/%d/%Y",
+            "%b %d, %Y",
+            "%B %d, %Y",
+            "%d-%b-%Y",
+            "%d/%m/%Y",
+        ]
         for fmt in formats:
             try:
                 return datetime.strptime(text, fmt).date()
@@ -212,7 +221,12 @@ def parse_date(text: str, format: str | None = None, locale: str = "en_US") -> d
     return datetime.strptime(text, format).date()
 
 
-def parse_time(text: str, format: str | None = None, locale: str = "en_US", timezone: tzinfo | str | None = None) -> time:
+def parse_time(
+    text: str,
+    format: str | None = None,
+    locale: str = "en_US",
+    timezone: tzinfo | str | None = None,
+) -> time:
     """Parse time from string.
 
     Args:
@@ -346,7 +360,9 @@ def from_iso(text: str, timezone: tzinfo | str | None = None) -> date | datetime
         raise ValueError(f"Invalid ISO format: {text}") from e
 
 
-def format_timedelta(delta: timedelta, style: str = "default", units: str | None = None) -> str:
+def format_timedelta(
+    delta: timedelta, style: str = "default", units: str | None = None
+) -> str:
     """Format timedelta to HH:MM:SS."""
     valid_styles = {"default", "short", "medium", "long"}
     if style not in valid_styles:
@@ -427,7 +443,9 @@ def parse_timedelta(text: str) -> timedelta:
         if len(parts) != 3:
             raise ValueError("Invalid timedelta format")
         hours, minutes, seconds = map(int, parts)
-        return sign * timedelta(days=day_part, hours=hours, minutes=minutes, seconds=seconds)
+        return sign * timedelta(
+            days=day_part, hours=hours, minutes=minutes, seconds=seconds
+        )
 
     if ":" in text:
         parts = text.split(":")

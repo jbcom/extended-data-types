@@ -18,7 +18,7 @@ class CustomClass:
     """Test class for custom type checking."""
 
 
-@pytest.fixture()
+@pytest.fixture
 def mixed_list() -> list[Any]:
     """Fixture providing a list with mixed types."""
     return [
@@ -34,7 +34,7 @@ def mixed_list() -> list[Any]:
     ]
 
 
-@pytest.fixture()
+@pytest.fixture
 def mixed_dict() -> dict[str, Any]:
     """Fixture providing a dictionary with mixed value types."""
     return {

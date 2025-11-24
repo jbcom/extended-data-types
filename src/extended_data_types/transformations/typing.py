@@ -18,8 +18,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, TypeVar
 
-from extended_data_types.core.types import typeof
-
 
 K = TypeVar("K")  # Key type for dictionaries
 V = TypeVar("V")  # Value type for collections

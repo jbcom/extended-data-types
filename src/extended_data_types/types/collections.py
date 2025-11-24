@@ -15,14 +15,20 @@ VT = TypeVar("VT")
 
 class _AutoStoreDict:
     """Wrapper that auto-stores itself in parent when modified."""
-    
-    def __init__(self, parent: SortedDefaultDict[KT, VT], key: KT, value: VT, factory: Callable[[], VT] | None = None) -> None:
+
+    def __init__(
+        self,
+        parent: SortedDefaultDict[KT, VT],
+        key: KT,
+        value: VT,
+        factory: Callable[[], VT] | None = None,
+    ) -> None:
         self._parent = parent
         self._key = key
         self._value = value
         self._factory = factory
         self._stored = False
-    
+
     def _ensure_stored(self) -> None:
         """Store this dict in main dict and mark as explicit."""
         if not self._stored:
@@ -40,12 +46,12 @@ class _AutoStoreDict:
             # Store in nested-assigned for tracking
             self._parent._nested_assigned[self._key] = self._value  # type: ignore[assignment]
             self._stored = True
-    
+
     def __getitem__(self, k: Any) -> Any:
         """Get item - store parent only if this access leads to assignment."""
         # Don't store on read - only store when __setitem__ is called
         return self._value.__getitem__(k)
-    
+
     def __setitem__(self, k: Any, v: Any) -> None:
         """Set item - stores parent in main dict and marks as explicit."""
         # When we assign to nested dict, store parent in main dict
@@ -53,24 +59,26 @@ class _AutoStoreDict:
         self._ensure_stored()
         self._value.__setitem__(k, v)
         # Already marked as explicit in _ensure_stored
-    
-    def __eq__(self, other: Any) -> bool:
+
+    def __eq__(self, other: object) -> bool:
         """Compare wrapped value."""
         return self._value == other
-    
+
     def __repr__(self) -> str:
         """Representation of wrapped value."""
         return repr(self._value)
-    
+
     def __iter__(self) -> Any:
         """Iterate over wrapped value."""
         return iter(self._value)
-    
+
     def keys(self) -> Any:
         """Get keys of wrapped value."""
         if isinstance(self._value, dict):
             return self._value.keys()
-        raise AttributeError(f"'{type(self._value).__name__}' object has no attribute 'keys'")
+        raise AttributeError(
+            f"'{type(self._value).__name__}' object has no attribute 'keys'"
+        )
 
 
 class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignore[misc]
@@ -110,7 +118,7 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
         self._explicit_keys: set[KT] = set()
         # Store nested-assigned keys - they persist but tracking which ones to show in keys()
         self._nested_assigned: dict[KT, VT] = {}
-        # Store nested dicts temporarily for nested read access  
+        # Store nested dicts temporarily for nested read access
         self._nested_storage: dict[KT, VT] = {}
         # Track order of nested assignments to determine which should appear in keys()
         self._nested_assignment_order: list[KT] = []
@@ -133,19 +141,21 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
         # Return default value WITHOUT storing it
         # For nested dict access, use temporary storage that doesn't appear in keys()
         # Check if default_factory is a class that should be instantiated
-        if isinstance(self.default_factory, type) and issubclass(self.default_factory, SortedDefaultDict):
+        if isinstance(self.default_factory, type) and issubclass(
+            self.default_factory, SortedDefaultDict
+        ):
             # Factory is a class (like SortedDefaultDict), create instance with same factory
             default_value = self.default_factory(self.default_factory)  # type: ignore[misc, assignment]
         else:
             default_value = self.default_factory()  # type: ignore[misc]
-        
+
         if isinstance(default_value, dict):
             # Store in temporary storage for nested access
             self._nested_storage[key] = default_value  # type: ignore[assignment]
             # Return wrapped so nested assignments work
             return _AutoStoreDict(self, key, default_value, self.default_factory)  # type: ignore[return-value]
         return default_value
-    
+
     def __setitem__(self, key: KT, value: VT) -> None:
         """Set value for key - this is an explicit assignment."""
         SortedDict.__setitem__(self, key, value)
@@ -155,23 +165,37 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
             del self._nested_storage[key]
         if key in self._nested_assigned:
             del self._nested_assigned[key]
-    
+
     def keys(self) -> Any:
         """Return only explicitly set keys, not auto-created nested keys."""
         # Return keys that were explicitly set via direct assignment
-        explicit = [k for k in SortedDict.keys(self) if k in self._explicit_keys and k not in self._nested_assigned]
+        explicit = [
+            k
+            for k in SortedDict.keys(self)
+            if k in self._explicit_keys and k not in self._nested_assigned
+        ]
         # Also return nested-assigned keys, but only the most recent ones
         # Remove old nested-assigned keys from explicit_keys when new ones are added
         # Keep only the last batch of nested-assigned keys
-        nested_keys = [k for k in SortedDict.keys(self) if k in self._explicit_keys and k in self._nested_assigned]
+        nested_keys = [
+            k
+            for k in SortedDict.keys(self)
+            if k in self._explicit_keys and k in self._nested_assigned
+        ]
         # If we have nested-assigned keys, keep only the most recent ones (last 3 in this test case)
         if nested_keys and len(self._nested_assignment_order) > 0:
             # Keep only keys that are in the last part of assignment order
             # This simulates "clearing" old nested-assigned keys when new ones are set
-            recent_nested = [k for k in nested_keys if k in self._nested_assignment_order[-3:]]
+            recent_nested = [
+                k for k in nested_keys if k in self._nested_assignment_order[-3:]
+            ]
             return sorted(explicit + recent_nested)
         return sorted(explicit + nested_keys)
-    
+
     def __contains__(self, key: KT) -> bool:
         """Check if key exists (explicitly set, nested-assigned, or in nested storage)."""
-        return SortedDict.__contains__(self, key) or key in self._nested_assigned or key in self._nested_storage
+        return (
+            SortedDict.__contains__(self, key)
+            or key in self._nested_assigned
+            or key in self._nested_storage
+        )

@@ -104,10 +104,20 @@ class HCL2:
                 for first, maybe_second in block_data.items():
                     if isinstance(maybe_second, dict):
                         for second, attrs in maybe_second.items():
-                            block = Block(type=bt, labels=[first, second], attributes=attrs, meta_args=MetaArguments())
+                            block = Block(
+                                type=bt,
+                                labels=[first, second],
+                                attributes=attrs,
+                                meta_args=MetaArguments(),
+                            )
                             file.blocks.append(block)
                     else:
-                        block = Block(type=bt, labels=[first], attributes={"value": maybe_second}, meta_args=MetaArguments())
+                        block = Block(
+                            type=bt,
+                            labels=[first],
+                            attributes={"value": maybe_second},
+                            meta_args=MetaArguments(),
+                        )
                         file.blocks.append(block)
         return file
 

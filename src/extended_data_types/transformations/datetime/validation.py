@@ -5,8 +5,8 @@ from __future__ import annotations
 import calendar
 
 from datetime import date, datetime, time, timedelta
-from zoneinfo import ZoneInfo
 from typing import Literal, TypeVar
+from zoneinfo import ZoneInfo
 
 from extended_data_types.transformations.core import Transform
 
@@ -26,7 +26,9 @@ def _to_int(value: int | str) -> int:
     raise TypeError("Value must be int or numeric string")
 
 
-def is_valid_date(year: int | str, month: int | str | None = None, day: int | str | None = None) -> bool:
+def is_valid_date(
+    year: int | str, month: int | str | None = None, day: int | str | None = None
+) -> bool:
     """Check if date is valid.
 
     Args:
@@ -53,7 +55,10 @@ def is_valid_date(year: int | str, month: int | str | None = None, day: int | st
 
 
 def is_valid_time(
-    hour: int | str, minute: int | str | None = None, second: int | str = 0, microsecond: int | str = 0
+    hour: int | str,
+    minute: int | str | None = None,
+    second: int | str = 0,
+    microsecond: int | str = 0,
 ) -> bool:
     """Check if time is valid.
 
@@ -168,7 +173,12 @@ def compare_dates(
     return "before" if date1 < date2 else "after"
 
 
-def normalize_date(dt: DT | int, month: int | None = None, day: int | None = None, mode: Literal["start", "end", "workday"] = "start") -> DT:
+def normalize_date(
+    dt: DT | int,
+    month: int | None = None,
+    day: int | None = None,
+    mode: Literal["start", "end", "workday"] = "start",
+) -> DT:
     """Normalize date/datetime to specific point.
 
     Args:

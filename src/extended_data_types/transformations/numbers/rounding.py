@@ -46,9 +46,17 @@ def round_to(number: N, precision: int = 0, mode: RoundingMode = "nearest") -> N
     n = float(number)
 
     if mode == "up":
-        result = math.ceil(n * factor) / factor if precision >= 0 else math.ceil(n / factor) * factor
+        result = (
+            math.ceil(n * factor) / factor
+            if precision >= 0
+            else math.ceil(n / factor) * factor
+        )
     elif mode == "down":
-        result = math.floor(n * factor) / factor if precision >= 0 else math.floor(n / factor) * factor
+        result = (
+            math.floor(n * factor) / factor
+            if precision >= 0
+            else math.floor(n / factor) * factor
+        )
     elif mode == "ceil":
         result = math.ceil(n)
     elif mode == "floor":
@@ -100,7 +108,9 @@ def quantize(number: N, step: N, mode: RoundingMode = "nearest") -> N:
     return lower if number - lower <= upper - number else upper
 
 
-def round_to_increment(number: N, increment: float, mode: RoundingMode = "nearest") -> N:
+def round_to_increment(
+    number: N, increment: float, mode: RoundingMode = "nearest"
+) -> N:
     """Round to the nearest increment (legacy helper)."""
     if increment <= 0:
         raise ValueError("Increment must be positive")
@@ -109,6 +119,7 @@ def round_to_increment(number: N, increment: float, mode: RoundingMode = "neares
     if isinstance(result, float):
         # Round to avoid floating point errors
         from decimal import Decimal
+
         result = float(Decimal(str(result)).quantize(Decimal(str(increment))))
     return result
 
@@ -122,6 +133,7 @@ def round_to_fraction(number: N, denominator: int, mode: RoundingMode = "nearest
     # Round to avoid floating point precision issues - round to 5 decimal places
     if isinstance(result, float):
         from decimal import Decimal
+
         # Round to 5 decimal places to match test expectations
         result = float(Decimal(str(result)).quantize(Decimal("1e-5")))
     return result

@@ -62,7 +62,7 @@ class CollectionSplitter:
     def split_by_predicate(
         self,
         items: Sequence[T],
-        predicate: callable[[T], bool],
+        predicate: Callable[[T], bool],
     ) -> tuple[list[T], list[T]]:
         """Split sequence based on predicate function.
 

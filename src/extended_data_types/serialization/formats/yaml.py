@@ -12,14 +12,24 @@ from extended_data_types.serialization.formats.base import _sanitize
 class YamlSerializer:
     """YAML serializer."""
 
-    def encode(self, data: Any, *, indent_size: int = 2, sort_keys: bool = False, default_flow_style: bool | None = None, **kwargs: Any) -> str:
+    def encode(
+        self,
+        data: Any,
+        *,
+        indent_size: int = 2,
+        sort_keys: bool = False,
+        default_flow_style: bool | None = None,
+        **kwargs: Any,
+    ) -> str:
         """Serialize data to YAML."""
         sanitized = _sanitize(data)
         return yaml.safe_dump(
             sanitized,
             sort_keys=sort_keys,
             indent=kwargs.get("indent", indent_size),
-            default_flow_style=False if default_flow_style is None else default_flow_style,
+            default_flow_style=(
+                False if default_flow_style is None else default_flow_style
+            ),
             width=1000,
         )
 
@@ -37,4 +47,3 @@ class YamlSerializer:
     def loads(self, data: str, **kwargs: Any) -> Any:
         """Alias for decode."""
         return self.decode(data, **kwargs)
-

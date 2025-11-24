@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+
 from typing import Any
 
 from extended_data_types.serialization.formats.base import _sanitize
@@ -27,4 +28,3 @@ class IniSerializer:
     def loads(self, data: str, **kwargs: Any) -> Any:
         """Alias for decode."""
         return self.decode(data, **kwargs)
-

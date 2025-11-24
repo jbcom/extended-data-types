@@ -30,7 +30,7 @@ def is_nothing(v: Any) -> bool:
         >>> is_nothing("text")
         False
     """
-    empties = (None, "", {}, [])
+    empties: tuple[None | str | dict[str, Any] | list[Any], ...] = (None, "", {}, [])
 
     try:
         if v in empties:

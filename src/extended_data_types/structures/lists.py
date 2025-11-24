@@ -89,7 +89,7 @@ class ListHandler:
                 allow_item = item in allowlist
             else:  # allowlist is empty []
                 allow_item = False
-            
+
             if allow_item and item not in denylist:
                 filtered.append(item)
 
@@ -124,4 +124,8 @@ class ListHandler:
         if keep_order:
             return list(dict.fromkeys(items))
 
-        return sorted(set(items))
+        # Try to sort, but fallback to unsorted set if elements are not comparable
+        try:
+            return sorted(set(items))
+        except TypeError:
+            return list(set(items))

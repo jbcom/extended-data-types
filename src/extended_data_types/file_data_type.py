@@ -15,16 +15,15 @@ from pathlib import Path
 
 
 if sys.version_info >= (3, 10):
-    from typing import TypeAlias, Union
+    from typing import TypeAlias
 else:
-    from typing import Union
 
-    from typing_extensions import TypeAlias
+    from typing import TypeAlias
 
 from git import GitCommandError, InvalidGitRepositoryError, NoSuchPathError, Repo
 
 
-FilePath: TypeAlias = Union[str, os.PathLike[str]]
+FilePath: TypeAlias = str | os.PathLike[str]
 """Type alias for file paths that can be represented as strings or os.PathLike objects."""
 
 
@@ -143,8 +142,12 @@ def match_file_extensions(
     Returns:
         bool: True if the file's extension is allowed and not denied, otherwise False.
     """
-    allowed_extensions = [ext.removeprefix(".").lower() for ext in (allowed_extensions or [])]
-    denied_extensions = [ext.removeprefix(".").lower() for ext in (denied_extensions or [])]
+    allowed_extensions = [
+        ext.removeprefix(".").lower() for ext in (allowed_extensions or [])
+    ]
+    denied_extensions = [
+        ext.removeprefix(".").lower() for ext in (denied_extensions or [])
+    ]
 
     p = Path(p)
     suffix = (

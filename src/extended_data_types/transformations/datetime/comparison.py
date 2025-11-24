@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, time, timedelta
-from typing import Iterable, Literal
+from collections.abc import Iterable
+from datetime import date, datetime, time
+from typing import Literal
 
 from extended_data_types.transformations.datetime.arithmetic import round_time
+
 
 CompareUnit = Literal["second", "minute", "hour", "day"]
 
@@ -18,7 +20,9 @@ def _normalize(value: date | datetime | time) -> datetime:
     return datetime.combine(date.today(), value)
 
 
-def compare_dates(a: date | datetime | time, b: date | datetime | time, unit: CompareUnit = "second") -> int:
+def compare_dates(
+    a: date | datetime | time, b: date | datetime | time, unit: CompareUnit = "second"
+) -> int:
     """Compare two date/time values with optional unit granularity."""
     if unit not in {"second", "minute", "hour", "day"}:
         raise ValueError(f"Unsupported unit: {unit}")
