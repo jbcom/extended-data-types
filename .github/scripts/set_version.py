@@ -44,13 +44,19 @@ def main():
     init_file = find_init_file()
     content = init_file.read_text()
 
-    # Replace version line
-    lines = content.split("\n")
+    lines = content.splitlines(keepends=True)
     for i, line in enumerate(lines):
         if line.startswith("__version__"):
-            lines[i] = f'__version__ = "{new_version}"'
+            # Preserve original line ending
+            line_ending = ""
+            if line.endswith("\r\n"):
+                line_ending = "\r\n"
+            elif line.endswith("\n"):
+                line_ending = "\n"
+            lines[i] = f'__version__ = "{new_version}"{line_ending}'
             break
-
+    
+    init_file.write_text("".join(lines))
     init_file.write_text("\n".join(lines))
 
     # Output for GitHub Actions
