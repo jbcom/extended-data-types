@@ -10,7 +10,7 @@ try:
     from hcl2.api import loads  # type: ignore[import]
 except ImportError:
     try:
-        import hcl2
+        import hcl2  # type: ignore[import]
         loads = hcl2.loads  # type: ignore[attr-defined]
     except (ImportError, AttributeError):
         def loads(s: str) -> dict[str, Any]:  # type: ignore[misc]

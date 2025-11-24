@@ -201,7 +201,7 @@ def to_json_dict(obj: Any) -> JsonDict:
             return cast(
                 JsonDict,
                 {
-                    f.name: to_json_dict(getattr(obj, f.name))
+                    f.name: to_json_dict(getattr(obj, f.name))  # type: ignore[arg-type]
                     for f in fields(obj)  # type: ignore[arg-type]
                 },
             )

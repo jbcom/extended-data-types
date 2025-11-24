@@ -11,8 +11,8 @@ import json
 
 from typing import Any, cast
 
-from hcl2 import dumps as hcl2_dumps
-from hcl2 import loads as hcl2_loads
+from hcl2 import dumps as hcl2_dumps  # type: ignore[import]
+from hcl2 import loads as hcl2_loads  # type: ignore[import]
 
 from extended_data_types.core.exceptions import SerializationError
 from extended_data_types.core.types import JsonDict, convert_special_types

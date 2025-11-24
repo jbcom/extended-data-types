@@ -68,9 +68,9 @@ class _AutoStoreDict:
         """Representation of wrapped value."""
         return repr(self._value)
 
-    def __iter__(self) -> Any:
+    def __iter__(self) -> Any:  # type: ignore[misc]
         """Iterate over wrapped value."""
-        return iter(self._value)  # type: ignore
+        return iter(self._value)  # type: ignore[misc]
 
     def keys(self) -> Any:
         """Get keys of wrapped value."""

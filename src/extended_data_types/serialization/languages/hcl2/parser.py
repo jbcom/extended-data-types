@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-import hcl2
+import hcl2  # type: ignore[import]
 
 from .types import Block, BlockType, Expression, HCLFile, MetaArguments
 
@@ -26,9 +26,9 @@ class HCL2Parser:
             file.terraform_version = tf.get("required_version")
             providers = tf.get("required_providers", {})
             if (
-                isinstance(providers, list)
+                isinstance(providers, list)  # type: ignore[arg-type]
                 and providers
-                and isinstance(providers[0], dict)
+                and isinstance(providers[0], dict)  # type: ignore[arg-type]
             ):
                 providers = providers[0]
             file.required_providers = providers

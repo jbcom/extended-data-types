@@ -153,17 +153,7 @@ def get_file(
     errors: str = "strict",
     raise_on_not_found: bool = False,
     logger: LoggerProtocol | None = None,
-) -> ReturnPathType: ...
-
-@overload
-def get_file(
-    file_path: FilePath,
-    decode: Literal[False],
-    charset: str = "utf-8",
-    errors: str = "strict",
-    raise_on_not_found: bool = False,
-    logger: LoggerProtocol | None = None,
-) -> str: ...
+) -> ReturnPathType: ...  # type: ignore[misc]
 
 def get_file(
     file_path: FilePath,
