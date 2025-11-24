@@ -5,7 +5,17 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Any
 
-import hcl2
+# Use public API
+try:
+    from hcl2.api import loads  # type: ignore[import]
+except ImportError:
+    try:
+        import hcl2
+        loads = hcl2.loads  # type: ignore[attr-defined]
+    except (ImportError, AttributeError):
+        def loads(s: str) -> dict[str, Any]:  # type: ignore[misc]
+            """Fallback."""
+            raise ImportError("python-hcl2 not installed")
 
 
 class Hcl2Serializer:

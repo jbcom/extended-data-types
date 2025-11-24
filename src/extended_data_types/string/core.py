@@ -33,7 +33,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from extended_data_types.core.conversion import TypeRegistry
+# Removed import of non-existent module
+# from extended_data_types.core.conversion import TypeRegistry
 
 from .types import ExtendedString, Pattern
 
