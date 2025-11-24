@@ -60,6 +60,9 @@ def from_roman(numeral: str) -> int:
         else:
             raise ValueError(f"Invalid Roman numeral: {numeral}")
     
+    if to_roman(result) != numeral:
+        raise ValueError(f"Invalid or non-canonical Roman numeral: {numeral}")
+    
     return result
 
 
