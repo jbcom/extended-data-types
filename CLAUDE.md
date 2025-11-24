@@ -136,11 +136,6 @@ Both APIs are fully supported and tested. The main `__init__.py` exports both fo
 - Git repository operations via GitPython
 - Safe file operations with type preservation
 
-#### CLI (`src/extended_data_types/cli/`)
-- Command-line interface for format conversion and validation
-- Uses Click framework
-- Supports format conversion between YAML/JSON/TOML/HCL2
-
 ### Import Patterns
 
 ```python

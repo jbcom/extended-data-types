@@ -7,8 +7,6 @@ different string formats.
 
 from __future__ import annotations
 
-import sys
-
 from urllib.parse import urlparse
 
 import inflection
@@ -163,8 +161,6 @@ def titleize_name(name: str) -> str:
 def removeprefix(string: str, prefix: str) -> str:
     """Removes the specified prefix from the string if present.
 
-    For Python versions less than 3.9, this function mimics str.removeprefix.
-
     Args:
         string: The string from which to remove the prefix.
         prefix: The prefix to remove.
@@ -178,20 +174,11 @@ def removeprefix(string: str, prefix: str) -> str:
         >>> removeprefix("text", "other")
         'text'
     """
-    if sys.version_info >= (3, 9):
-        return string.removeprefix(prefix)
-
-    if prefix and string.startswith(prefix):
-        return string[len(prefix) :]
-
-    return string
+    return string.removeprefix(prefix)
 
 
 def removesuffix(string: str, suffix: str) -> str:
     """Removes the specified suffix from the string if present.
-
-    For Python versions less than 3.9, this function mimics str.removesuffix.
-    Only removes the suffix if it's an exact match at the end of the string.
 
     Args:
         string: The string from which to remove the suffix.
@@ -208,25 +195,4 @@ def removesuffix(string: str, suffix: str) -> str:
     """
     if not suffix:
         return string
-    
-    # Only remove if string ends with exactly the suffix
-    # AND the suffix is not part of a larger suffix pattern
-    if not string.endswith(suffix):
-        return string
-    
-    # Check if suffix is preceded by underscore - if so, don't remove
-    # This handles cases like "text_different_suffix" with suffix "suffix"
-    # where "suffix" is part of "_suffix" and shouldn't be removed alone
-    if len(string) > len(suffix):
-        char_before = string[-len(suffix) - 1]
-        # If suffix is preceded by underscore, it's part of a larger suffix
-        # Only remove if the full suffix including underscore matches
-        if char_before == "_":
-            # Check if we're trying to remove just "suffix" from "_suffix"
-            # In that case, don't remove it unless the full "_suffix" matches
-            return string
-    
-    # Remove the suffix
-    if sys.version_info >= (3, 9):
-        return string.removesuffix(suffix)
-    return string[: -len(suffix)]
+    return string.removesuffix(suffix)

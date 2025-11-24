@@ -107,6 +107,14 @@ def test_unhump_map():
     result = unhump_map(test_map, drop_without_prefix="prefix")
     assert result == {"prefix_camel": 1}
 
+    # Nested prefix dropping propagates to children
+    nested_prefixed = {
+        "prefixCamel": {"prefixChild": 2, "noPrefixChild": 3},
+        "noPrefixCamel": {"prefixChild": 4},
+    }
+    result = unhump_map(nested_prefixed, drop_without_prefix="prefix")
+    assert result == {"prefix_camel": {"prefix_child": 2}}
+
 
 def test_filter_map():
     """Test filter_map function."""

@@ -3,9 +3,6 @@
 
 from typing import TypeAlias
 
-# CLI utilities
-from .cli import ConfigManager, convert_format, format_output, validate_schema
-
 # Legacy utilities (v5 API)
 from .base64_utils import base64_decode, base64_encode
 from .export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
@@ -154,11 +151,6 @@ __all__ = [
     "SchemaValidator",
     # Matching
     "Matcher",
-    # CLI
-    "convert_format",
-    "validate_schema",
-    "ConfigManager",
-    "format_output",
     # Legacy compatibility utilities
     "base64_decode",
     "base64_encode",

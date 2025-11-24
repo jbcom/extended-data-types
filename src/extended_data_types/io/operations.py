@@ -9,7 +9,8 @@ from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any, TypeVar, cast
 
-import requests
+from urllib import request
+from urllib.error import HTTPError, URLError
 
 from filelock import FileLock, Timeout
 
@@ -153,9 +154,11 @@ def get_file(
     # Handle URLs
     if is_url(path_str):
         logger.info("Downloading from URL: %s", path_str)
-        response = requests.get(path_str)
-        response.raise_for_status()
-        content = response.text
+        try:
+            with request.urlopen(path_str) as response:
+                content = response.read().decode(charset, errors=errors)
+        except (HTTPError, URLError) as exc:
+            raise OSError(f"Failed to download {path_str}: {exc}") from exc
     else:
         # Handle local files
         path = Path(path_str)

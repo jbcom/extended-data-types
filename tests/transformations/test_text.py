@@ -145,11 +145,12 @@ def test_removesuffix():
     """Test removesuffix function."""
     # Basic suffix removal
     assert removesuffix("text_suffix", "_suffix") == "text"
+    assert removesuffix("text_suffix", "suffix") == "text_"
     assert removesuffix("textsuffix", "suffix") == "text"
+    assert removesuffix("text_different_suffix", "suffix") == "text_different_"
 
     # No suffix match
     assert removesuffix("text", "suffix") == "text"
-    assert removesuffix("text_different_suffix", "suffix") == "text_different_suffix"
 
     # Empty strings
     assert removesuffix("", "") == ""
@@ -158,3 +159,15 @@ def test_removesuffix():
 
     # Suffix same as string
     assert removesuffix("suffix", "suffix") == ""
+
+    # Aligns with built-in removesuffix when available (Python >= 3.9)
+    if hasattr(str, "removesuffix"):
+        cases = [
+            ("text_suffix", "_suffix"),
+            ("text_suffix", "suffix"),
+            ("textsuffix", "suffix"),
+            ("text_different_suffix", "suffix"),
+            ("text", "suffix"),
+        ]
+        for original, suffix in cases:
+            assert removesuffix(original, suffix) == original.removesuffix(suffix)

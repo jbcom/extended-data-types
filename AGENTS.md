@@ -59,16 +59,6 @@ tox -e pre-commit
 .venv/bin/pytest -k <pattern>
 ```
 
-### CLI Testing
-
-```bash
-# From repo root
-.venv/bin/python -m extended_data_types.cli --help
-
-# Invoke specific commands
-.venv/bin/python -m extended_data_types.cli.commands.<command>
-```
-
 ### Code Quality
 
 ```bash
@@ -271,4 +261,3 @@ Single `ci.yml` workflow handles both CI and releases, eliminating `workflow_run
 - **PEP 8**: https://pep8.org/
 - **Project Repository**: https://github.com/jbcom/extended-data-types
 - **Documentation**: https://jbcom.github.io/extended-data-types/
-

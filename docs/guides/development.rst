@@ -40,17 +40,6 @@ Testing
     # Run with pattern matching
     .venv/bin/pytest -k <pattern>
 
-CLI Testing
-~~~~~~~~~~~
-
-.. code-block:: bash
-
-    # From repo root
-    .venv/bin/python -m extended_data_types.cli --help
-
-    # Invoke specific commands
-    .venv/bin/python -m extended_data_types.cli.commands.<command>
-
 Code Quality
 ~~~~~~~~~~~~
 

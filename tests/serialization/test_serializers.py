@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -15,6 +15,7 @@ from extended_data_types.serialization.registry import (
     register_serializer,
     serialize,
 )
+from extended_data_types.serialization.formats.base import _sanitize
 
 
 class MockSerializer:
@@ -43,6 +44,12 @@ def complex_data() -> dict[str, Any]:
             "path": Path("/test/path"),
         },
     }
+
+
+def test_sanitize_datetime_preserves_time() -> None:
+    """Ensure datetime serialization retains time and timezone components."""
+    dt = datetime(2024, 1, 2, 3, 4, 5, tzinfo=timezone.utc)
+    assert _sanitize(dt) == "2024-01-02T03:04:05+00:00"
 
 
 class TestSerializerRegistry:

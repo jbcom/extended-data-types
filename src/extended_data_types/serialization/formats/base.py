@@ -40,7 +40,7 @@ def _sanitize(data: Any) -> Any:
     if isinstance(converted, Path):
         return str(converted)
     if isinstance(converted, datetime):
-        return converted.date().isoformat()
+        return converted.isoformat()
     if isinstance(converted, (date, time)):
         return converted.isoformat()
     if isinstance(converted, (bytes, bytearray)):
@@ -55,4 +55,3 @@ def _sanitize(data: Any) -> Any:
     if isinstance(converted, dict):
         return {k: _sanitize(v) for k, v in converted.items()}
     return converted
-

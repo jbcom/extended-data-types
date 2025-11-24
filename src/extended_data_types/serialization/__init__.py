@@ -75,11 +75,8 @@ def deserialize(content: str, format_name: str | None = None) -> Any:
     Raises:
         SerializationError: If format is unsupported or deserialization fails
     """
-    if not format_name:
-        format_name = guess_format(content)
-
-    fmt = format_name or guess_format(content)
-    raw = registry_deserialize(content, fmt)
+    detected_format = format_name or guess_format(content)
+    raw = registry_deserialize(content, detected_format)
     return reconstruct_from_serialized(raw)
 
 

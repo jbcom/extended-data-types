@@ -213,7 +213,9 @@ def unhump_map(
 
         unhumped_key = inflection.underscore(k)
         if isinstance(v, Mapping):
-            unhumped[unhumped_key] = unhump_map(v)
+            unhumped[unhumped_key] = unhump_map(
+                v, drop_without_prefix=drop_without_prefix
+            )
             continue
         unhumped[unhumped_key] = v
     return unhumped
