@@ -37,7 +37,7 @@ def main():
     run_number = os.environ.get("GITHUB_RUN_NUMBER", "0")
 
     # Generate CalVer: YYYY.MM.BUILD
-    now = datetime.now(timezone.utc)
+    new_version = f"{now.year}.{now.month:02d}.{run_number}"
     new_version = f"{now.year}.{now.month}.{run_number}"
 
     # Find and update __init__.py
