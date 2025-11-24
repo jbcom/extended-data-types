@@ -69,16 +69,24 @@ def from_roman(numeral: str) -> int:
 def number_to_words(number: int | float, lang: str = "en") -> str:
     """Convert number to words.
     
+    Supports both integers and floats. Floats are converted using "point" notation.
+    
     Args:
-        number: Number to convert
-        lang: Language code (default: 'en')
+        number: Integer or float to convert
+        lang: Language code (default: 'en'). Supported languages include 'en', 'es', 
+              'fr', 'de', and many others (see num2words documentation)
         
     Returns:
         Number as words
         
-    Example:
+    Raises:
+        NotImplementedError: If the specified language is not supported by num2words
+        
+    Examples:
         >>> number_to_words(42)
         'forty-two'
+        >>> number_to_words(42.5)
+        'forty-two point five'
     """
     return num2words(number, lang=lang)
 
@@ -87,11 +95,15 @@ def number_to_ordinal(number: int, lang: str = "en") -> str:
     """Convert number to ordinal words.
     
     Args:
-        number: Number to convert
-        lang: Language code (default: 'en')
+        number: Integer to convert
+        lang: Language code (default: 'en'). Supported languages include 'en', 'es', 
+              'fr', 'de', and many others (see num2words documentation)
         
     Returns:
         Ordinal as words
+        
+    Raises:
+        NotImplementedError: If the specified language is not supported by num2words
         
     Example:
         >>> number_to_ordinal(42)
@@ -105,11 +117,17 @@ def number_to_currency(amount: float, currency: str = "USD", lang: str = "en") -
     
     Args:
         amount: Amount to convert
-        currency: Currency code (default: 'USD')
-        lang: Language code (default: 'en')
+        currency: Currency code (default: 'USD'). Common codes include 'USD', 'EUR', 
+                  'GBP', etc. Supported currencies vary by language
+        lang: Language code (default: 'en'). Supported languages include 'en', 'es', 
+              'fr', 'de', and many others (see num2words documentation)
         
     Returns:
         Currency as words
+        
+    Raises:
+        NotImplementedError: If the specified language or currency code is not 
+                             supported by num2words for the given language
         
     Example:
         >>> number_to_currency(42.50)
