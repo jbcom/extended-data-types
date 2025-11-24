@@ -192,7 +192,7 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
             return sorted(explicit + recent_nested)
         return sorted(explicit + nested_keys)
 
-    def __contains__(self, key: object) -> bool:
+    def __contains__(self, key: KT) -> bool:
         """Check if key exists (explicitly set, nested-assigned, or in nested storage)."""
         return (
             SortedDict.__contains__(self, key)
