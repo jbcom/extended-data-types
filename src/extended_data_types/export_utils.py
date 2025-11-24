@@ -12,12 +12,10 @@ import pathlib
 from collections.abc import Mapping
 from typing import Any
 
-from ruamel.yaml import scalarstring
-
 from .json_utils import encode_json
 from .toml_utils import encode_toml
 from .type_utils import convert_special_types, strtobool
-from .yaml_utils import encode_yaml, is_yaml_data
+from .yaml_utils import LiteralScalarString, encode_yaml, is_yaml_data
 
 
 def wrap_raw_data_for_export(
@@ -139,6 +137,6 @@ def make_raw_data_export_safe(raw_data: Any, export_to_yaml: bool = False) -> An
         or "||" in exported_data
         or "&&" in exported_data
     ):
-        return scalarstring.LiteralScalarString(exported_data)
+        return LiteralScalarString(exported_data)
 
     return exported_data
