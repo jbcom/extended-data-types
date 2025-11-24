@@ -37,7 +37,7 @@ def main():
     run_number = os.environ.get("GITHUB_RUN_NUMBER", "0")
 
     # Generate CalVer: YYYY.MM.BUILD
-    new_version = f"{now.year}.{now.month:02d}.{run_number}"
+    now = datetime.now(timezone.utc)
     new_version = f"{now.year}.{now.month}.{run_number}"
 
     # Find and update __init__.py
@@ -46,7 +46,9 @@ def main():
 
     lines = content.splitlines(keepends=True)
     for i, line in enumerate(lines):
-        if line.startswith("__version__"):
+        # Match only "__version__ " assignments, not __version_info__ or similar
+        stripped = line.strip()
+        if stripped.startswith("__version__ ") or stripped == "__version__":
             # Preserve original line ending
             line_ending = ""
             if line.endswith("\r\n"):
@@ -57,7 +59,6 @@ def main():
             break
     
     init_file.write_text("".join(lines))
-    init_file.write_text("\n".join(lines))
 
     # Output for GitHub Actions
     print(f"VERSION={new_version}")
