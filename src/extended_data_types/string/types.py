@@ -17,7 +17,7 @@ import re
 
 from collections import UserString
 from pathlib import Path
-from typing import Literal, Union
+from typing import Literal, Union, overload
 
 
 # Type aliases
@@ -25,6 +25,27 @@ StrOrBytes = Union[str, bytes, bytearray, memoryview]
 StrPath = Union[str, Path]
 CaseStyle = Literal["camel", "pascal", "snake", "kebab", "title", "upper", "lower"]
 FormatPattern = Union[str, re.Pattern[str]]
+
+@overload
+def convert_case(text: str, style: CaseStyle) -> str: ...
+
+def convert_case(text: str, style: CaseStyle) -> str:
+    """Convert string case."""
+    if style == "camel":
+        return text.lower().replace(" ", "")
+    if style == "pascal":
+        return text.title().replace(" ", "")
+    if style == "snake":
+        return text.lower().replace(" ", "_")
+    if style == "kebab":
+        return text.lower().replace(" ", "-")
+    if style == "title":
+        return text.title()
+    if style == "upper":
+        return text.upper()
+    if style == "lower":
+        return text.lower()
+    raise ValueError(f"Unsupported case style: {style}")
 
 
 class ExtendedString(UserString):

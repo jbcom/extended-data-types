@@ -18,7 +18,7 @@ import decimal
 
 from collections.abc import Mapping
 from pathlib import Path
-from typing import Any, TypeVar, Union
+from typing import Any, TypeVar, Union, get_origin
 
 import attrs
 import cattrs
@@ -214,6 +214,19 @@ def convert_special_types(data: Any) -> Any:
         {'date': '2024-01-01'}
     """
     return converter.unstructure(data)
+
+def is_generic_type(obj: Any, base_type: type) -> bool:
+    """Check if an object is a generic type of a specific base type.
+
+    Args:
+        obj: Object to check
+        base_type: Base type to compare against
+
+    Returns:
+        True if obj is a generic type of base_type, False otherwise
+    """
+    origin = get_origin(obj)
+    return origin is not None and origin is base_type
 
 
 def reconstruct_special_type(value: Any, target_type: type[T] | None = None) -> T:

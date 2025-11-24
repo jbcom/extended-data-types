@@ -142,10 +142,10 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
         # For nested dict access, use temporary storage that doesn't appear in keys()
         # Check if default_factory is a class that should be instantiated
         if isinstance(self.default_factory, type) and issubclass(
-            self.default_factory, SortedDefaultDict
+            self.default_factory, (SortedDefaultDict, dict)
         ):
             # Factory is a class (like SortedDefaultDict), create instance with same factory
-            default_value = self.default_factory(self.default_factory)  # type: ignore[misc, assignment]
+            default_value = self.default_factory() if not isinstance(self.default_factory, type) else self.default_factory(self.default_factory)  # type: ignore[misc, assignment]
         else:
             default_value = self.default_factory()  # type: ignore[misc]
 

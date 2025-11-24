@@ -7,7 +7,7 @@ import os
 
 from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Any, Protocol, TypeVar, cast
+from typing import Any, Literal, Protocol, TypeVar, cast, overload
 from urllib import request
 from urllib.error import HTTPError, URLError
 
@@ -144,6 +144,26 @@ def delete_file(file_path: FilePath) -> None:
     """
     Path(str(file_path)).unlink(missing_ok=True)
 
+
+@overload
+def get_file(
+    file_path: FilePath,
+    decode: bool = True,
+    charset: str = "utf-8",
+    errors: str = "strict",
+    raise_on_not_found: bool = False,
+    logger: LoggerProtocol | None = None,
+) -> ReturnPathType: ...
+
+@overload
+def get_file(
+    file_path: FilePath,
+    decode: Literal[False],
+    charset: str = "utf-8",
+    errors: str = "strict",
+    raise_on_not_found: bool = False,
+    logger: LoggerProtocol | None = None,
+) -> str: ...
 
 def get_file(
     file_path: FilePath,

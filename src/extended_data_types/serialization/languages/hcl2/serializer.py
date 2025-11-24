@@ -13,11 +13,11 @@ class HCL2Serializer:
     def __init__(self, indent_size: int = 2, sort_keys: bool = False):
         self.backend = Hcl2Serializer(indent_size=indent_size, sort_keys=sort_keys)
 
-    def encode(self, obj: Any, **kwargs: Any) -> str:
-        return self.backend.encode(obj, **kwargs)
+    def encode(self, data: Any, **kwargs: Any) -> str:
+        return self.backend.encode(data, **kwargs)
 
-    def decode(self, s: str, **kwargs: Any) -> dict[str, Any]:
-        return self.backend.decode(s, **kwargs)
+    def decode(self, data: str, **kwargs: Any) -> dict[str, Any]:
+        return self.backend.decode(data, **kwargs)
 
     dumps = encode
     loads = decode

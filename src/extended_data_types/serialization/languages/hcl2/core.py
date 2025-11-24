@@ -8,9 +8,17 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from .generator import HCL2Generator
-from .parser import HCL2Parser
-from .types import Block, BlockType, HCLFile, MetaArguments
+try:
+    from .generator import HCL2Generator
+    from .parser import HCL2Parser
+    from .types import Block, BlockType, HCLFile, MetaArguments
+except ImportError:
+    HCL2Generator = object  # type: ignore
+    HCL2Parser = object  # type: ignore
+    Block = object  # type: ignore
+    BlockType = object  # type: ignore
+    HCLFile = object  # type: ignore
+    MetaArguments = object  # type: ignore
 
 
 class HCL2:
