@@ -19,19 +19,21 @@ from pathlib import Path
 
 
 def find_init_file():
-    """Find the __init__.py file with __version__."""
+    """Find the __init__.py file with a valid __version__ declaration."""
     src = Path("src")
     if not src.exists():
         raise FileNotFoundError("src/ directory not found")
 
+    # Regex pattern to match __version__ assignment
+    version_pattern = re.compile(r'^\s*__version__\s*=\s*["\'].*["\']')
+    
     # Find all __init__.py files in src/
     for init_file in src.rglob("__init__.py"):
         content = init_file.read_text()
         # Check if file has an actual __version__ assignment line
-        # Match the same logic used in replacement to avoid false positives
+        # Use same regex pattern as replacement logic to avoid false positives
         for line in content.splitlines():
-            stripped = line.strip()
-            if stripped.startswith("__version__ ") or stripped == "__version__":
+            if version_pattern.match(line):
                 return init_file
 
     raise FileNotFoundError("No __init__.py with __version__ found in src/")
@@ -56,6 +58,7 @@ def main():
     # Matches: __version__ = "..." or __version__="..." (with/without spaces)
     version_pattern = re.compile(r'^(\s*)__version__\s*=\s*["\'].*["\']')
     
+    updated = False
     for i, line in enumerate(lines):
         match = version_pattern.match(line)
         if match:
@@ -64,7 +67,11 @@ def main():
             # Preserve everything after the closing quote (including newline)
             remainder = line[match.end():]
             lines[i] = f'{indent}__version__ = "{new_version}"{remainder}'
+            updated = True
             break
+    
+    if not updated:
+        raise ValueError(f"Failed to update __version__ in {init_file}")
     
     init_file.write_text("".join(lines))
 
