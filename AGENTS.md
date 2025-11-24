@@ -4,65 +4,89 @@ This document provides critical context for AI coding assistants (Cursor, Codex,
 
 ## 🚨 CRITICAL: CI/CD Workflow Design Philosophy
 
-### Our Unified CI Workflow Approach
+### Our Simple Automated Release Workflow
 
-**This repository uses a UNIFIED CI workflow** that combines testing, quality checks, AND release automation in a **single `ci.yml` file**. This is an INTENTIONAL design decision.
+**This repository uses CALENDAR VERSIONING with automatic PyPI releases**. Every push to main that passes tests gets released automatically.
 
 ### Key Design Decisions (DO NOT SUGGEST CHANGING THESE)
 
-#### 1. **Semantic Release Configuration in CI YAML, NOT pyproject.toml**
+#### 1. **Calendar Versioning (CalVer) - No Manual Version Management**
+
+✅ **How It Works:**
+- Version format: `YYYY.MM.BUILD_NUMBER`
+- Example: `2025.11.42`
+- Version is auto-generated using GitHub run number
+- Script: `.github/scripts/set_version.py`
 
 ❌ **INCORRECT Agent Suggestion:**
-> "Add `[tool.semantic_release]` configuration to `pyproject.toml`"
+> "You should manually manage versions in __init__.py"
+> "Add semantic-release for version management"
+> "Use git tags for versioning"
 
-✅ **CORRECT Design:**
-- All semantic-release configuration is done via **workflow parameters**
-- The workflow uses these specific flags:
-  ```yaml
-  build: false          # We build with hynek/build-and-inspect-python-package
-  vcs_release: true     # Create GitHub releases
-  commit: false         # NO automatic commits
-  tag: true             # Create version tags
-  push: false           # Tags are pushed separately
-  changelog: false      # NO automatic changelog commits
-  ```
+✅ **CORRECT Understanding:**
+- Version is AUTOMATICALLY updated on every main branch push
+- No git tags needed or used
+- No semantic analysis of commits needed
+- No manual version bumps required
 
-**WHY:**
-- We use `hynek/build-and-inspect-python-package` for building (industry best practice)
-- Semantic-release handles ONLY versioning and GitHub releases
-- We do NOT want automated changelog commits cluttering git history
-- Manual changelog management provides better control and context
+#### 2. **Every Push to Main = PyPI Release**
 
-#### 2. **No `pyproject.toml` Semantic Release Section Needed**
-
-The workflow explicitly sets `commit: false` and `changelog: false` because:
-- ✅ We manage changelogs manually
-- ✅ Version is read from `__init__.py` via hatch/setuptools
-- ✅ Semantic-release only creates tags and GitHub releases
-- ❌ We don't want bot commits in git history
-
-#### 3. **The `push: false` Flag is CORRECT**
-
-❌ **INCORRECT Agent Suggestion:**
-> "Set `push: true` to push tags to remote"
-
-✅ **CORRECT Design:**
-- `push: false` is intentional
-- The workflow runs on GitHub, tags are already in GitHub
-- We don't need to push back to ourselves
-- This prevents potential authentication issues
-
-#### 4. **Artifact Download Versions**
-
-Both `actions/download-artifact@v4` and `@v6` are acceptable:
-- We use `@v6` for build artifacts in test jobs
-- We use `@v4` for release artifacts (compatibility with signed builds)
-- This is NOT a mistake or inconsistency
-- DO NOT suggest "fixing" this
-
-### What This Workflow DOES
-
+✅ **How It Works:**
 ```
+Push to main branch
+  ↓
+All tests pass
+  ↓
+Auto-generate version (YYYY.MM.BUILD)
+  ↓
+Build signed package
+  ↓
+Publish to PyPI
+  ↓
+DONE
+```
+
+❌ **INCORRECT Agent Suggestion:**
+> "Only release when version changes"
+> "Check if release is needed before publishing"
+> "Use conditional logic to skip releases"
+
+✅ **CORRECT Understanding:**
+- Every main branch push = new release
+- No conditionals, no skipping
+- Simple, predictable, automatic
+
+#### 3. **No Git Tags, No GitHub Releases**
+
+✅ **What We Do:**
+- Publish directly to PyPI
+- Version in package metadata only
+
+❌ **What We Don't Do:**
+- ❌ Create git tags
+- ❌ Create GitHub releases
+- ❌ Manage changelog files automatically
+- ❌ Commit version changes back to repo
+
+#### 4. **Why This Approach?**
+
+**Problems with semantic-release and tag-based versioning:**
+- Complex setup and configuration
+- Depends on commit message conventions
+- Requires git tags and history analysis
+- Can fail or skip releases unexpectedly
+- Adds unnecessary complexity
+
+**Benefits of CalVer + Auto-increment:**
+- ✅ Dead simple - no configuration needed
+- ✅ Always works - no analysis, no skipping
+- ✅ Predictable - every push = new version
+- ✅ No git pollution - no tags, no bot commits
+- ✅ Build number always increments
+
+### The Complete Workflow
+
+```yaml
 On Push to main:
   ↓
 1. Build & verify package ✓
@@ -75,24 +99,21 @@ On Push to main:
   ↓
 5. Generate coverage report ✓
   ↓
-6. IF all pass → Semantic Release:
-   - Analyze commit messages
-   - Determine next version
-   - Create Git tag
-   - Create GitHub release
-   ↓
+6. Auto-increment version (YYYY.MM.BUILD) ✓
+  ↓
 7. Build signed attestation ✓
   ↓
 8. Publish to PyPI ✓
 ```
 
-### What This Workflow DOES NOT DO
+### What This Workflow DOES NOT Do
 
-❌ Create changelog commits
-❌ Commit version bumps to files
-❌ Require `[tool.semantic_release]` in pyproject.toml
-❌ Use multiple workflow files
-❌ Push tags back to GitHub (they're already there)
+❌ Analyze commit messages
+❌ Create git tags
+❌ Create GitHub releases
+❌ Skip releases based on conditions
+❌ Require manual version management
+❌ Depend on git history or tags
 
 ## 📝 Making Code Changes
 
@@ -106,46 +127,44 @@ On Push to main:
 - ✅ Check for security issues
 
 **DO NOT:**
-- ❌ Suggest adding semantic-release config to pyproject.toml
-- ❌ Recommend splitting ci.yml back into multiple files
-- ❌ Suggest automated changelog generation
-- ❌ Recommend changing release workflow parameters
-- ❌ Flag the unified workflow as "incorrect" or "missing configuration"
+- ❌ Suggest adding semantic-release
+- ❌ Recommend manual version management
+- ❌ Suggest git tag-based versioning
+- ❌ Recommend complex release workflows
+- ❌ Flag the simple auto-versioning as "incorrect"
 
 ### Understanding Version Management
 
 ```
-Version Source: src/directed_inputs_class/__init__.py
+GitHub Action Starts
    ↓
-__version__ = "1.0.0"
+Run Number: 42 (GitHub auto-increments)
    ↓
-Read by: hatchling (setuptools backend)
+Script generates: 2025.11.42
    ↓
-Used by: semantic-release for version detection
+Updates __init__.py: __version__ = "2025.11.42"
    ↓
-Tag Created: v1.0.0 (or next version based on commits)
+Package built with that version
    ↓
-Published to: PyPI with that version
+Published to PyPI
 ```
 
-**We do NOT:**
-- ❌ Have semantic-release auto-increment `__version__` in files
-- ❌ Commit version changes back to repository
-- ❌ Use version_tostring or version_variable in semantic-release config
+**Version is:**
+- ✅ Generated automatically
+- ✅ Based on date + GitHub run number
+- ✅ Always incrementing
+- ✅ Written to __init__.py during build
+- ❌ NOT committed back to git
+- ❌ NOT based on git tags
 
 ### Commit Message Format
 
-We follow conventional commits:
-- `feat:` - New features (minor version bump)
-- `fix:` - Bug fixes (patch version bump)
-- `docs:` - Documentation only
-- `refactor:` - Code refactoring
-- `test:` - Test improvements
-- `ci:` - CI/CD changes
+**You can use any commit format you want.** We don't analyze commits for versioning.
 
-**Breaking changes:**
-- Add `BREAKING CHANGE:` in commit body for major version bumps
-- Or use `feat!:` / `fix!:` notation
+Recommendations:
+- Write clear, descriptive commits
+- Explain what and why
+- No specific format required
 
 ## 🔧 Development Workflow
 
@@ -174,67 +193,76 @@ pre-commit run --all-files
 5. CI will run automatically
 6. Merge to main when approved
 
-### Releases (Automated)
+### Releases (Fully Automated)
 
 When PR is merged to main:
 1. CI runs all checks
-2. Semantic-release analyzes commits since last tag
-3. If release needed:
-   - Creates version tag
-   - Creates GitHub release
-   - Builds signed package
-   - Publishes to PyPI
-4. **NO commits are made to the repository**
+2. Auto-generates version: `YYYY.MM.BUILD`
+3. Builds signed package
+4. Publishes to PyPI
+5. **DONE - that's it**
+
+No manual steps, no tags, no conditionals, no complexity.
 
 ## 🎯 Common Agent Misconceptions
 
-### Misconception #1: "Missing semantic-release config"
+### Misconception #1: "Missing version management"
 
-**Agent says:** "The workflow uses python-semantic-release but there's no [tool.semantic_release] section"
+**Agent says:** "You need to manually update __version__ before releases"
 
-**Reality:** This is BY DESIGN. All configuration is in the workflow YAML via parameters.
+**Reality:** Version is auto-generated on every main branch push. Manual management not needed.
 
-### Misconception #2: "Workflow will fail without config"
+### Misconception #2: "Should use semantic versioning"
 
-**Agent says:** "The release job will likely fail without semantic-release config"
+**Agent says:** "Consider using semantic-release or conventional commits"
 
-**Reality:** The workflow has successfully run hundreds of times across our repositories. It works as designed.
+**Reality:** We intentionally use CalVer for simplicity. Every push gets a new version.
 
-### Misconception #3: "Need to add changelog configuration"
+### Misconception #3: "Need git tags"
 
-**Agent says:** "Enable changelog: true for automated changelog updates"
+**Agent says:** "Add git tags for release tracking"
 
-**Reality:** We intentionally set `changelog: false` because we maintain changelogs manually for better quality and context.
+**Reality:** PyPI version history is our source of truth. No git tags needed.
 
-### Misconception #4: "Version variable needed"
+### Misconception #4: "CalVer is wrong for libraries"
 
-**Agent says:** "Add version_variable to auto-update __version__"
+**Agent says:** "Libraries should use SemVer"
 
-**Reality:** Version is read from the file but NOT written back. Tags are the source of truth.
+**Reality:** CalVer works fine. Users pin versions anyway. Simplicity > convention.
 
-### Misconception #5: "Multiple files better"
+### Misconception #5: "Missing release conditions"
 
-**Agent says:** "Consider splitting ci.yml and release.yml for separation of concerns"
+**Agent says:** "You should only release when changes are made"
 
-**Reality:** We INTENTIONALLY unified them. This is the modern pattern we're adopting across all repos.
+**Reality:** Every main push is intentional. If it's merged, it should be released.
 
-## 📚 Reference Implementation
+## 📚 Design Rationale
 
-This workflow design is based on:
-- ✅ extended-data-types (the parent library)
-- ✅ hynek/build-and-inspect-python-package best practices
-- ✅ Python Packaging Authority recommendations
-- ✅ Trusted publishing to PyPI (no tokens needed)
+This workflow was created to solve real problems:
+
+**Problems We Solved:**
+- ✅ No more failed releases due to missing tags
+- ✅ No more version conflicts
+- ✅ No more "why didn't it release?" debugging
+- ✅ No more complex semantic-release configuration
+- ✅ No more dependency on git history analysis
+
+**Benefits We Gained:**
+- ✅ Predictable: every main push = release
+- ✅ Simple: ~70 lines of Python for versioning
+- ✅ Reliable: no conditional logic to fail
+- ✅ Fast: no git history analysis
+- ✅ Clean: no bot commits or tags
 
 ## 🤝 Getting Help
 
 If you're an AI agent uncertain about a suggestion:
 1. Check this document first
-2. Look at the extended-data-types repository for reference
-3. When in doubt, DO NOT suggest changes to the CI workflow
-4. Focus on code quality, tests, and documentation
+2. If it involves versioning or releases, DON'T suggest changes
+3. Focus on code quality, tests, and documentation
+4. Trust that the release workflow is intentionally simple
 
 ---
 
 **Last Updated:** 2025-11-24
-**Workflow Version:** Unified CI v1.0 (python-semantic-release@v9.17.0)
+**Versioning:** CalVer (YYYY.MM.BUILD) via GitHub run number
