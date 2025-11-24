@@ -6,7 +6,7 @@ import re
 from fractions import Fraction
 from typing import Literal
 
-import roman
+from num2words import num2words
 
 from extended_data_types.transformations.core import Transform
 from extended_data_types.transformations.numbers.words import ordinal_to_words, to_words
@@ -16,24 +16,53 @@ Base = Literal[2, 8, 16]
 
 
 def to_roman(number: int, upper: bool = True) -> str:
-    """Convert number to Roman numerals."""
+    """Convert number to Roman numerals using num2words."""
     if not isinstance(number, int):
         raise TypeError("to_roman requires an integer")
     if number < 1 or number > 3999:
         raise ValueError(f"Number must be between 1 and 3999, got {number}")
     try:
-        result = roman.toRoman(number)
-    except roman.InvalidRomanNumeralError as e:
+        result = num2words(number, to='roman')
+    except (ValueError, OverflowError) as e:
         raise ValueError(f"Invalid number for Roman numeral: {number}") from e
     return result if upper else result.lower()
 
 
+_ROMAN_VALUES = {
+    'M': 1000, 'CM': 900, 'D': 500, 'CD': 400,
+    'C': 100, 'XC': 90, 'L': 50, 'XL': 40,
+    'X': 10, 'IX': 9, 'V': 5, 'IV': 4, 'I': 1
+}
+
+
 def from_roman(numeral: str) -> int:
     """Convert Roman numerals to number."""
-    try:
-        return roman.fromRoman(numeral.upper())
-    except roman.InvalidRomanNumeralError as e:
-        raise ValueError(f"Invalid Roman numeral: {numeral}") from e
+    numeral = numeral.upper().strip()
+    if not numeral:
+        raise ValueError("Empty Roman numeral")
+    
+    # Validate characters
+    if not all(c in 'MDCLXVI' for c in numeral):
+        raise ValueError(f"Invalid Roman numeral: {numeral}")
+    
+    result = 0
+    i = 0
+    while i < len(numeral):
+        # Check for two-character combo first
+        if i + 1 < len(numeral):
+            two_char = numeral[i:i+2]
+            if two_char in _ROMAN_VALUES:
+                result += _ROMAN_VALUES[two_char]
+                i += 2
+                continue
+        # Single character
+        if numeral[i] in _ROMAN_VALUES:
+            result += _ROMAN_VALUES[numeral[i]]
+            i += 1
+        else:
+            raise ValueError(f"Invalid Roman numeral: {numeral}")
+    
+    return result
 
 
 def to_ordinal(number: int, words: bool = False) -> str:
