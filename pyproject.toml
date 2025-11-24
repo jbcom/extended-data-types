@@ -25,13 +25,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "future>=1.0.0",
     "gitpython>=3.1.0",
     "inflection>=0.5.1",
+    "num2words>=0.5.14",
     "orjson>=3.10.7",
     "python-hcl2>=4.3.4",
     "pyyaml>=6.0.1",
-    "requests>=2.32.3",
     "ruamel.yaml>=0.18.0",
     "sortedcontainers>=2.4.0",
     "tomlkit>=0.13.2",
