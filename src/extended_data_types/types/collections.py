@@ -34,7 +34,7 @@ class _AutoStoreDict:
         if not self._stored:
             # Move from nested storage to main dict
             if self._key in self._parent._nested_storage:
-                self._value = self._parent._nested_storage[self._key]  # type: ignore[assignment]
+                self._value = self._parent._nested_storage[self._key]  # type: ignore[assignment,misc]
                 del self._parent._nested_storage[self._key]
             # Store in main dict
             SortedDict.__setitem__(self._parent, self._key, self._value)
@@ -44,20 +44,20 @@ class _AutoStoreDict:
             if self._key not in self._parent._nested_assignment_order:
                 self._parent._nested_assignment_order.append(self._key)
             # Store in nested-assigned for tracking
-            self._parent._nested_assigned[self._key] = self._value  # type: ignore[assignment]
+            self._parent._nested_assigned[self._key] = self._value  # type: ignore[assignment,misc]
             self._stored = True
 
     def __getitem__(self, k: Any) -> Any:
         """Get item - store parent only if this access leads to assignment."""
         # Don't store on read - only store when __setitem__ is called
-        return self._value.__getitem__(k)
+        return self._value.__getitem__(k)  # type: ignore[index]
 
     def __setitem__(self, k: Any, v: Any) -> None:
         """Set item - stores parent in main dict and marks as explicit."""
         # When we assign to nested dict, store parent in main dict
         # This makes it appear in keys()
         self._ensure_stored()
-        self._value.__setitem__(k, v)
+        self._value.__setitem__(k, v)  # type: ignore[index]
         # Already marked as explicit in _ensure_stored
 
     def __eq__(self, other: object) -> bool:

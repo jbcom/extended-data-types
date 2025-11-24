@@ -78,7 +78,7 @@ class HCL2Generator:
             return "[" + ", ".join(self._format_value(v, level) for v in value) + "]"
         if isinstance(value, dict):
             inner = []
-            items = value.items()
+            items: list[tuple[Any, Any]] = list(value.items())
             if self.sort_keys:
                 items = sorted(items)
             for k, v in items:
@@ -142,7 +142,7 @@ class HCL2Generator:
             or block.meta_args.lifecycle
         ) and block.attributes:
             lines.append("")
-        items = block.attributes.items()
+        items: list[tuple[str, Any]] = list(block.attributes.items())
         if self.sort_keys:
             items = sorted(items)
         for key, value in items:

@@ -126,6 +126,6 @@ class ListHandler:
 
         # Try to sort, but fallback to unsorted set if elements are not comparable
         try:
-            return sorted(set(items))
+            return sorted(set(items))  # type: ignore[type-var]
         except TypeError:
             return list(set(items))
