@@ -73,6 +73,11 @@ Testing Guidelines
 - **Formats/Parsers**: When adding formats/parsers, ensure round-trip tests and import/export paths are exercised.
 - **Stability**: Maintain stable output formatting; indentation and ordering are asserted in tests.
 
+Compatibility
+-------------
+
+See the :doc:`guides/compatibility` guide for the current dual-layer API approach (`extended_data_types.compat`) and how releases/version checks are handled.
+
 Commit & Pull Request Guidelines
 ----------------------------------
 

@@ -1,35 +1,39 @@
 """Backward compatibility layer for bob type utilities."""
 
-from collections.abc import Mapping
 from typing import Any, TypeVar
 
-from extended_data_types.core.types import TypeSystem, convert_special_types as core_convert_special_types
+from extended_data_types.core.types import TypeSystem
+from extended_data_types.type_utils import (
+    convert_special_type as _convert_special_type,
+    convert_special_types as _convert_special_types,
+    reconstruct_special_type as _reconstruct_special_type,
+    reconstruct_special_types as _reconstruct_special_types,
+)
 
 
 T = TypeVar("T")
 
-# Global instance for compatibility
+# Local type system for conversions targeting explicit types.
 _type_system = TypeSystem()
 
 
-def convert_special_type(value: Any, target_type: type[T] = None) -> T:
+def convert_special_type(value: Any, target_type: type[T] | None = None) -> T:
     """Maintain bob.type_utils.convert_special_type compatibility."""
-    return _type_system.convert_value(value, target_type or type(value))
+    if target_type is None:
+        return _convert_special_type(value)
+    return _type_system.convert_value(value, target_type)
 
 
 def convert_special_types(data: Any) -> Any:
     """Maintain bob.type_utils.convert_special_types compatibility."""
-    try:
-        return core_convert_special_types(data)
-    except Exception:
-        return data
+    return _convert_special_types(data)
 
 
 def reconstruct_special_type(converted_obj: str, fail_silently: bool = False) -> Any:
     """Maintain bob.type_utils.reconstruct_special_type compatibility."""
-    try:
-        return _type_system.reconstruct_value(converted_obj)
-    except Exception as e:
-        if fail_silently:
-            return converted_obj
-        raise e
+    return _reconstruct_special_type(converted_obj, fail_silently=fail_silently)
+
+
+def reconstruct_special_types(data: Any, fail_silently: bool = False) -> Any:
+    """Maintain bob.type_utils.reconstruct_special_types compatibility."""
+    return _reconstruct_special_types(data, fail_silently=fail_silently)
