@@ -21,4 +21,3 @@ __all__ = [
     'to_words', 'to_ordinal_words', 'to_currency', 'to_year',
     'to_scientific_notation', 'to_roman_numeral', 'from_roman_numeral',
 ]
-]
