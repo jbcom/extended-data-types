@@ -7,6 +7,7 @@ combining the parser and generator functionality into a cohesive API.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 try:
     from .generator import HCL2Generator  # type: ignore[attr-defined]
