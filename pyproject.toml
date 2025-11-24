@@ -25,13 +25,12 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "future>=1.0.0",
     "gitpython>=3.1.0",
     "inflection>=0.5.1",
+    "num2words>=0.5.14",
     "orjson>=3.10.7",
     "python-hcl2>=4.3.4",
     "pyyaml>=6.0.1",
-    "requests>=2.32.3",
     "ruamel.yaml>=0.18.0",
     "sortedcontainers>=2.4.0",
     "tomlkit>=0.13.2",
@@ -113,6 +112,7 @@ exclude_lines = [
 [tool.codespell]
 skip = '*.js,*.css,*.inv,*.lock,*.toml,*.json,*.yml,*.yaml'
 count = true
+ignore-words-list = "nd"
 
 [tool.interrogate]
 omit-covered-files = true
@@ -156,10 +156,12 @@ ignore = [
     "BLE",     # Tests often intentionally handle exceptions differently, allowing for exploratory testing of failure cases and behavior under error conditions.
     "DTZ",     # Datetime handling in tests may use naive datetimes for simplicity and testing purposes.
     "EM",      # Exception handling in tests frequently diverges from typical patterns to deliberately provoke or verify specific failure paths.
+    "INP001",  # Implicit namespace packages are acceptable in test directories
     "LOG001",  # Instantiating log messages directly in tests can help verify logging behavior and content, ensuring the logging system works as expected.
     "PLC0415", # Imports can be placed inside test functions for specific testing scenarios.
     "PLC1901", # Empty strings as test values may be intentional to specifically validate how empty or falsy data is handled by the system.
     "PLR2004", # Magic values in tests are often test data and don't need to be constants.
+    "PT011",   # pytest.raises without match is acceptable in tests for simplicity
     "RUF012",  # Type hints in tests can be more distracting than helpful, as test code is often more flexible and subject to change than production code.
     "S",       # Security rules around input validation, like potential vulnerabilities, can be less critical in the controlled context of test code.
     "SIM300",  # "Yoda conditions" (using literal comparisons like `if "value" == var:`) can sometimes make tests more readable, clarifying the expected values.
@@ -171,6 +173,26 @@ ignore = [
     "D100", # Missing docstring in public module
     "D104", # Missing docstring in public package
     "D103", # Missing docstring in public function
+]
+
+"src/extended_data_types/transformations/numbers/words.py" = [
+    "PLR0912", # Too many branches - complex logic is necessary for number parsing
+    "PLR0124", # Name compared with itself - intentional NaN check
+    "PLR2004", # Magic values - specific to fraction denominators (2, 4)
+    "S105",    # Hardcoded password - false positive for string comparisons
+]
+
+"src/extended_data_types/transformations/numbers/notation.py" = [
+    "PLR0124", # Name compared with itself - intentional NaN check
+    "SLF001",  # Private member access - internal function sharing
+]
+
+"src/extended_data_types/number_transformations.py" = [
+    "PYI041", # Use float instead of int|float - intentional for flexibility
+]
+
+"src/extended_data_types/transformations/numbers/*.py" = [
+    "PYI041", # Use float instead of int|float - intentional for flexibility
 ]
 
 [tool.ruff.lint.pydocstyle]

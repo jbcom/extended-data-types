@@ -84,6 +84,7 @@ def sanitized_key() -> str:
     params=[
         ("This is a long message", 10, "This is..."),
         ("Short msg", 10, "Short msg"),
+        ("Needs zero length", 0, ""),
     ]
 )
 def truncate_data(request: Any) -> tuple[str, int, str]:
