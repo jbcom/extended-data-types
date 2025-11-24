@@ -197,11 +197,12 @@ def to_json_dict(obj: Any) -> JsonDict:
             )
 
         if is_dataclass_instance(obj):
+            from dataclasses import fields
             return cast(
                 JsonDict,
                 {
                     f.name: to_json_dict(getattr(obj, f.name))
-                    for f in obj.__dataclass_fields__.values()  # type: ignore
+                    for f in fields(obj)  # type: ignore[arg-type]
                 },
             )
 

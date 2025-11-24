@@ -61,7 +61,10 @@ def wrap_raw_data_for_export(
         # Handle string format specification
         format_lower = allow_encoding.casefold()
         if format_lower in ["yaml", "json", "toml", "hcl2", "raw"]:
-            return _handler.serialize(raw_data, format_lower, **format_opts)
+            # Cast to FormatType for type checking
+            from typing import cast
+            from extended_data_types.serialization.types import FormatType
+            return _handler.serialize(raw_data, cast(FormatType, format_lower), **format_opts)
 
         raise ValueError(f"Invalid allow_encoding value: {allow_encoding}")
 

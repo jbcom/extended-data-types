@@ -7,19 +7,42 @@ import os
 
 from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Any, TypeVar, cast
+from typing import Any, Protocol, TypeVar, cast
 from urllib import request
 from urllib.error import HTTPError, URLError
 
 from filelock import FileLock, Timeout
 
-from extended_data_types.log_utils import LoggerProtocol, get_null_logger
-from extended_data_types.serialization.decoders import (
-    decode_hcl2,
-    decode_json,
-    decode_yaml,
-)
-from extended_data_types.string.core import is_url
+# These imports removed - modules don't exist in v6
+# Optional logger support
+class LoggerProtocol(Protocol):
+    """Protocol for logger objects."""
+    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None: ...
+    def info(self, msg: str, *args: Any, **kwargs: Any) -> None: ...
+    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None: ...
+    def error(self, msg: str, *args: Any, **kwargs: Any) -> None: ...
+
+def get_null_logger() -> LoggerProtocol:
+    """Get a null logger that does nothing."""
+    class NullLogger:
+        def debug(self, msg: str, *args: Any, **kwargs: Any) -> None: pass
+        def info(self, msg: str, *args: Any, **kwargs: Any) -> None: pass
+        def warning(self, msg: str, *args: Any, **kwargs: Any) -> None: pass
+        def error(self, msg: str, *args: Any, **kwargs: Any) -> None: pass
+    return cast(LoggerProtocol, NullLogger())
+
+# Use new serialization imports
+from extended_data_types.hcl2_utils import decode_hcl2
+from extended_data_types.json_utils import decode_json
+from extended_data_types.yaml_utils import decode_yaml
+
+# Fallback URL checker if string_utils doesn't have it
+try:
+    from extended_data_types.string.core import is_url
+except (ImportError, AttributeError):
+    def is_url(s: str) -> bool:  # type: ignore[misc]
+        """Fallback URL checker."""
+        return s.startswith(("http://", "https://"))
 
 from .types import FilePath, FilePathWrapper
 

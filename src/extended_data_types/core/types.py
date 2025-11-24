@@ -192,7 +192,7 @@ def convert_special_type(value: Any, target_type: type[T] | None = None) -> T:
     """
     system = TypeSystem()
     if target_type is None:
-        return value
+        return value  # type: ignore[return-value]
     return system.convert_value(value, target_type)
 
 
