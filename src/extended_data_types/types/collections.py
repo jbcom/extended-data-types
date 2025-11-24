@@ -70,7 +70,7 @@ class _AutoStoreDict:
 
     def __iter__(self) -> Any:
         """Iterate over wrapped value."""
-        return iter(self._value)
+        return iter(self._value)  # type: ignore
 
     def keys(self) -> Any:
         """Get keys of wrapped value."""
@@ -153,7 +153,7 @@ class SortedDefaultDict(defaultdict[KT, VT], SortedDict[KT, VT]):  # type: ignor
             # Store in temporary storage for nested access
             self._nested_storage[key] = default_value  # type: ignore[assignment]
             # Return wrapped so nested assignments work
-            return _AutoStoreDict(self, key, default_value, self.default_factory)  # type: ignore[return-value]
+            return _AutoStoreDict(self, key, default_value, self.default_factory)  # type: ignore[return-value,misc]
         return default_value
 
     def __setitem__(self, key: KT, value: VT) -> None:

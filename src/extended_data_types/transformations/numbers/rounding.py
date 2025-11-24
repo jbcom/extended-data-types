@@ -17,6 +17,9 @@ RoundingMode = Literal["up", "down", "nearest", "floor", "ceil", "half_up", "hal
 @overload
 def round_to(number: N, precision: int = 0, mode: RoundingMode = "nearest") -> N: ...
 
+@overload
+def round_to(number: float, precision: int = 0, mode: RoundingMode = "nearest") -> float: ...
+
 
 def round_to(number: N, precision: int = 0, mode: RoundingMode = "nearest") -> N:
     """Round number to specified precision with several legacy modes."""
@@ -100,7 +103,7 @@ def quantize(number: N, step: N, mode: RoundingMode = "nearest") -> N:
         return ceil_to(number, step)
 
     if mode in ("nearest", "half_up", "half_down"):
-        scaled = round_to(number / step, 0, mode)
+        scaled = round_to(float(number) / step, 0, mode)
         return type(number)(scaled * step)
 
     lower = floor_to(number, step)

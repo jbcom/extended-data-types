@@ -13,6 +13,7 @@ from typing import Any
 import inflection
 
 from sortedcontainers import SortedDict
+from extended_data_types.types.collections import SortedDefaultDict
 
 from extended_data_types.types import convert_special_types
 

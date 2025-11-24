@@ -74,7 +74,7 @@ def singularize(text: str) -> str:
     return result
 
 
-def ordinalize(number: int | str) -> str:
+def ordinalize(number: int | str | float) -> str:
     """Convert number to ordinal string.
 
     Args:
