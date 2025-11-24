@@ -66,6 +66,9 @@ def truncate(msg: str, max_length: int, ender: str = "...") -> str:
     Returns:
         str: The truncated message.
     """
+    if max_length <= 0:
+        return ""
+
     if len(msg) <= max_length:
         return msg
     if len(ender) >= max_length:
