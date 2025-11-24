@@ -13,8 +13,8 @@ This document provides critical context for AI coding assistants (Cursor, Codex,
 #### 1. **Calendar Versioning (CalVer) - No Manual Version Management**
 
 ✅ **How It Works:**
-- Version format: `YYYY.MM.BUILD_NUMBER`
-- Example: `2025.11.42`
+- Version format: `YYYY.MM.BUILD_NUMBER` (with zero-padded month)
+- Example: `2025.01.42` for January, `2025.11.42` for November
 - Version is auto-generated using GitHub run number
 - Script: `.github/scripts/set_version.py`
 
@@ -140,9 +140,9 @@ GitHub Action Starts
    ↓
 Run Number: 42 (GitHub auto-increments)
    ↓
-Script generates: 2025.11.42
+Script generates: 2025.01.42 (for January)
    ↓
-Updates __init__.py: __version__ = "2025.11.42"
+Updates __init__.py: __version__ = "2025.01.42"
    ↓
 Package built with that version
    ↓

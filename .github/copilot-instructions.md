@@ -52,8 +52,8 @@ def func(data: Dict[str, Any]) -> Dict[str, Any]:
 ## Version Management
 
 Version is auto-generated during CI using `.github/scripts/set_version.py`:
-- Format: `YYYY.MM.BUILD_NUMBER`
-- Example: `2025.11.42`
+- Format: `YYYY.MM.BUILD_NUMBER` (with zero-padded month)
+- Example: `2025.01.42` for January, `2025.11.42` for November
 - Updated automatically in `__init__.py` during release build
 
 DO NOT suggest manual version management. It's fully automated.

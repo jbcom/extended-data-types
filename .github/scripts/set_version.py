@@ -40,9 +40,11 @@ def main():
     # Get GitHub run number (always incrementing)
     run_number = os.environ.get("GITHUB_RUN_NUMBER", "0")
 
-    # Generate CalVer: YYYY.MM.BUILD
+    # Get current date in UTC
     now = datetime.now(timezone.utc)
-    new_version = f"{now.year}.{now.month}.{run_number}"
+
+    # Generate CalVer: YYYY.MM.BUILD (with zero-padded month)
+    new_version = f"{now.year}.{now.month:02d}.{run_number}"
 
     # Find and update __init__.py
     init_file = find_init_file()
