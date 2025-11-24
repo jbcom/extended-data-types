@@ -70,7 +70,8 @@ def number_to_words(number: int | float, lang: str = "en") -> str:
     """Convert number to words.
     
     Args:
-        number: Number to convert
+        number: Integer or float to convert. Floats are converted using
+            'point' notation (e.g., 3.14 becomes "three point one four")
         lang: Language code (default: 'en')
         
     Returns:
@@ -79,6 +80,8 @@ def number_to_words(number: int | float, lang: str = "en") -> str:
     Example:
         >>> number_to_words(42)
         'forty-two'
+        >>> number_to_words(3.14)
+        'three point one four'
     """
     return num2words(number, lang=lang)
 

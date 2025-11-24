@@ -59,6 +59,11 @@ def test_number_to_words() -> None:
     assert number_to_words(42) == "forty-two"
     assert number_to_words(100) == "one hundred"
     assert number_to_words(1000) == "one thousand"
+    
+    # Test float conversion
+    assert number_to_words(3.14) == "three point one four"
+    assert number_to_words(42.5) == "forty-two point five"
+    assert number_to_words(100.99) == "one hundred point nine nine"
 
 
 def test_number_to_ordinal() -> None:
