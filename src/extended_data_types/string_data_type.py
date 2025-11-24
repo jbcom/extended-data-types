@@ -11,8 +11,6 @@ from urllib.parse import urlparse
 
 import inflection
 
-from .stack_utils import current_python_version_is_at_least
-
 
 def bytestostr(bstr: str | memoryview | bytes | bytearray) -> str:
     """Converts bytes, memoryview, or bytearray to a UTF-8 decoded string.
@@ -70,6 +68,8 @@ def truncate(msg: str, max_length: int, ender: str = "...") -> str:
     """
     if len(msg) <= max_length:
         return msg
+    if len(ender) >= max_length:
+        return ender[0] if ender else ""
     return msg[: max_length - len(ender)] + ender
 
 
@@ -125,9 +125,6 @@ def titleize_name(name: str) -> str:
 def removeprefix(string: str, prefix: str) -> str:
     """Removes the specified prefix from the string if present.
 
-    For Python versions less than 3.9, the function mimics the behavior of
-    str.removeprefix.
-
     Args:
         string (str): The string from which to remove the prefix.
         prefix (str): The prefix to remove.
@@ -135,20 +132,11 @@ def removeprefix(string: str, prefix: str) -> str:
     Returns:
         str: The string with the prefix removed if it was present, otherwise the original string.
     """
-    if current_python_version_is_at_least(9):
-        return string.removeprefix(prefix)
-
-    if prefix and string.startswith(prefix):
-        string = string[len(prefix) :]
-
-    return string
+    return string.removeprefix(prefix)
 
 
 def removesuffix(string: str, suffix: str) -> str:
     """Removes the specified suffix from the string if present.
-
-    For Python versions less than 3.9, the function mimics the behavior of
-    str.removesuffix.
 
     Args:
         string (str): The string from which to remove the suffix.
@@ -157,10 +145,6 @@ def removesuffix(string: str, suffix: str) -> str:
     Returns:
         str: The string with the suffix removed if it was present, otherwise the original string.
     """
-    if current_python_version_is_at_least(9):
-        return string.removesuffix(suffix)
-
-    if suffix and string.endswith(suffix):
-        string = string[: -len(suffix)]
-
-    return string
+    if not suffix:
+        return string
+    return string.removesuffix(suffix)

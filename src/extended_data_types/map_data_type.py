@@ -7,8 +7,8 @@ convert keys from camelCase to snake_case.
 from __future__ import annotations
 
 from collections import defaultdict
-from collections.abc import Mapping, MutableMapping
-from typing import Any, Callable, TypeVar
+from collections.abc import Callable, Mapping, MutableMapping
+from typing import Any, TypeVar
 
 import inflection
 
@@ -248,7 +248,9 @@ def unhump_map(
         unhumped_key = inflection.underscore(k)
 
         if isinstance(v, Mapping):
-            unhumped[unhumped_key] = unhump_map(v)
+            unhumped[unhumped_key] = unhump_map(
+                v, drop_without_prefix=drop_without_prefix
+            )
             continue
 
         unhumped[unhumped_key] = v
