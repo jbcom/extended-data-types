@@ -9,7 +9,7 @@ Typical usage:
     >>> lists, dicts = splitter.split_by_type([1, {}, 2, {}])
 """
 
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from typing import Any, TypeVar
 
 import attrs
