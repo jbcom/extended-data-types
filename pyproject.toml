@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "extended-data-types"
-version = "202511.6.0"
+version = "202511.8.0"
 description = "Extended functionality for data types"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 readme = "README.md"
-keywords = ["python3"]
+keywords = ["python3", "data-types", "utilities"]
 authors = [{ name = "Jon Bogaty", email = "jon@jonbogaty.com" }]
 maintainers = [{ name = "Jon Bogaty", email = "jon@jonbogaty.com" }]
 classifiers = [
@@ -53,13 +53,11 @@ tests = [
     "pytest-xdist>=3.6.1",
     "coverage[toml]>=7.6.0",
 ]
-
 typing = [
     "mypy>=1.0.0",
     "types-PyYAML>=6.0.12.20240724",
     "sortedcontainers-stubs>=2.4.2",
 ]
-
 docs = [
     "sphinx>=7.0",
     "sphinxawesome-theme>=5.2.0",
@@ -107,20 +105,6 @@ exclude_lines = [
     "pass",
 ]
 
-[tool.codespell]
-skip = '*.js,*.css,*.inv,*.lock,*.toml,*.json,*.yml,*.yaml'
-count = true
-ignore-words-list = "nd"
-
-[tool.interrogate]
-omit-covered-files = true
-verbose = 2
-fail-under = 100
-whitelist-regex = ["test_.*"]
-
-[tool.black]
-line-length = 88
-
 [tool.ruff]
 src = ["extended_data_types", "tests"]
 exclude = ["docs"]
@@ -128,84 +112,26 @@ exclude = ["docs"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN",     # Type annotations checks are better handled by Mypy, which provides more comprehensive type analysis and type-checking capabilities.
-    "C901",    # Ignore overly complex functions: Occasionally, complex code is necessary for performance optimization or to handle intricate logic that can't be easily simplified without sacrificing efficiency or clarity.
-    "COM",     # Black automatically handles commas in formatting, ensuring consistent style without the need for additional comma-specific linting.
-    "D205",    # One blank line required between the summary line and description: Inconsistent enforcement often leads to style churn and unnecessary changes in documentation-heavy code.
-    "D415",    # First line should end with a period, question mark, or exclamation point: This rule is overly strict and often doesn't impact the clarity or usefulness of docstrings.
-    "DTZ007",  # Naive datetime usage without timezone information is sometimes intentional, especially when working with legacy code or when timezone awareness is not required.
-    "E501",    # Line length is managed by Black, which reflows lines according to its style guide, maintaining readability without enforcing arbitrary line length limits.
-    "EM102",   # Using f-string without variable assignments: F-strings are often used for quick formatting even when not assigning values, especially in logging or print statements.
-    "FBT",     # Allow boolean arguments in function signatures; they provide simple, clear control over behavior.
-    "FIX",     # FIXME markers are useful for highlighting areas needing further attention or future fixes, and ignoring this rule allows these markers to remain as intentional reminders.
-    "PLR0911", # Too many return statements: Functions with multiple exit points can improve code readability and maintainability by avoiding deeply nested logic.
-    "PLR0913", # Too many arguments in function definition: Sometimes, functions require many parameters to handle complex configurations or provide flexibility, particularly in factory functions or when adhering to specific interface contracts.
-    "RET505",  # Unnecessary `elif` after `return`: Often used for clarity in maintaining separate conditional branches, enhancing readability despite technically being redundant.
-    "TCH",     # TYPE_CHECKING blocks: These are essential for type hinting without importing unnecessary dependencies at runtime, especially useful for preventing circular imports and keeping runtime environments lean, though they may affect automatic documentation generation.
-    "TD",      # TODO comments are a common part of development workflows for tracking pending tasks, and there’s often no need to enforce a specific style or behavior for these comments.
-    "TID252",  # Relative imports are perfectly acceptable within well-structured modules and packages, especially when maintaining a clear and logical project layout.
-    "TRY003",  # Simple strings are acceptable in exceptions without specifying type: Providing explicit exception messages improves readability and understanding, even when not adding extra error details.
-    "TRY300",  # Allow broad exception catches in certain contexts where specific handling of multiple exceptions is complex or unnecessary.
+    "ANN", "C901", "COM", "D205", "D415", "DTZ007", "E501", "EM102",
+    "FBT", "FIX", "PLR0911", "PLR0913", "RET505", "TCH", "TD", "TID252",
+    "TRY003", "TRY300",
 ]
 
 [tool.ruff.lint.per-file-ignores]
-".github/scripts/*.py" = [
-    "T201",    # Print is needed for CI scripts
-    "D103",    # Docstrings not required for simple CI scripts
-    "EM101",   # String literals in exceptions are fine for CI scripts
-    "PTH123",  # open() is fine for CI scripts
-]
 "tests/*" = [
-    "B018",    # In tests, expressions that seem "useless" can often serve as assertions or necessary side effects, making them valuable.
-    "BLE",     # Tests often intentionally handle exceptions differently, allowing for exploratory testing of failure cases and behavior under error conditions.
-    "DTZ",     # Datetime handling in tests may use naive datetimes for simplicity and testing purposes.
-    "EM",      # Exception handling in tests frequently diverges from typical patterns to deliberately provoke or verify specific failure paths.
-    "INP001",  # Implicit namespace packages are acceptable in test directories
-    "LOG001",  # Instantiating log messages directly in tests can help verify logging behavior and content, ensuring the logging system works as expected.
-    "PLC0415", # Imports can be placed inside test functions for specific testing scenarios.
-    "PLC1901", # Empty strings as test values may be intentional to specifically validate how empty or falsy data is handled by the system.
-    "PLR2004", # Magic values in tests are often test data and don't need to be constants.
-    "PT011",   # pytest.raises without match is acceptable in tests for simplicity
-    "RUF012",  # Type hints in tests can be more distracting than helpful, as test code is often more flexible and subject to change than production code.
-    "S",       # Security rules around input validation, like potential vulnerabilities, can be less critical in the controlled context of test code.
-    "SIM300",  # "Yoda conditions" (using literal comparisons like `if "value" == var:`) can sometimes make tests more readable, clarifying the expected values.
-    "TRY",     # The handling of exceptions in tests often needs to be more permissive and less structured to accommodate the exploration of edge cases and failure modes.
+    "B018", "BLE", "DTZ", "EM", "INP001", "LOG001", "PLC0415", "PLC1901",
+    "PLR2004", "PT011", "RUF012", "S", "SIM300", "TRY",
 ]
-
-# Specific ignore rules for tests/__init__.py
-"tests/__init__.py" = [
-    "D100", # Missing docstring in public module
-    "D104", # Missing docstring in public package
-    "D103", # Missing docstring in public function
-]
-
-"src/extended_data_types/transformations/numbers/words.py" = [
-    "PLR0912", # Too many branches - complex logic is necessary for number parsing
-    "PLR0124", # Name compared with itself - intentional NaN check
-    "PLR2004", # Magic values - specific to fraction denominators (2, 4)
-    "S105",    # Hardcoded password - false positive for string comparisons
-]
-
-"src/extended_data_types/transformations/numbers/notation.py" = [
-    "PLR0124", # Name compared with itself - intentional NaN check
-    "SLF001",  # Private member access - internal function sharing
-]
-
-"src/extended_data_types/number_transformations.py" = [
-    "PYI041", # Use float instead of int|float - intentional for flexibility
-]
-
-"src/extended_data_types/transformations/numbers/*.py" = [
-    "PYI041", # Use float instead of int|float - intentional for flexibility
-]
-
-"src/extended_data_types/file_data_type.py" = [
-    "PLC0415", # Lazy imports to avoid circular dependencies
-    "S310",    # URL open is intentional - scheme validation done via is_url
-]
+"tests/__init__.py" = ["D100", "D104", "D103"]
+"src/extended_data_types/transformations/numbers/words.py" = ["PLR0912", "PLR0124", "PLR2004", "S105"]
+"src/extended_data_types/transformations/numbers/notation.py" = ["PLR0124", "SLF001"]
+"src/extended_data_types/number_transformations.py" = ["PYI041"]
+"src/extended_data_types/transformations/numbers/*.py" = ["PYI041"]
+"src/extended_data_types/file_data_type.py" = ["PLC0415", "S310"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
 [tool.ruff.lint.isort]
 lines-between-types = 1
 lines-after-imports = 2
@@ -236,44 +162,13 @@ ignore_missing_imports = true
 
 # Python Semantic Release configuration
 [tool.semantic_release]
-# Build command using uv
 build_command = "uv build"
-
-# Monorepo parser filters commits by file path
-commit_parser = "../../scripts/psr/monorepo_parser.py:ConventionalCommitMonorepoParser"
-
-# Commit message template
-commit_message = """
-chore(edt-release): release extended-data-types v{version} [skip ci]
-
-Automatically generated by python-semantic-release
-"""
-
-# Allow 0.x versions during development
+commit_message = "chore(release): release v{version} [skip ci]"
 allow_zero_version = true
-
-# Per-package Git tag format
-tag_format = "extended-data-types-v{version}"
-
-# Version locations
+tag_format = "v{version}"
 version_toml = ["pyproject.toml:project.version"]
 version_variables = ["src/extended_data_types/__init__.py:__version__"]
 
-# Build artifacts location
-[tool.semantic_release.publish]
-dist_glob_patterns = ["../../dist/extended_data_types-*"]
-
-# Branch configuration
 [tool.semantic_release.branches.main]
 match = "main"
 prerelease = false
-
-[tool.semantic_release.branches.beta]
-match = "beta"
-prerelease = true
-prerelease_token = "beta"
-
-# Monorepo parser options - filter commits to this package
-[tool.semantic_release.commit_parser_options]
-path_filters = ["packages/extended-data-types/*"]
-scope_prefix = "edt"
