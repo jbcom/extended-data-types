@@ -15,7 +15,7 @@ import inflection
 from deepmerge import Merger
 from sortedcontainers import SortedDict
 
-from src.extended_data_types.type_utils import convert_special_types
+from extended_data_types.type_utils import convert_special_types
 
 
 # Default merger configuration:
