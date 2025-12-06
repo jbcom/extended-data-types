@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from transformations.numbers.notation import (
+from extended_data_types.transformations.numbers.notation import (
     from_fraction,
     from_ordinal,
     from_roman,
@@ -12,7 +12,7 @@ from transformations.numbers.notation import (
     to_roman,
     to_words,
 )
-from transformations.numbers.words import (
+from extended_data_types.transformations.numbers.words import (
     fraction_to_words,
     number_to_words,
     ordinal_to_words,

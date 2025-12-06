@@ -9,7 +9,10 @@ from typing import Any
 
 from yaml import SafeLoader
 
-from extended_data_types.yaml_utils.constructors import yaml_construct_pairs, yaml_construct_undefined
+from extended_data_types.yaml_utils.constructors import (
+    yaml_construct_pairs,
+    yaml_construct_undefined,
+)
 
 
 class PureLoader(SafeLoader):

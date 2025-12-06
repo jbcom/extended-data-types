@@ -11,7 +11,6 @@ from typing import Any
 import yaml
 
 from extended_data_types.string_data_type import bytestostr
-
 from extended_data_types.yaml_utils.dumpers import PureDumper
 from extended_data_types.yaml_utils.loaders import PureLoader
 from extended_data_types.yaml_utils.tag_classes import YamlTagged
