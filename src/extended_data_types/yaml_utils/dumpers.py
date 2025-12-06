@@ -13,13 +13,13 @@ from typing import Any
 
 from yaml import SafeDumper
 
-from .representers import (
+from extended_data_types.yaml_utils.representers import (
     yaml_literal_str_representer,
     yaml_represent_pairs,
     yaml_represent_tagged,
     yaml_str_representer,
 )
-from .tag_classes import LiteralScalarString, YamlPairs, YamlTagged
+from extended_data_types.yaml_utils.tag_classes import LiteralScalarString, YamlPairs, YamlTagged
 
 
 class PureDumper(SafeDumper):

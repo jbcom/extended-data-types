@@ -11,8 +11,8 @@ import tomlkit
 
 from tomlkit.exceptions import TOMLKitError
 
-from .string_data_type import bytestostr
-from .type_utils import convert_special_types
+from src.extended_data_types.string_data_type import bytestostr
+from src.extended_data_types.type_utils import convert_special_types
 
 
 def decode_toml(toml_data: str | memoryview | bytes | bytearray) -> Any:

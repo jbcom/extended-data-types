@@ -356,10 +356,10 @@ def decode_file(
         Any: The decoded data structure, or the original string if format is unknown.
     """
     # Lazy imports to avoid circular dependencies
-    from .hcl2_utils import decode_hcl2
-    from .json_utils import decode_json
-    from .toml_utils import decode_toml
-    from .yaml_utils import decode_yaml
+    from src.extended_data_types.hcl2_utils import decode_hcl2
+    from src.extended_data_types.json_utils import decode_json
+    from src.extended_data_types.toml_utils import decode_toml
+    from src.extended_data_types.yaml_utils import decode_yaml
 
     if suffix is None and file_path is not None:
         suffix = Path(file_path).suffix.lstrip(".").lower()
@@ -402,8 +402,8 @@ def write_file(
     Returns:
         Path | None: The path that was written to, or None if data was empty and not allowed.
     """
-    from .export_utils import wrap_raw_data_for_export
-    from .state_utils import is_nothing
+    from src.extended_data_types.export_utils import wrap_raw_data_for_export
+    from src.extended_data_types.state_utils import is_nothing
 
     if is_nothing(data) and not allow_empty:
         return None

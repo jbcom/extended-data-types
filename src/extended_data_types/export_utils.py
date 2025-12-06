@@ -12,10 +12,10 @@ import pathlib
 from collections.abc import Mapping
 from typing import Any
 
-from .json_utils import encode_json
-from .toml_utils import encode_toml
-from .type_utils import convert_special_types, strtobool
-from .yaml_utils import LiteralScalarString, encode_yaml, is_yaml_data
+from src.extended_data_types.json_utils import encode_json
+from src.extended_data_types.toml_utils import encode_toml
+from src.extended_data_types.type_utils import convert_special_types, strtobool
+from src.extended_data_types.yaml_utils import LiteralScalarString, encode_yaml, is_yaml_data
 
 
 def wrap_raw_data_for_export(

@@ -7,9 +7,9 @@ lists, maps, and more.
 
 from __future__ import annotations
 
-from .base64_utils import base64_decode, base64_encode
-from .export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
-from .file_data_type import (
+from src.extended_data_types.base64_utils import base64_decode, base64_encode
+from src.extended_data_types.export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
+from src.extended_data_types.file_data_type import (
     FilePath,
     clone_repository_to_temp,
     decode_file,
@@ -26,11 +26,11 @@ from .file_data_type import (
     resolve_local_path,
     write_file,
 )
-from .hcl2_utils import decode_hcl2
-from .import_utils import unwrap_raw_data_from_import
-from .json_utils import decode_json, encode_json
-from .list_data_type import filter_list, flatten_list
-from .map_data_type import (
+from src.extended_data_types.hcl2_utils import decode_hcl2
+from src.extended_data_types.import_utils import unwrap_raw_data_from_import
+from src.extended_data_types.json_utils import decode_json, encode_json
+from src.extended_data_types.list_data_type import filter_list, flatten_list
+from src.extended_data_types.map_data_type import (
     SortedDefaultDict,
     all_values_from_map,
     create_merger,
@@ -43,9 +43,9 @@ from .map_data_type import (
     unhump_map,
     zipmap,
 )
-from .matcher_utils import is_non_empty_match, is_partial_match
-from .splitter_utils import split_dict_by_type, split_list_by_type
-from .stack_utils import (
+from src.extended_data_types.matcher_utils import is_non_empty_match, is_partial_match
+from src.extended_data_types.splitter_utils import split_dict_by_type, split_list_by_type
+from src.extended_data_types.stack_utils import (
     filter_methods,
     get_available_methods,
     get_caller,
@@ -53,7 +53,7 @@ from .stack_utils import (
     get_unique_signature,
     update_docstring,
 )
-from .state_utils import (
+from src.extended_data_types.state_utils import (
     all_non_empty,
     all_non_empty_in_dict,
     all_non_empty_in_list,
@@ -63,7 +63,7 @@ from .state_utils import (
     is_nothing,
     yield_non_empty,
 )
-from .string_data_type import (
+from src.extended_data_types.string_data_type import (
     bytestostr,
     lower_first_char,
     removeprefix,
@@ -73,7 +73,7 @@ from .string_data_type import (
     truncate,
     upper_first_char,
 )
-from .string_transformations import (
+from src.extended_data_types.string_transformations import (
     humanize,
     ordinalize,
     pluralize,
@@ -84,8 +84,8 @@ from .string_transformations import (
     to_pascal_case,
     to_snake_case,
 )
-from .toml_utils import decode_toml, encode_toml
-from .type_utils import (
+from src.extended_data_types.toml_utils import decode_toml, encode_toml
+from src.extended_data_types.type_utils import (
     convert_special_type,
     convert_special_types,
     get_default_value_for_type,
@@ -102,7 +102,7 @@ from .type_utils import (
     strtotime,
     typeof,
 )
-from .yaml_utils import decode_yaml, encode_yaml, is_yaml_data
+from src.extended_data_types.yaml_utils import decode_yaml, encode_yaml, is_yaml_data
 
 
 __version__ = "202511.8.0"

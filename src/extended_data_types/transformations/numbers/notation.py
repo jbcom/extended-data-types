@@ -7,7 +7,7 @@ from typing import Final
 
 from num2words import num2words
 
-from . import words as words_module
+from transformations.numbers import words as words_module
 
 
 _ROMAN_VALUES: Final[dict[str, int]] = {

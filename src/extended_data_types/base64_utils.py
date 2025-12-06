@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from base64 import b64decode, b64encode
 
-from .export_utils import wrap_raw_data_for_export
-from .import_utils import unwrap_raw_data_from_import
+from src.extended_data_types.export_utils import wrap_raw_data_for_export
+from src.extended_data_types.import_utils import unwrap_raw_data_from_import
 
 
 def base64_encode(raw_data: str | bytes, wrap_raw_data: bool = True) -> str:

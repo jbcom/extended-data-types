@@ -1,10 +1,12 @@
 """This module provides utilities for unwrapping data after import."""
 
+from __future__ import annotations
+
 from typing import Any
 
-from .json_utils import decode_json
-from .toml_utils import decode_toml
-from .yaml_utils import decode_yaml
+from src.extended_data_types.json_utils import decode_json
+from src.extended_data_types.toml_utils import decode_toml
+from src.extended_data_types.yaml_utils import decode_yaml
 
 
 def unwrap_raw_data_from_import(wrapped_data: str, encoding: str = "yaml") -> Any:

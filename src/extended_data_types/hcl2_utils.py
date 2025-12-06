@@ -19,7 +19,7 @@ import hcl2
 
 from lark.exceptions import ParseError
 
-from .string_data_type import bytestostr
+from src.extended_data_types.string_data_type import bytestostr
 
 
 def decode_hcl2(hcl2_data: str | memoryview | bytes | bytearray) -> Any:

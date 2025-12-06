@@ -1,6 +1,8 @@
 """Transformations related to numeric formats and representations."""
 
-from .notation import (
+from __future__ import annotations
+
+from transformations.numbers.notation import (
     from_fraction,
     from_ordinal,
     from_roman,
@@ -10,7 +12,7 @@ from .notation import (
     to_roman,
     to_words,
 )
-from .words import (
+from transformations.numbers.words import (
     fraction_to_words,
     number_to_words,
     ordinal_to_words,

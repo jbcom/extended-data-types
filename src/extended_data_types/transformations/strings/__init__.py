@@ -1,6 +1,8 @@
 """String transformation helpers leveraging inflection."""
 
-from .inflection import (
+from __future__ import annotations
+
+from transformations.strings.inflection import (
     camelize,
     humanize,
     ordinalize,

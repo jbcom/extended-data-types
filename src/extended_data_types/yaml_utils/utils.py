@@ -12,9 +12,9 @@ import yaml
 
 from extended_data_types.string_data_type import bytestostr
 
-from .dumpers import PureDumper
-from .loaders import PureLoader
-from .tag_classes import YamlTagged
+from extended_data_types.yaml_utils.dumpers import PureDumper
+from extended_data_types.yaml_utils.loaders import PureLoader
+from extended_data_types.yaml_utils.tag_classes import YamlTagged
 
 
 def decode_yaml(yaml_data: str | memoryview | bytes | bytearray) -> Any:
