@@ -13,7 +13,7 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Any
 
-from src.extended_data_types.type_utils import typeof
+from extended_data_types.type_utils import typeof
 
 
 def split_list_by_type(

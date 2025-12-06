@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from transformations.strings.inflection import (
+from extended_data_types.transformations.strings.inflection import (
     camelize,
     humanize,
     ordinalize,

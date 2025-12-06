@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from src.extended_data_types.json_utils import decode_json
-from src.extended_data_types.toml_utils import decode_toml
-from src.extended_data_types.yaml_utils import decode_yaml
+from extended_data_types.json_utils import decode_json
+from extended_data_types.toml_utils import decode_toml
+from extended_data_types.yaml_utils import decode_yaml
 
 
 def unwrap_raw_data_from_import(wrapped_data: str, encoding: str = "yaml") -> Any:
