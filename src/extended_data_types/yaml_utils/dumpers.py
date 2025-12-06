@@ -19,7 +19,11 @@ from extended_data_types.yaml_utils.representers import (
     yaml_represent_tagged,
     yaml_str_representer,
 )
-from extended_data_types.yaml_utils.tag_classes import LiteralScalarString, YamlPairs, YamlTagged
+from extended_data_types.yaml_utils.tag_classes import (
+    LiteralScalarString,
+    YamlPairs,
+    YamlTagged,
+)
 
 
 class PureDumper(SafeDumper):

@@ -15,7 +15,11 @@ from typing import Any
 from extended_data_types.json_utils import encode_json
 from extended_data_types.toml_utils import encode_toml
 from extended_data_types.type_utils import convert_special_types, strtobool
-from extended_data_types.yaml_utils import LiteralScalarString, encode_yaml, is_yaml_data
+from extended_data_types.yaml_utils import (
+    LiteralScalarString,
+    encode_yaml,
+    is_yaml_data,
+)
 
 
 def wrap_raw_data_for_export(

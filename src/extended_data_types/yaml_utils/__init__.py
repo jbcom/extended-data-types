@@ -5,7 +5,10 @@ It includes custom loaders, dumpers, and utility functions for working with YAML
 
 from __future__ import annotations
 
-from extended_data_types.yaml_utils.constructors import yaml_construct_pairs, yaml_construct_undefined
+from extended_data_types.yaml_utils.constructors import (
+    yaml_construct_pairs,
+    yaml_construct_undefined,
+)
 from extended_data_types.yaml_utils.dumpers import PureDumper
 from extended_data_types.yaml_utils.loaders import PureLoader
 from extended_data_types.yaml_utils.representers import (
@@ -14,7 +17,11 @@ from extended_data_types.yaml_utils.representers import (
     yaml_represent_tagged,
     yaml_str_representer,
 )
-from extended_data_types.yaml_utils.tag_classes import LiteralScalarString, YamlPairs, YamlTagged
+from extended_data_types.yaml_utils.tag_classes import (
+    LiteralScalarString,
+    YamlPairs,
+    YamlTagged,
+)
 from extended_data_types.yaml_utils.utils import decode_yaml, encode_yaml, is_yaml_data
 
 

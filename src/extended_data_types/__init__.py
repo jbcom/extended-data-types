@@ -8,7 +8,10 @@ lists, maps, and more.
 from __future__ import annotations
 
 from extended_data_types.base64_utils import base64_decode, base64_encode
-from extended_data_types.export_utils import make_raw_data_export_safe, wrap_raw_data_for_export
+from extended_data_types.export_utils import (
+    make_raw_data_export_safe,
+    wrap_raw_data_for_export,
+)
 from extended_data_types.file_data_type import (
     FilePath,
     clone_repository_to_temp,

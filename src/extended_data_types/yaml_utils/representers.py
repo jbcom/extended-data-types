@@ -11,7 +11,11 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from yaml import MappingNode, Node, SafeDumper, ScalarNode
 
-from extended_data_types.yaml_utils.tag_classes import LiteralScalarString, YamlPairs, YamlTagged
+from extended_data_types.yaml_utils.tag_classes import (
+    LiteralScalarString,
+    YamlPairs,
+    YamlTagged,
+)
 
 
 def yaml_represent_tagged(dumper: SafeDumper, data: YamlTagged) -> Node:
