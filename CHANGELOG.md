@@ -2,6 +2,92 @@
 
 <!-- version list -->
 
+## v5.2.0 (2025-12-07)
+
+### Bug Fixes
+
+- Add all mypy error codes for wrapt.ObjectProxy across Python versions
+  ([#35](https://github.com/jbcom/extended-data-types/pull/35),
+  [`5cf3c04`](https://github.com/jbcom/extended-data-types/commit/5cf3c0432722d482fe4e794008c463c23236f40f))
+
+- Add all mypy error codes for wrapt.ObjectProxy across Python versions
+  ([#36](https://github.com/jbcom/extended-data-types/pull/36),
+  [`8801df8`](https://github.com/jbcom/extended-data-types/commit/8801df8882261842132bd9451036c25d3b4e00c6))
+
+- Add ruamel.yaml dependency and bump to 5.1.2
+  ([`36d88d5`](https://github.com/jbcom/extended-data-types/commit/36d88d5ae260434e2c7feb71fe2a24829244296f))
+
+- Correct mypy type ignore comment for wrapt.ObjectProxy
+  ([#34](https://github.com/jbcom/extended-data-types/pull/34),
+  [`c3515c8`](https://github.com/jbcom/extended-data-types/commit/c3515c8d3618d0a86ea95f6f275a7398165cadb9))
+
+- Use absolute imports throughout package
+  ([#59](https://github.com/jbcom/extended-data-types/pull/59),
+  [`fbacc7f`](https://github.com/jbcom/extended-data-types/commit/fbacc7f3bae78123c0609ab30f75e432e972bc58))
+
+- Use mypy override for wrapt.ObjectProxy instead of inline ignores
+  ([#36](https://github.com/jbcom/extended-data-types/pull/36),
+  [`8801df8`](https://github.com/jbcom/extended-data-types/commit/8801df8882261842132bd9451036c25d3b4e00c6))
+
+- Use TypeAlias for Python 3.9 mypy compatibility and fix ruff linting
+  ([#35](https://github.com/jbcom/extended-data-types/pull/35),
+  [`5cf3c04`](https://github.com/jbcom/extended-data-types/commit/5cf3c0432722d482fe4e794008c463c23236f40f))
+
+- Use typing_extensions.TypeAlias and string literal for Python 3.9
+  ([#35](https://github.com/jbcom/extended-data-types/pull/35),
+  [`5cf3c04`](https://github.com/jbcom/extended-data-types/commit/5cf3c0432722d482fe4e794008c463c23236f40f))
+
+### Chores
+
+- Bump version to 5.1.1 ([#37](https://github.com/jbcom/extended-data-types/pull/37),
+  [`bb42013`](https://github.com/jbcom/extended-data-types/commit/bb42013b74b77fb6221a3229f577915db429b8b6))
+
+### Code Style
+
+- Apply pre-commit formatting to set_version.py
+  ([`74dab09`](https://github.com/jbcom/extended-data-types/commit/74dab0960695d59351724d0e14a109ce02825780))
+
+### Documentation
+
+- Clarify float support and exception handling in number transformations
+  ([#45](https://github.com/jbcom/extended-data-types/pull/45),
+  [`400c975`](https://github.com/jbcom/extended-data-types/commit/400c9755d16c7887e5c6fda7275dbf0d4140f1ff))
+
+### Features
+
+- Add release workflow and PR creation ([#41](https://github.com/jbcom/extended-data-types/pull/41),
+  [`3fd24cb`](https://github.com/jbcom/extended-data-types/commit/3fd24cb0e9ba91924623d7b353b78e3a39a09f28))
+
+- Add string and number transformation utilities
+  ([#45](https://github.com/jbcom/extended-data-types/pull/45),
+  [`400c975`](https://github.com/jbcom/extended-data-types/commit/400c9755d16c7887e5c6fda7275dbf0d4140f1ff))
+
+- Improve export_utils with better format handling
+  ([#45](https://github.com/jbcom/extended-data-types/pull/45),
+  [`400c975`](https://github.com/jbcom/extended-data-types/commit/400c9755d16c7887e5c6fda7275dbf0d4140f1ff))
+
+- Migrate from monorepo to standalone package
+  ([`c4f24df`](https://github.com/jbcom/extended-data-types/commit/c4f24dfa10729a683390849c8ec83a8ee7d485cb))
+
+- Update docs/conf.py version in sync with CalVer releases
+  ([`74dab09`](https://github.com/jbcom/extended-data-types/commit/74dab0960695d59351724d0e14a109ce02825780))
+
+### Refactoring
+
+- Improve string, list, and map utilities
+  ([#45](https://github.com/jbcom/extended-data-types/pull/45),
+  [`400c975`](https://github.com/jbcom/extended-data-types/commit/400c9755d16c7887e5c6fda7275dbf0d4140f1ff))
+
+- Use absolute imports and add future annotations
+  ([`f2568eb`](https://github.com/jbcom/extended-data-types/commit/f2568eb60460ba58faeaa6e9fc02d923452fcd22))
+
+### Testing
+
+- Add comprehensive tests for transformation utilities
+  ([#45](https://github.com/jbcom/extended-data-types/pull/45),
+  [`400c975`](https://github.com/jbcom/extended-data-types/commit/400c9755d16c7887e5c6fda7275dbf0d4140f1ff))
+
+
 ## v202511.8.0 (2025-12-01)
 
 ### Features

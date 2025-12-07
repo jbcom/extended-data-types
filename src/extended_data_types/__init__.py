@@ -108,7 +108,7 @@ from extended_data_types.type_utils import (
 from extended_data_types.yaml_utils import decode_yaml, encode_yaml, is_yaml_data
 
 
-__version__ = "202511.8.0"
+__version__ = "5.2.0"
 
 __all__ = [
     "FilePath",
