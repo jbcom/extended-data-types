@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v5.2.1 (2025-12-07)
+
+### Bug Fixes
+
+- Restore working Dockerfile with Go 1.25.3 and correct process-compose install
+  ([`5bbafb9`](https://github.com/jbcom/extended-data-types/commit/5bbafb9e0473c3dd0423fd024ff5e24f5a3b413d))
+
+
 ## v5.2.0 (2025-12-07)
 
 ### Bug Fixes
