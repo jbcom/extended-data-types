@@ -30,6 +30,7 @@ dependencies = [
     "inflection>=0.5.1",
     "num2words>=0.5.14",
     "orjson>=3.10.7",
+    "pydantic>=2.12.5",
     "python-hcl2>=4.3.4",
     "pyyaml>=6.0.1",
     "ruamel.yaml>=0.18.0",

@@ -41,7 +41,7 @@ def decode_hcl2(hcl2_data: str | memoryview | bytes | bytearray) -> Any:
         raise ParseError(f"Failed to decode bytes to string: {hcl2_data!r}") from exc
 
     hcl2_data_stream = StringIO(hcl2_data)
-    return hcl2.load(hcl2_data_stream)  # type: ignore[attr-defined]
+    return hcl2.load(hcl2_data_stream)  # type: ignore[attr-defined, misc]
 
 
 def encode_hcl2(data: Any) -> str:
