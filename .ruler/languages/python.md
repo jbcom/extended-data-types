@@ -1,8 +1,3 @@
----
-description: Python coding standards
-globs: "**/*.py"
----
-
 # Python Standards
 
 ## Style
@@ -29,14 +24,14 @@ uvx ruff format .
 ## Type Hints
 
 ```python
-# ✅ Modern style (Python 3.9+)
+# Modern style (Python 3.9+)
 from collections.abc import Mapping, Sequence
 from typing import Any
 
 def process(items: list[dict[str, Any]]) -> dict[str, int]:
     return {"count": len(items)}
 
-# ❌ Legacy style - avoid
+# Legacy style - avoid
 from typing import Dict, List
 def process(items: Dict[str, Any]) -> List[str]: ...
 ```
@@ -78,11 +73,11 @@ pytest tests/test_utils.py::test_specific
 ## Imports
 
 ```python
-# ✅ Use pathlib
+# Use pathlib
 from pathlib import Path
 config = Path("config.yaml")
 
-# ❌ Avoid os.path
+# Avoid os.path
 import os
 config = os.path.join("config.yaml")
 ```

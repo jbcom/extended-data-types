@@ -1,0 +1,54 @@
+---
+description: Cloud agent environment operations (Cursor, Windsurf)
+globs: "**/*"
+alwaysApply: true
+---
+
+# Cloud Agent Operations
+
+These rules apply when operating in a cloud agent environment (Cursor, Windsurf, etc.).
+
+## Authentication Requirements
+
+Cloud agents require explicit token authentication for GitHub operations:
+
+```bash
+# ALWAYS use explicit token for gh commands
+GH_TOKEN="$GITHUB_TOKEN" gh <command>
+
+# Examples
+GH_TOKEN="$GITHUB_TOKEN" gh pr create --title "feat: new feature"
+GH_TOKEN="$GITHUB_TOKEN" gh issue list
+GH_TOKEN="$GITHUB_TOKEN" gh api repos/:owner/:repo
+```
+
+## Environment Differences from Local Agents
+
+| Aspect | Cloud Agent | Local Agent |
+|--------|-------------|-------------|
+| GitHub CLI | Requires `GH_TOKEN` | Pre-authenticated |
+| File access | Container-scoped | Full system access |
+| MCP servers | Remote via gateway | Local stdio |
+| Git config | May need setup | Usually configured |
+
+## Before Git Operations
+
+```bash
+# Ensure git is configured
+git config user.name || git config user.name "Cursor Agent"
+git config user.email || git config user.email "cursor@example.com"
+```
+
+## Network Considerations
+
+- API rate limits apply to all external requests
+- Use authenticated requests to increase rate limits
+- Cache responses where appropriate
+- Handle timeouts gracefully
+
+## MCP Server Access
+
+Cloud agents access MCP servers via the Docker MCP Gateway:
+- All MCP tools available through unified gateway
+- No local server management required
+- Connection handled automatically

@@ -1,8 +1,3 @@
----
-description: CI/CD workflow patterns
-globs: "**/*"
----
-
 # CI/CD Workflow
 
 ## Branch Protection

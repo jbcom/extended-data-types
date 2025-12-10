@@ -1,9 +1,3 @@
----
-description: Fundamental rules for all jbcom repos
-globs: "**/*"
-alwaysApply: true
----
-
 # Fundamentals
 
 ## Before Acting

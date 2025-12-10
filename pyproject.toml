@@ -52,6 +52,7 @@ tests = [
     "pytest-mock>=3.14.0",
     "pytest-xdist>=3.6.1",
     "coverage[toml]>=7.6.0",
+    "hypothesis>=6.0.0",
 ]
 typing = [
     "mypy>=1.0.0",
@@ -112,19 +113,54 @@ exclude = ["docs"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "ANN", "C901", "COM", "D205", "D415", "DTZ007", "E501", "EM102",
-    "FBT", "FIX", "PLR0911", "PLR0913", "RET505", "TCH", "TD", "TID252",
-    "TRY003", "TRY300",
+    "ANN",
+    "C901",
+    "COM",
+    "D205",
+    "D415",
+    "DTZ007",
+    "E501",
+    "EM102",
+    "FBT",
+    "FIX",
+    "PLR0911",
+    "PLR0913",
+    "RET505",
+    "TCH",
+    "TD",
+    "TID252",
+    "TRY003",
+    "TRY300",
 ]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = [
-    "B018", "BLE", "DTZ", "EM", "INP001", "LOG001", "PLC0415", "PLC1901",
-    "PLR2004", "PT011", "RUF012", "S", "SIM300", "TRY",
+    "B018",
+    "BLE",
+    "DTZ",
+    "EM",
+    "INP001",
+    "LOG001",
+    "PLC0415",
+    "PLC1901",
+    "PLR2004",
+    "PT011",
+    "RUF012",
+    "S",
+    "SIM300",
+    "TRY",
 ]
 "tests/__init__.py" = ["D100", "D104", "D103"]
-"src/extended_data_types/transformations/numbers/words.py" = ["PLR0912", "PLR0124", "PLR2004", "S105"]
-"src/extended_data_types/transformations/numbers/notation.py" = ["PLR0124", "SLF001"]
+"src/extended_data_types/transformations/numbers/words.py" = [
+    "PLR0912",
+    "PLR0124",
+    "PLR2004",
+    "S105",
+]
+"src/extended_data_types/transformations/numbers/notation.py" = [
+    "PLR0124",
+    "SLF001",
+]
 "src/extended_data_types/number_transformations.py" = ["PYI041"]
 "src/extended_data_types/transformations/numbers/*.py" = ["PYI041"]
 "src/extended_data_types/file_data_type.py" = ["PLC0415", "S310"]
