@@ -1,0 +1,71 @@
+# Ruler Configuration File
+# See https://ai.intellectronica.net/ruler for documentation.
+
+# Enable nested rule loading for complex project structures
+nested = true
+
+# Default agents to configure
+default_agents = ["copilot", "claude", "cursor", "aider", "kiro", "gemini-cli", "amazonqcli"]
+
+# --- Global MCP Server Configuration ---
+[mcp]
+enabled = true
+merge_strategy = "merge"
+
+# --- MCP Server Definitions ---
+
+# Docker MCP Gateway - primary MCP access point
+[mcp_servers.MCP_DOCKER]
+command = "docker"
+args = ["mcp", "gateway", "run"]
+disabled = false
+
+[mcp_servers.MCP_DOCKER.env]
+
+# --- Global .gitignore Configuration ---
+[gitignore]
+enabled = true
+
+# --- Agent-Specific Configurations ---
+
+[agents.agentsmd]
+enabled = true
+
+[agents.copilot]
+enabled = true
+
+[agents.claude]
+enabled = true
+output_path = "CLAUDE.md"
+
+[agents.cursor]
+enabled = true
+
+[agents.cursor.mcp]
+enabled = true
+merge_strategy = "merge"
+
+[agents.kiro]
+enabled = true
+output_path = ".kiro/steering/ruler_kiro_instructions.md"
+
+[agents.kiro.mcp]
+enabled = true
+merge_strategy = "merge"
+
+[agents.aider]
+enabled = true
+output_path_instructions = "AGENTS.md"
+output_path_config = ".aider.conf.yml"
+
+[agents.gemini-cli]
+enabled = true
+
+[agents.amazonqcli]
+enabled = true
+
+[agents.windsurf]
+enabled = false
+
+[agents.cline]
+enabled = false

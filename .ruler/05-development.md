@@ -36,15 +36,15 @@ uvx mypy src/
 ## Commit Messages
 
 Use conventional commits:
-- `feat(scope): description` → minor bump
-- `fix(scope): description` → patch bump
-- `feat!: breaking change` → major bump
+- `feat(scope): description` - minor bump
+- `fix(scope): description` - patch bump
+- `feat!: breaking change` - major bump
 
 ## Quality Standards
 
-- ✅ All tests passing
-- ✅ No linter errors
-- ✅ Complete type annotations
-- ✅ Proper error handling
-- ❌ No TODOs or placeholders
-- ❌ No shortcuts
+- All tests passing
+- No linter errors
+- Complete type annotations
+- Proper error handling
+- No TODOs or placeholders
+- No shortcuts

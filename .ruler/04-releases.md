@@ -1,8 +1,3 @@
----
-description: Release and versioning workflow
-globs: "**/*"
----
-
 # Releases
 
 ## Versioning
@@ -18,9 +13,9 @@ All packages use **Semantic Versioning (SemVer)**: `MAJOR.MINOR.PATCH`
 Commits drive automatic version bumps:
 
 ```
-feat(scope): new feature       → minor bump (x.Y.0)
-fix(scope): bug fix            → patch bump (x.y.Z)
-feat(scope)!: breaking change  → major bump (X.0.0)
+feat(scope): new feature       - minor bump (x.Y.0)
+fix(scope): bug fix            - patch bump (x.y.Z)
+feat(scope)!: breaking change  - major bump (X.0.0)
 ```
 
 ### Package Scopes
@@ -39,24 +34,24 @@ feat(scope)!: breaking change  → major bump (X.0.0)
 
 ```
 Push to main with conventional commit
-        ↓
+        |
 CI runs tests & lint
-        ↓
+        |
 Semantic release analyzes commits
-        ↓
+        |
 Version bumped automatically
-        ↓
+        |
 Package published (PyPI/npm/Docker)
-        ↓
+        |
 Synced to public repo
 ```
 
 ## What NOT to Do
 
-- ❌ **Never** manually edit `__version__` or `package.json` version
-- ❌ **Never** create tags by hand
-- ❌ **Never** skip CI for releases
-- ❌ **Never** suggest alternative versioning schemes
+- **Never** manually edit `__version__` or `package.json` version
+- **Never** create tags by hand
+- **Never** skip CI for releases
+- **Never** suggest alternative versioning schemes
 
 ## Checking Release Status
 

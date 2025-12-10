@@ -1,0 +1,8 @@
+# Ruler configuration for docs/ directory
+# Inherits from root configuration
+
+# Keep nested mode enabled
+nested = true
+
+# Use default agents from parent
+# No MCP servers needed at this level

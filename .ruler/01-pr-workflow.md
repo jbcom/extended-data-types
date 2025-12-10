@@ -1,8 +1,3 @@
----
-description: PR creation and review workflow
-globs: "**/*"
----
-
 # PR Workflow
 
 ## Creating PRs
@@ -15,8 +10,8 @@ globs: "**/*"
 
 | Type | Use Case |
 |------|----------|
-| `feat` | New feature → minor bump |
-| `fix` | Bug fix → patch bump |
+| `feat` | New feature - minor bump |
+| `fix` | Bug fix - patch bump |
 | `docs` | Documentation only |
 | `chore` | Maintenance tasks |
 | `refactor` | Code restructuring |
@@ -42,16 +37,16 @@ globs: "**/*"
 
 ```bash
 # Via GraphQL (preferred for batch resolution)
-gh api graphql -f query='mutation { 
-  resolveReviewThread(input: {threadId: "PRRT_xxx"}) { 
-    thread { isResolved } 
-  } 
+gh api graphql -f query='mutation {
+  resolveReviewThread(input: {threadId: "PRRT_xxx"}) {
+    thread { isResolved }
+  }
 }'
 ```
 
 ## Merging
 
-- ✅ Wait for CI to pass
-- ✅ Address all review comments  
-- ✅ Squash if commits are messy
-- ❌ Never use `--admin` to bypass checks
+- Wait for CI to pass
+- Address all review comments
+- Squash if commits are messy
+- Never use `--admin` to bypass checks

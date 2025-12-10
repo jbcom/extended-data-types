@@ -1,8 +1,3 @@
----
-description: Session memory and handoff protocol
-globs: "**/*"
----
-
 # Memory Bank Protocol
 
 ## Purpose

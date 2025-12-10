@@ -75,6 +75,35 @@ jobs:
       - run: uvx ruff check src/ tests/
       - run: uvx ruff format --check src/ tests/
 
+  ruler-check:
+    name: Check Ruler Configuration
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Ruler
+        run: npm install -g @intellectronica/ruler
+
+      - name: Apply Ruler configuration
+        run: ruler apply --nested --no-gitignore
+
+      - name: Check for uncommitted changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "::error::Ruler configuration is out of sync!"
+            echo "Please run 'npx @intellectronica/ruler apply --nested' locally and commit the changes."
+            git status --porcelain
+            git diff
+            exit 1
+          fi
+          echo "Ruler configuration is in sync."
+
   release:
     name: Release
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
