@@ -1,0 +1,105 @@
+
+# 2025-01-30 11:01:04.147490
++/test tox -e pre-commit
+
+# 2025-01-30 11:01:06.466610
++What's wrong? Fix
+
+# 2025-01-30 11:02:05.976967
++/commit
+
+# 2025-01-30 11:02:20.907750
++/test tox -e pre-commit
+
+# 2025-01-30 11:02:26.908686
++What's wrong? Fix
+
+# 2025-01-30 11:03:04.923237
++/test tox -e pre-commit
+
+# 2025-01-30 11:03:09.037068
++What's wrong? Fix
+
+# 2025-01-30 11:03:32.344204
++/test tox -e pre-commit
+
+# 2025-01-30 11:03:36.981400
++What's wrong? Fix
+
+# 2025-01-30 11:03:58.277205
++/test tox -e pre-commit
+
+# 2025-01-30 11:04:01.370564
++What's wrong? Fix
+
+# 2025-01-30 11:04:15.240432
++/test tox -e pre-commit
+
+# 2025-01-30 11:04:37.662337
++What's wrong? Fix
+
+# 2025-01-30 11:04:56.045440
++/test tox -e pre-commit
+
+# 2025-01-30 11:04:59.707900
++What's wrong? Fix
+
+# 2025-01-30 11:05:16.506118
++/test tox -e pre-commit
+
+# 2025-01-30 11:05:19.288973
++What's wrong? Fix
+
+# 2025-01-30 11:05:37.795776
++/test tox -e pre-commit
+
+# 2025-01-30 11:05:43.612792
++What's wrong? Fix
+
+# 2025-01-30 11:06:01.461071
++/test tox -e pre-commit
+
+# 2025-01-30 11:06:04.427482
++What's wrong? Fix
+
+# 2025-01-30 11:06:21.337993
++/test tox -e pre-commit
+
+# 2025-01-30 11:06:45.251647
++We keep abstracting raising and it isn't working
+
+# 2025-01-30 11:07:20.238566
++We neeed to get rid of all that do raise and final raise and ultimate riase stuff 
+
+# 2025-01-30 11:07:44.849517
++/undu
+
+# 2025-01-30 11:07:47.771066
++/undo
+
+# 2025-01-30 11:07:58.345862
++/exit
+
+# 2025-01-30 21:51:23.092548
++/test
+
+# 2025-01-30 21:51:25.651928
++What's wrong? Fix
+
+# 2025-01-30 21:52:07.017747
++A
+
+# 2025-01-30 21:57:36.281418
++What's wrong? Fix
+
+# 2025-01-30 21:57:48.671509
++/commit
+
+# 2025-01-30 21:57:54.233019
++exit
+
+# 2025-01-30 21:58:02.237718
++/editor
+
+# 2025-01-30 21:58:08.555629
++/exit

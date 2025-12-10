@@ -38,3 +38,4 @@ Use conventional commits:
 - Use absolute imports (`from extended_data_types...`)
 - Include `from __future__ import annotations`
 - Type hints required
+
